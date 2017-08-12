@@ -12,4 +12,4 @@ yarn-error.log
 .env
 *.dockerfile
 *.conf
-docker-compose.yml
+.DS_Store
