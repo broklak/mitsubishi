@@ -29,7 +29,7 @@
 	                </div>
 	                <div class="form-group">
 
-	               	  <img src="{{ asset('banner') . '/' . $row->file }}" />
+	               	  <img src="{{ asset('images') . '/banner/' . $row->file }}" />
 	                  <label for="file" class="col-sm-2 control-label">Image File</label>
 
 	                  <div class="col-sm-10">

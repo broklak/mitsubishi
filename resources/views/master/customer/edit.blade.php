@@ -88,7 +88,7 @@
 	                <div class="form-group">
 	                  @php $folder = ($row->id_type == 1) ? 'ktp' : 'sim'; @endphp
 	                  <div class="col-sm-2">
-		               	  <img style="width:170px;height:120px" src="{{ asset('customer') . '/' . $folder . '/' . $row->image }}" />
+		               	  <img style="width:170px;height:120px" src="{{ asset('images') . '/customer/' . $folder . '/' . $row->image }}" />
 		                  <label for="file" class="control-label">ID Image File</label>
 	                  </div>
 	                  <div class="col-sm-10">

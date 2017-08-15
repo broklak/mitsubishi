@@ -40,7 +40,7 @@
 
 	                <div class="form-group">
 
-	               	  <img src="{{ asset('news') . '/' . $row->image }}" />
+	               	  <img src="{{ asset('images') . '/news/' . $row->image }}" />
 	                  <label for="file" class="col-sm-2 control-label">Image File</label>
 
 	                  <div class="col-sm-10">

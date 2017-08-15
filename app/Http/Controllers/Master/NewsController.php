@@ -78,7 +78,7 @@ class NewsController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/news/', $name
+                base_path() . '/public/images/news/', $name
             );
             $create['image'] = $name;
         }
@@ -142,7 +142,7 @@ class NewsController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/news/', $name
+                base_path() . '/public/images/news/', $name
             );
             $update['image'] = $name;
         }

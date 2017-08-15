@@ -94,7 +94,7 @@ class CustomerController extends Controller
             $name = $request->image->getClientOriginalName();
             $folder = ($create['id_type'] == 1) ? 'ktp' : 'sim';
             $request->image->move(
-                base_path() . '/public/customer/'.$folder.'/', $name
+                base_path() . '/public/images/customer/'.$folder.'/', $name
             );
             $create['image'] = $name;
         }
@@ -156,7 +156,7 @@ class CustomerController extends Controller
             $name = $request->image->getClientOriginalName();
             $folder = ($update['id_type'] == 1) ? 'ktp' : 'sim';
             $request->image->move(
-                base_path() . '/public/customer/'.$folder.'/', $name
+                base_path() . '/public/images/customer/'.$folder.'/', $name
             );
             $update['image'] = $name;
         }

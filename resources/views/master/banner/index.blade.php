@@ -26,7 +26,7 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{$val->name}}</td>
-                <td><img src="{{ asset('banner') . '/' . $val->file }}" style="width:100px;height:75px" /></td>
+                <td><img src="{{ asset('images') . '/banner/' . $val->file }}" style="width:100px;height:75px" /></td>
                 <td>{!!\App\Helpers\GlobalHelper::setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">

@@ -76,7 +76,7 @@ class BannerController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/banner/', $name
+                base_path() . '/public/images/banner/', $name
             );
             $create['file'] = $name;
         }
@@ -138,7 +138,7 @@ class BannerController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/banner/', $name
+                base_path() . '/public/images/banner/', $name
             );
             $update['file'] = $name;
         }
