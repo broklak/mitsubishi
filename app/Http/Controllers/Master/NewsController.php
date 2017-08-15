@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Master;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Banner;
+use App\Models\News;
 use App\Helpers\GlobalHelper;
 
-class BannerController extends Controller
+class NewsController extends Controller
 {
     /**
      * @var string
@@ -22,8 +22,8 @@ class BannerController extends Controller
 
 
     public function __construct() {
-        $this->module = 'master.banner';
-        $this->page = 'banner';
+        $this->module = 'master.news';
+        $this->page = 'news';
         $this->middleware('auth');
     }
 
@@ -35,7 +35,7 @@ class BannerController extends Controller
     public function index()
     {
         $data = [
-            'result' => Banner::all(),
+            'result' => News::all(),
             'page' => $this->page
         ];
         return view($this->module . ".index", $data);
@@ -64,24 +64,26 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'banner_name' => 'required',
-            'image'       => 'required|mimes:png,jpeg,jpg'
+            'title'     => 'required',
+            'content'   => 'required',
+            'image'     => 'required|mimes:png,jpeg,jpg'
         ]);
 
         $create = [
-            'name'  => $request->input('banner_name'),
+            'title'  => $request->input('title'),
+            'content'  => $request->input('content'),
             'created_by' => Auth::id()
         ];
 
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/banner/', $name
+                base_path() . '/public/news/', $name
             );
-            $create['file'] = $name;
+            $create['image'] = $name;
         }
 
-        Banner::create($create);
+        News::create($create);
 
         $message = GlobalHelper::setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -108,7 +110,7 @@ class BannerController extends Controller
     {
         $data = [
             'page' => $this->page,
-            'row' => Banner::find($id)
+            'row' => News::find($id)
         ];
 
         return view($this->module.".edit", $data);
@@ -124,23 +126,25 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'banner_name' => 'required',
-            'image'       => 'mimes:png,jpeg,jpg'
+            'title'     => 'required',
+            'content'   => 'required',
+            'image'     => 'mimes:png,jpeg,jpg'
         ]);
 
-        $data = Banner::find($id);
+        $data = News::find($id);
 
         $update = [
-            'name'  => $request->input('banner_name'),
+            'title'  => $request->input('title'),
+            'content'  => $request->input('content'),
             'updated_by' => Auth::id()
         ];
 
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $request->image->move(
-                base_path() . '/public/banner/', $name
+                base_path() . '/public/news/', $name
             );
-            $update['file'] = $name;
+            $update['image'] = $name;
         }
 
         $data->update($update);
@@ -157,7 +161,7 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        Banner::find($id)->delete();
+        News::find($id)->delete();
         $message = GlobalHelper::setDisplayMessage('success', "Success to delete ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -168,7 +172,7 @@ class BannerController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function changeStatus($id, $status) {
-        $data = Banner::find($id);
+        $data = News::find($id);
 
         $data->status = $status;
 

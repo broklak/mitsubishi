@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="{{asset('lte')}}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">

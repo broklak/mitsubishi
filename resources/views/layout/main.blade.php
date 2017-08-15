@@ -20,8 +20,15 @@
     ================================================== -->
     @include("layout.sidebar")
 
+    <div class="content-wrapper">
+        <!-- BREADCRUMB
+        ================================================== -->
+        @include("layout.bread")
 
-    @yield("content")
+        <!-- CONTENT
+        ================================================== -->
+        @yield("content")
+    </div>
   
 
     <!-- FOOTER

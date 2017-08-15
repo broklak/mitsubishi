@@ -8,7 +8,9 @@
 /*
  * Core: General Layout Style
  * -------------------------
+ RED COLOR : #e50012;
  */
+
 html,
 body {
   height: 100%;
@@ -1539,7 +1541,7 @@ a:focus {
   border-top-color: #3c8dbc;
 }
 .box.box-info {
-  border-top-color: #00c0ef;
+  border-top-color: #e50012;
 }
 .box.box-danger {
   border-top-color: #dd4b39;
@@ -2249,13 +2251,13 @@ a:focus {
   background-color: #008d4c;
 }
 .btn-info {
-  background-color: #00c0ef;
-  border-color: #00acd6;
+  background-color: #000;
+  border-color: #fff;
 }
 .btn-info:hover,
 .btn-info:active,
 .btn-info.hover {
-  background-color: #00acd6;
+  background-color: #000;
 }
 .btn-danger {
   background-color: #dd4b39;
@@ -4975,4 +4977,10 @@ table.text-center th {
   .table-responsive > .table tr td {
     white-space: normal !important;
   }
+}
+
+.deleteForm button {
+  background: none;
+  border: none;
+  padding: 3px 20px;
 }
