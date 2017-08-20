@@ -57,4 +57,4 @@ Route::resource('setting/approval', 'Setting\ApprovalController');
 
 Route::get('logout', 'Auth\LoginController@logout');
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'Spk\OrderController@index');
