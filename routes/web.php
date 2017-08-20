@@ -37,4 +37,24 @@ Route::resource('dealer', 'Master\DealerController');
 Route::get('master/customer/change-status/{id}/{status}', 'Master\CustomerController@changeStatus')->name('customer.change-status');
 Route::resource('customer', 'Master\CustomerController');
 
+Route::get('master/user/change-status/{id}/{status}', 'Master\UserController@changeStatus')->name('user.change-status');
+Route::resource('user', 'Master\UserController');
+
+Route::get('master/bbn/change-status/{id}/{status}', 'Master\BbnController@changeStatus')->name('bbn.change-status');
+Route::resource('bbn', 'Master\BbnController');
+
+Route::get('master/job-position/change-status/{id}/{status}', 'Master\JobPositionController@changeStatus')->name('job-position.change-status');
+Route::resource('job-position', 'Master\JobPositionController');
+
+Route::get('master/leasing/change-status/{id}/{status}', 'Master\LeasingController@changeStatus')->name('leasing.change-status');
+Route::resource('leasing', 'Master\LeasingController');
+
+Route::resource('order', 'Spk\OrderController');
+
+Route::get('setting/approval/delete/{id}', 'Setting\ApprovalController@delete')->name('approval.delete');
+Route::put('setting/approval/change-level', 'Setting\ApprovalController@changeLevel')->name('approval.change-level');
+Route::resource('setting/approval', 'Setting\ApprovalController');
+
+Route::get('logout', 'Auth\LoginController@logout');
+
 Route::get('/', 'HomeController@index');

@@ -27,7 +27,7 @@
                 <tr>
                 <td>{{$val->name}}</td>
                 <td>{{$val->code}}</td>
-                <td>{!!\App\Helpers\GlobalHelper::setActivationStatus($val->status)!!}</td>
+                <td>{!!setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>

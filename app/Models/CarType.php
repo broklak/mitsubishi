@@ -31,4 +31,14 @@ class CarType extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public static function getModel($id) {
+        $data = parent::find($id);
+        return (isset($data->model_id)) ? $data->model_id : 0;
+    }
+
+    public static function getName($id) {
+        $data = parent::find($id);
+        return $data->name;
+    }
 }

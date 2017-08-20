@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
-use App\Helpers\GlobalHelper;
+
 
 class CustomerController extends Controller
 {
@@ -101,7 +101,7 @@ class CustomerController extends Controller
 
         $this->model->create($create);
 
-        $message = GlobalHelper::setDisplayMessage('success', "Success to create new ".$this->page);
+        $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -163,7 +163,7 @@ class CustomerController extends Controller
 
         $data->update($update);
 
-        $message = GlobalHelper::setDisplayMessage('success', "Success to update ".$this->page);
+        $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -176,7 +176,7 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $this->model->find($id)->delete();
-        $message = GlobalHelper::setDisplayMessage('success', "Success to delete ".$this->page);
+        $message = setDisplayMessage('success', "Success to delete ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -194,7 +194,7 @@ class CustomerController extends Controller
 
         $data->save();
 
-        $message = GlobalHelper::setDisplayMessage('success', "Success to $desc ".$this->page);
+        $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 }

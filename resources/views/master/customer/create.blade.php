@@ -37,8 +37,8 @@
 	                <div class="form-group">
 	                  <label for="id_type" class="col-sm-2 control-label">ID Type</label>
 	                  <div class="col-sm-10">
-	                  	<label class="radio-inline"><input type="radio" value="1" name="id_type">KTP</label>
-	                  	<label class="radio-inline"><input type="radio" value="2" name="id_type">SIM</label>
+	                  	<label class="radio-inline"><input @if(old('id_type') == 1) selected="selected" @endif type="radio" value="1" name="id_type">KTP</label>
+	                  	<label class="radio-inline"><input @if(old('id_type') == 2) selected="selected" @endif type="radio" value="2" name="id_type">SIM</label>
 	                  </div>
 	                </div>
 

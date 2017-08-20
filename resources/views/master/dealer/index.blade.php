@@ -33,7 +33,7 @@
                 <td>{{$val->contact_name}}</td>
                 <td>{{$val->phone}}</td>
                 <td>{{$val->fax}}</td>
-                <td>{!!\App\Helpers\GlobalHelper::setActivationStatus($val->status)!!}</td>
+                <td>{!!setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>

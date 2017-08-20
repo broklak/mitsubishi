@@ -29,11 +29,11 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{$val->id_number}} ({{ \App\Helpers\GlobalHelper::getIDType($val->id_type) }})</td>
+                <td>{{$val->id_number}} ({{ getIDType($val->id_type) }})</td>
                 <td>{{$val->phone}}</td>
                 <td>{{$val->address}}</td>
                 <td>{{$val->email}}</td>
-                <td>{!!\App\Helpers\GlobalHelper::setActivationStatus($val->status)!!}</td>
+                <td>{!!setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>

@@ -1,9 +1,11 @@
 /node_modules
 /public/hot
 /public/storage
+/public/storage/framework/views/
 /public/images/customer
 /public/images/news
 /public/images/banner
+/public/images/npwp
 /storage/*.key
 /vendor
 /.idea

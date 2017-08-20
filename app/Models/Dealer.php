@@ -31,4 +31,9 @@ class Dealer extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public static function getName($id) {
+        $data = parent::find($id);
+        return $data->name;
+    }
 }
