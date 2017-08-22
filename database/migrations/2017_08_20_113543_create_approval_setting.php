@@ -25,6 +25,7 @@ class CreateApprovalSetting extends Migration
             $table->increments('id');
             $table->integer('order_id');
             $table->integer('level_approved');
+            $table->integer('job_position_id');
             $table->integer('approved_by');
             $table->timestamps();
         });

@@ -49,3 +49,20 @@
 
         return $money;
     }
+
+    function getPlatType($type) {
+        switch ($type) {
+            case '1':
+                return 'Hitam';
+                break;
+            case '2':
+                return 'Kuning';
+                break;
+            case '3':
+                return 'Merah';
+                break;
+            default:
+                return "Hitam";
+                break;
+        }
+    }

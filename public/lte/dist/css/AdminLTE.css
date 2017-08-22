@@ -4984,3 +4984,23 @@ table.text-center th {
   border: none;
   padding: 3px 20px;
 }
+
+.spk-field {
+  border-bottom: 1px solid #d2d6de;
+  padding: 7px 0 5px 0;
+}
+
+.approver {
+  text-align: center;
+  border: 1px solid #555;
+}
+
+.approver thead th {
+  font-size: 24px;
+  border: 1px solid #555;
+}
+
+.approver tbody tr td{
+  font-size: 20px;
+  border: 1px solid #555;
+}

@@ -36,6 +36,8 @@
           </a>
           <ul class="treeview-menu">
             <li @if($page == 'spk') class="active" @endif><a href="{{route('order.create')}}"><i class="fa fa-file-word-o"></i> Create SPK</a></li>
+            <li @if($page == 'spk') class="active" @endif><a href="{{route('order.index')}}"><i class="fa fa-file-word-o"></i> View SPK</a></li>
+            <!-- <li @if($page == 'spk') class="active" @endif><a href="{{route('order.index')}}?type=approval"><i class="fa fa-file-word-o"></i> Approve SPK</a></li> -->
           </ul>
         </li>
 

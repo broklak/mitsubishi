@@ -49,6 +49,7 @@ Route::resource('job-position', 'Master\JobPositionController');
 Route::get('master/leasing/change-status/{id}/{status}', 'Master\LeasingController@changeStatus')->name('leasing.change-status');
 Route::resource('leasing', 'Master\LeasingController');
 
+Route::get('order/approve/{id}/{level}', 'Spk\OrderController@approveSpk')->name('order.approve');
 Route::resource('order', 'Spk\OrderController');
 
 Route::get('setting/approval/delete/{id}', 'Setting\ApprovalController@delete')->name('approval.delete');

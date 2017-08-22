@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     protected function getViewName($view) {
         View::share('view_name', $view->getName());
         View::share('js_name', 'sites/js.'.$view->getName());
+        View::share('user', Auth::user());
         View::share('css_name', 'sites/css.'.$view->getName());
     }
 }

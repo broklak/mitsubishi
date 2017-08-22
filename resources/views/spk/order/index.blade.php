@@ -8,9 +8,11 @@
 	<div class="col-md-12">
 		{!! session('displayMessage') !!}
 		<div class="box">
+            @if(!$approval)
             <div class="box-header">
               <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
             </div>
+            @endif
             <!-- /.box-header -->
             <div class="box-body">
               <table id="example1" class="table table-bordered table-hover table-striped">
@@ -38,7 +40,11 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
+                      @if(!$approval)
                       <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+                      @endif
+                      <li><a href="{{ route($page.'.show', ['id' => $val->id]) }}">Show</a></li>
+                      @if(!$approval)
 	                    <li class="divider"></li>
 	                    <li>
 	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
@@ -47,6 +53,7 @@
 	                    		{{ method_field('DELETE') }}
 	                    	</form>
 	                    </li>
+                      @endif
 	                  </ul>
                 	</div>
                 </td>

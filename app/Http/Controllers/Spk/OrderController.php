@@ -10,6 +10,8 @@ use App\Models\OrderPrice;
 use App\Models\OrderHead;
 use App\Models\CarType;
 use App\Models\Leasing;
+use App\Models\ApprovalSetting;
+use App\Models\OrderApproval;
 use App\Models\Bbn;
 use App\Models\UserDealer;
 use App\Models\Customer;
@@ -43,13 +45,17 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $approval = ($request->input('type') == 'approval') ? true : false;
         $data = [
-            'result' => $this->model->all(),
-            'page' => $this->page
+            'result' =>  $this->model->all(),
+            'page' => $this->page,
+            'title' => ($approval) ? 'SPK To Approve' : 'SPK List',
+            'approval' => $approval
         ];
         return view($this->module . ".index", $data);
     }
@@ -200,6 +206,32 @@ class OrderController extends Controller
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $data = [
+            'page' => $this->page,
+            'title' => 'Surat Pesanan Kendaraan',
+            'row' => $this->model->find($id),
+            'carType' => CarType::all(),
+            'leasing' => Leasing::all(),
+            'bbn' => Bbn::all(),
+            'dealer' => UserDealer::where('user_id', Auth::id())->get(),
+            'init' => $this->initValue($type = 'update', $id),
+            'approver' => ApprovalSetting::orderBy('level')->get(), 
+            'approval'  => OrderApproval::getOrderApproval($id),
+            'toApprove' => OrderApproval::eligibleToApprove($this->model->find($id)),
+            'authId'    => Auth::id()
+        ];
+
+        return view($this->module.".show", $data);
+    }
+
     protected function rules() {
         return [
             'spk_doc_code'     => 'required',
@@ -316,5 +348,25 @@ class OrderController extends Controller
             'other_cost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
             'total_down_payment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
         ];
+    }
+
+    public function approveSpk($orderId, $level) {
+        $user = Auth::user();
+        $eligible = OrderApproval::eligibleToApprove($this->model->find($orderId));
+
+        if(!$eligible) {
+            $message = setDisplayMessage('error', "You are not eligible to approve this SPK");
+            return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
+        }
+
+        $approve = OrderApproval::create([
+            'order_id'  => $orderId,
+            'level_approved' => $level,
+            'job_position_id' => $user['job_position_id'],
+            'approved_by'   => $user['id']
+        ]);
+
+        $message = setDisplayMessage('success', "Success to approve SPK");
+        return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
     }
 }
