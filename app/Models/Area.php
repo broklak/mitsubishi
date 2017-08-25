@@ -11,7 +11,7 @@ class Area extends Model
     /**
      * @var string
      */
-    protected $table = 'area';
+    protected $table = 'areas';
 
     /**
      * @var array
