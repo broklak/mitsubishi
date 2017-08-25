@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Master;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Leasing;
+use App\Models\Area;
 
-
-class LeasingController extends Controller
+class AreaController extends Controller
 {
     /**
      * @var string
@@ -27,9 +26,9 @@ class LeasingController extends Controller
 
 
     public function __construct() {
-        $this->model = new Leasing();
-        $this->module = 'master.leasing';
-        $this->page = 'leasing';
+        $this->model = new Area();
+        $this->module = 'master.area';
+        $this->page = 'area';
         $this->middleware('auth');
     }
 
@@ -42,7 +41,7 @@ class LeasingController extends Controller
     {
         $data = [
             'result' => $this->model->all(),
-            'page' => $this->page
+            'page' => $this->page,
         ];
         return view($this->module . ".index", $data);
     }
@@ -70,18 +69,11 @@ class LeasingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name'     => 'required',
-            'admin_cost'     => 'required',
+            'name'     => 'required'
         ]);
 
         $create = [
             'name'  => $request->input('name'),
-            'contact_name'  => $request->input('contact_name'),
-            'admin_cost'  => parseMoneyToInteger($request->input('admin_cost')),
-            'phone'  => $request->input('phone'),
-            'fax'  => $request->input('fax'),
-            'email'  => $request->input('email'),
-            'address'  => $request->input('address'),
             'created_by' => Auth::id()
         ];
 
@@ -117,20 +109,13 @@ class LeasingController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'name'     => 'required',
-            'admin_cost'     => 'required',
+            'name'     => 'required'
         ]);
 
         $data = $this->model->find($id);
 
         $update = [
             'name'  => $request->input('name'),
-            'contact_name'  => $request->input('contact_name'),
-            'phone'  => $request->input('phone'),
-            'fax'  => $request->input('fax'),
-            'admin_cost'  => parseMoneyToInteger($request->input('admin_cost')),
-            'email'  => $request->input('email'),
-            'address'  => $request->input('address'),
             'updated_by' => Auth::id()
         ];
 

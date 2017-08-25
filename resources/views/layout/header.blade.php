@@ -63,7 +63,7 @@
               <li class="footer"><a href="#">View all</a></li>
             </ul>
           </li>
-          <!-- User Account: style can be found in dropdown.less -->
+          <!-- User Account: style can bepside found in dropdown.less -->
           <li class="dropdown user user-menu" style="background-color:#000;">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <span class="hidden-xs">{{$user['first_name'] . ' '. $user['last_name']}}</span>

@@ -21,6 +21,8 @@
             <li @if($page == 'dealer') class="active" @endif ><a href="{{route('dealer.index')}}"><i class="fa fa-building-o"></i> Dealer</a></li>
             <li @if($page == 'leasing') class="active" @endif ><a href="{{route('leasing.index')}}"><i class="fa fa-credit-card"></i> Leasing</a></li>
             <li @if($page == 'bbn') class="active" @endif ><a href="{{route('bbn.index')}}"><i class="fa fa-truck"></i> BBN Type</a></li>
+            <li @if($page == 'area') class="active" @endif ><a href="{{route('area.index')}}"><i class="fa fa-map"></i> Area</a></li>
+            <li @if($page == 'default-admin-fee') class="active" @endif ><a href="{{route('default-admin-fee.edit', ['id' => 1])}}"><i class="fa fa-money"></i> Default Admin Fee</a></li>
             <li @if($page == 'customer') class="active" @endif ><a href="{{route('customer.index')}}"><i class="fa fa-users"></i> Customer</a></li>
             <li @if($page == 'user') class="active" @endif ><a href="{{route('user.index')}}"><i class="fa fa-user"></i> User</a></li>
             <li @if($page == 'job-position') class="active" @endif ><a href="{{route('job-position.index')}}"><i class="fa fa-user-circle-o"></i> Job Position</a></li>

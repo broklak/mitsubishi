@@ -45,6 +45,7 @@
         var val = parseInt($('#dp_amount').val().replace(/,/gi, ''));
         var percent =(isNaN(total_sale)) ? 0 : Math.round((val / total_sale) * 100);
         $('#dp_percentage').val(percent);
+        calculateUnpaid(total_sale, val);
     }
 
     function calculateDPAmount() {
@@ -53,6 +54,8 @@
         var val = parseInt($('#dp_percentage').val());
         var amount =(isNaN(total_sale) || isNaN(val)) ? 0 : Math.round((val * total_sale) / 100);
         $('#dp_amount').val(toMoney(amount));
+        calculateUnpaid(total_sale, amount);
+        return amount;
     }
 
     function formatMoney(elem) {
@@ -82,9 +85,15 @@
         $('#total_sales_price').val(toMoney(total));
 
         if(total > 0) {
-            calculateDPAmount();
+            var dpAmount = calculateDPAmount();
             calculateDPPercent();
+            calculateUnpaid(total, dpAmount);
         }
+    }
+
+    function calculateUnpaid(total, dpAmount) {
+        var unpaid = total - dpAmount;
+        $('#total_unpaid').val(toMoney(unpaid));
     }
 
     function toMoney(num) {

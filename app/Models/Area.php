@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Leasing extends Model
+class Area extends Model
 {
     use SoftDeletes;
     /**
      * @var string
      */
-    protected $table = 'leasing';
+    protected $table = 'area';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 'contact_name', 'phone', 'fax', 'email', 'admin_cost', 'address', 'status', 'created_by', 'updated_by'
+        'name', 'status', 'created_by', 'updated_by'
     ];
 
     /**
@@ -34,6 +34,6 @@ class Leasing extends Model
 
     public static function getName($id) {
         $data = parent::find($id);
-        return (isset($data->name)) ? $data->name : 'Cash';
+        return (isset($data->name)) ? $data->name : 'Others';
     }
 }

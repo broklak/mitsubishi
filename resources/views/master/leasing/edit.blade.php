@@ -62,6 +62,13 @@
 	                  </div>
 	                </div>
 
+	                <div class="form-group">
+	                  <label for="cost" class="col-sm-2 control-label">Admin Fee</label>
+	                  <div class="col-sm-10">
+	                    <input type="text" class="form-control" name="admin_cost" onkeyup="formatMoney($(this))" value="{{moneyFormat($row->admin_cost)}}" id="cost" placeholder="Leasing Admin Fee">
+	                  </div>
+	                </div>
+
 	              </div>
 	              <!-- /.box-body -->
 	              <div class="box-footer">

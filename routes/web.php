@@ -43,6 +43,12 @@ Route::resource('user', 'Master\UserController');
 Route::get('master/bbn/change-status/{id}/{status}', 'Master\BbnController@changeStatus')->name('bbn.change-status');
 Route::resource('bbn', 'Master\BbnController');
 
+Route::get('master/area/change-status/{id}/{status}', 'Master\AreaController@changeStatus')->name('area.change-status');
+Route::resource('area', 'Master\AreaController');
+
+Route::get('master/default-admin-fee/change-status/{id}/{status}', 'Master\DefaultAdminFeeController@changeStatus')->name('default-admin-fee.change-status');
+Route::resource('default-admin-fee', 'Master\DefaultAdminFeeController');
+
 Route::get('master/job-position/change-status/{id}/{status}', 'Master\JobPositionController@changeStatus')->name('job-position.change-status');
 Route::resource('job-position', 'Master\JobPositionController');
 
