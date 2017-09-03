@@ -61,7 +61,7 @@
 	              			<tr>
 	              				<th>Premi Type</th>
 	              				<th>Car Years</th>
-	              				<th>Rate</th>
+	              				<th>Rate (%) * Use (.) for decimal</th>
 	              				<th><a class="btn btn-default" style="cursor:pointer" onclick="addMonth()">Add Months</a></th>
 	              			</tr>
 	              		</thead>

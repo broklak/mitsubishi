@@ -80,10 +80,10 @@
 			         <table class="table table-striped leasing-rate">
 	              		<thead>
 	              			<tr>
-	              				<th>Month</th>
-	              				<th>DP Minimum</th>
-	              				<th>DP Maximum</th>
-	              				<th>Rate</th>
+	              				<th>Months</th>
+	              				<th>DP Minimum (%)</th>
+	              				<th>DP Maximum (%)</th>
+	              				<th>Rate (%) * Use (.) for decimal</th>
 	              				<th><a class="btn btn-default" style="cursor:pointer" onclick="addMonth()">Add Months</a></th>
 	              			</tr>
 	              		</thead>
