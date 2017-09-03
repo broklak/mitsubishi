@@ -17,15 +17,15 @@
 			               </div>
 			            </div>
 			            <div class="form-group">
-			               <label for="jaminan_cost_amount" class="col-sm-3 control-label">DP Amount</label>
-			               <div class="col-sm-9">
-			                  <input type="text" id="dp_amount" onkeyup="formatMoney($(this))" class="form-control" name="jaminan_cost_amount" value="{{$init['jaminan_cost_amount']}}" placeholder="Enter DP Amount">
-			               </div>
-			            </div>
-			            <div class="form-group">
 			               <label for="jaminan_cost_percentage" class="col-sm-3 control-label">DP Percentage</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" maxlength="100" name="jaminan_cost_percentage" value="{{$init['jaminan_cost_percentage']}}" id="dp_percentage" placeholder="Enter DP Percentage">
+			               </div>
+			            </div>
+			            <div class="form-group">
+			               <label for="jaminan_cost_amount" class="col-sm-3 control-label">DP Amount</label>
+			               <div class="col-sm-9">
+			                  <input type="text" id="dp_amount" onkeyup="formatMoney($(this))" class="form-control" name="jaminan_cost_amount" value="{{$init['jaminan_cost_amount']}}" placeholder="Enter DP Amount">
 			               </div>
 			            </div>
 			            <div class="form-group">

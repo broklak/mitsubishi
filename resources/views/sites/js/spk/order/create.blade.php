@@ -48,7 +48,7 @@
         calculateTotalSales();
     });
 
-    $('#interest_rate, #admin_cost, #installment_cost, #insurance_cost, #other_cost').keyup(function(){
+    $('#admin_cost, #insurance_cost, #other_cost').keyup(function(){
         calculateTotalDP();
     });
 

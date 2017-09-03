@@ -59,7 +59,7 @@
 			            <div class="form-group">
 			               <label for="installment_cost" class="col-sm-3 control-label">Installment Cost</label>
 			               <div class="col-sm-9">
-			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="installment_cost" value="{{$init['installment_cost']}}" id="installment_cost" placeholder="Enter Installment Cost">
+			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="installment_cost" value="{{$init['installment_cost']}}" id="installment_cost" readonly placeholder="Enter Installment Cost">
 			               </div>
 			            </div>
 			            <div class="form-group">
@@ -71,7 +71,7 @@
 			            <div class="form-group">
 			               <label for="total_down_payment" class="col-sm-3 control-label">Total Down Payment</label>
 			               <div class="col-sm-9">
-			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="total_down_payment" value="{{$init['total_down_payment']}}" id="total_down_payment" placeholder="Enter Total Down Payment Amount">
+			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="total_down_payment" value="{{$init['total_down_payment']}}" id="total_down_payment" readonly placeholder="Enter Total Down Payment Amount">
 			               </div>
 			            </div>  		
 		            </div>
