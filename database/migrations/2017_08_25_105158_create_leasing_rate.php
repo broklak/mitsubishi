@@ -13,21 +13,30 @@ class CreateLeasingRate extends Migration
      */
     public function up()
     {
-        Schema::create('leasing_rate', function (Blueprint $table) {
+        Schema::create('leasing_rate_head', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('leasing_id');
-            $table->integer('csr_model_id');
+            $table->integer('car_model_id');
             $table->integer('car_type_id');
-            $table->integer('month_duration');
             $table->string('areas', 255);
             $table->date('start_date');
             $table->date('end_date');
-            $table->integer('dp_min');
-            $table->integer('dp_max');
-            $table->float('rate');
+            $table->integer('karoseri')->nullable();
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('leasing_rate_detail', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('leasing_rate_id');
+            $table->integer('dp_min');
+            $table->integer('dp_max');
+            $table->integer('months');
+            $table->float('rate');
+            $table->integer('created_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
 
@@ -53,6 +62,7 @@ class CreateLeasingRate extends Migration
 
         Schema::table('leasing', function (Blueprint $table) {
             $table->integer('admin_cost')->after('address');
+            $table->string('areas', 255)->nullable()->after('address');
         });
     }
 
@@ -64,11 +74,14 @@ class CreateLeasingRate extends Migration
     public function down()
     {
         Schema::dropIfExists('leasing_rate');
+        Schema::dropIfExists('leasing_rate_head');
+        Schema::dropIfExists('leasing_rate_detail');
         Schema::dropIfExists('areas');
         Schema::dropIfExists('default_admin_fee');
 
         Schema::table('leasing', function (Blueprint $table) {
             $table->dropColumn('admin_cost');
+            $table->dropColumn('areas');
         });
     }
 }

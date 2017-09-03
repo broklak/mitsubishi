@@ -5004,3 +5004,11 @@ table.text-center th {
   font-size: 20px;
   border: 1px solid #555;
 }
+
+.leasing-rate {
+  text-align: center;
+}
+
+.leasing-rate tr th {
+  text-align: center;
+}

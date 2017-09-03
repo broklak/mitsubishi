@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderHead extends Model
 {
@@ -32,6 +34,32 @@ class OrderHead extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public function list($where = []) {
+        $user = Auth::user();
+        $job = $user->job_position_id;
+        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, model_id, type_id,date, 
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved"))
+                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->where($where)
+                        ->orderBy('date', 'desc')
+                        ->get();
+
+        return $data;
+    }
+
+    public static function notApproved() {
+        $user = Auth::user();
+        $job = $user->job_position_id;
+        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, model_id, type_id,date,
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved"))
+                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->whereRaw("(select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0")
+                        ->orderBy('date', 'desc')
+                        ->get();
+
+        return $data;
+    }
 
     public function create($data) {
     	return parent::create([
@@ -80,8 +108,7 @@ class OrderHead extends Model
             'karoseri'      => $data['karoseri'],
             'karoseri_type' => $data['karoseri_type'],
             'karoseri_spec' => $data['karoseri_spec'],
-            // 'karoseri_price'    => parseMoneyToInteger($data['karoseri_price']),
-            'karoseri_price'    => 1000,
+            'karoseri_price'    => parseMoneyToInteger($data['karoseri_price']),
             'updated_by'    => $data['updated_by']
         ]);
     }
@@ -103,5 +130,24 @@ class OrderHead extends Model
         }
 
         return $acronym;
+    }
+
+    public function setNotif() {
+        $spkNotApproved = count($this->notApproved());
+        $doNotChecked = count(DeliveryOrder::notChecked());
+        $session = [
+            'spk_notif' => $spkNotApproved,
+            'do_notif' => $doNotChecked,
+            'total_notif' => $doNotChecked + $spkNotApproved
+        ];
+        session($session);
+    }
+
+    public static function getInsentifByType($orderId) {
+        $data = parent::select('car_models.insentif_amount', 'order_head.created_by')
+                    ->where('order_head.id', $orderId)
+                    ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                    ->first();
+        return $data;
     }
 }

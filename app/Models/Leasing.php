@@ -17,7 +17,7 @@ class Leasing extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'contact_name', 'phone', 'fax', 'email', 'admin_cost', 'address', 'status', 'created_by', 'updated_by'
+        'name', 'contact_name', 'phone', 'fax', 'email', 'admin_cost', 'address', 'status', 'created_by', 'updated_by', 'areas'
     ];
 
     /**

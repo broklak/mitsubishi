@@ -25,39 +25,27 @@
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
+              <span class="label label-warning"><?php echo e(session('total_notif')); ?></span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have 10 notifications</li>
+              <li class="header">You have <?php echo e(session('total_notif')); ?> notifications</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
+                  <?php if(session('spk_notif')): ?>
                   <li>
-                    <a href="#">
-                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                    <a href="<?php echo e(route('order.index')); ?>?type=approval">
+                      <i class="fa fa-file"></i> <?php echo e(session('spk_notif')); ?> SPK to Approve
                     </a>
                   </li>
+                  <?php endif; ?>
+                  <?php if(session('do_notif')): ?>
                   <li>
-                    <a href="#">
-                      <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                      page and may cause design problems
+                    <a href="<?php echo e(route('delivery-order.index')); ?>?type=checked">
+                      <i class="fa fa-thumbs-o-up"></i> <?php echo e(session('do_notif')); ?> DO to Check 
                     </a>
                   </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-users text-red"></i> 5 new members joined
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-user text-red"></i> You changed your username
-                    </a>
-                  </li>
+                  <?php endif; ?>
                 </ul>
               </li>
               <li class="footer"><a href="#">View all</a></li>

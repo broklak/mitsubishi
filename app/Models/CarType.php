@@ -17,7 +17,7 @@ class CarType extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'model_id', 'status', 'created_by', 'updated_by'
+        'name', 'model_id', 'status', 'insentif_amount', 'created_by', 'updated_by'
     ];
 
     /**

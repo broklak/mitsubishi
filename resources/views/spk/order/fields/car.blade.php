@@ -28,10 +28,10 @@
 			            <div class="form-group">
 			               <label for="car_type" class="col-sm-3 control-label">Car Type</label>
 			               <div class="col-sm-9">
-			               		<select class="form-control" name="type_id">
+			               		<select class="form-control" name="type_id" id="type_id">
 			               			<option disabled="disabled" selected="selected">Choose Type</option>
 			               			@foreach($carType as $key => $val)
-			               			<option @if($init['type_id'] == $val->id) selected @endif value="{{$val->id}}">{{$val->name}}</option>
+			               			<option @if($init['type_id'] == $val->id) selected @endif value="{{$val->id}}">{{\App\Models\CarModel::getName($val->model_id)}} - {{$val->name}}</option>
 			               			@endforeach
 			               		</select>
 			               </div>

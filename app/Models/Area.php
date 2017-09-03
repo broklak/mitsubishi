@@ -36,4 +36,14 @@ class Area extends Model
         $data = parent::find($id);
         return (isset($data->name)) ? $data->name : 'Others';
     }
+
+    public static function getNameByFields($ids) {
+    	$ids = explode(',', $ids);
+    	$name = [];
+    	foreach ($ids as $key => $value) {
+    		$data = parent::find($value);
+    		if(isset($data->name)) $name[] = $data->name;
+    	}
+    	return implode(', ', $name);
+    }
 }

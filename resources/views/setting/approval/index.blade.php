@@ -26,7 +26,7 @@
                   <tbody>
                   @foreach($result as $key => $val)
                   <tr>
-                  <td>{{\App\Models\JobPosition::getName($val->job_position_id)}}</td>
+                  <td>{{\App\Role::getName($val->job_position_id)}}</td>
                   <td>
                     <input style="width:30px;text-align:center" type="number" name="level[{{$val->id}}]" value="{{$val->level}}" />
                   </td>

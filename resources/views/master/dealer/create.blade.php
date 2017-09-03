@@ -74,6 +74,17 @@
 	                  </div>
 	                </div>
 
+	                <div class="form-group">
+	                  <label for="areas" class="col-sm-2 control-label">Areas</label>
+	                  <div class="col-sm-10">
+	                  	<select name="area" class="form-control">
+	                  		@foreach($area as $key => $val)
+	                  		<option value="{{$val->id}}">{{$val->name}}</option>
+	                  		@endforeach
+	                  	</select>
+	                  </div>
+	                </div>
+
 	              </div>
 	              <!-- /.box-body -->
 	              <div class="box-footer">

@@ -71,7 +71,7 @@ class LeasingController extends Controller
     {
         $this->validate($request,[
             'name'     => 'required',
-            'admin_cost'     => 'required',
+            'admin_cost'     => 'required'
         ]);
 
         $create = [
@@ -79,6 +79,7 @@ class LeasingController extends Controller
             'contact_name'  => $request->input('contact_name'),
             'admin_cost'  => parseMoneyToInteger($request->input('admin_cost')),
             'phone'  => $request->input('phone'),
+            'areas' => '',
             'fax'  => $request->input('fax'),
             'email'  => $request->input('email'),
             'address'  => $request->input('address'),
@@ -118,7 +119,7 @@ class LeasingController extends Controller
     {
         $this->validate($request,[
             'name'     => 'required',
-            'admin_cost'     => 'required',
+            'admin_cost'     => 'required'
         ]);
 
         $data = $this->model->find($id);
@@ -128,6 +129,7 @@ class LeasingController extends Controller
             'contact_name'  => $request->input('contact_name'),
             'phone'  => $request->input('phone'),
             'fax'  => $request->input('fax'),
+            'areas' => '',
             'admin_cost'  => parseMoneyToInteger($request->input('admin_cost')),
             'email'  => $request->input('email'),
             'address'  => $request->input('address'),

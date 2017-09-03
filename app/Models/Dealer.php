@@ -17,7 +17,7 @@ class Dealer extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'company_id', 'contact_name', 'phone', 'fax', 'email', 'address', 'status', 'created_by', 'updated_by'
+        'name', 'company_id', 'contact_name', 'phone', 'fax', 'email', 'address', 'status', 'created_by', 'updated_by', 'area'
     ];
 
     /**

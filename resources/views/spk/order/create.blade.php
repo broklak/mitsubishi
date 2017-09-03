@@ -36,7 +36,7 @@
 			             <div class="form-group">
 			                <label for="date" class="col-sm-3 control-label">Dealer</label>
 			                <div class="col-sm-9">
-			                   <select name="dealer_id" class="form-control">
+			                   <select name="dealer_id" class="form-control" id="dealer_id">
 			                   		<option disabled="disabled" selected="selected" value="0">Choose Dealer</option>
 			                   		@foreach($dealer as $key => $val)
 			                   		<option @if(old('dealer_id') == $val->dealer_id) selected @endif value="{{$val->dealer_id}}">{{\App\Models\Dealer::getName($val->dealer_id)}}</option>

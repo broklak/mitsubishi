@@ -10,11 +10,15 @@ use App\Models\OrderPrice;
 use App\Models\OrderHead;
 use App\Models\CarType;
 use App\Models\Leasing;
-use App\Models\ApprovalSetting;
+use App\PermissionRole;
 use App\Models\OrderApproval;
+use App\Models\OrderLog;
+use App\Models\DeliveryOrder;
 use App\Models\Bbn;
+use App\Models\DefaultAdminFee;
 use App\Models\UserDealer;
 use App\Models\Customer;
+use App\Models\CreditMonth;
 
 
 class OrderController extends Controller
@@ -50,9 +54,11 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        $this->model->setNotif();
         $approval = ($request->input('type') == 'approval') ? true : false;
+        $where = [];
         $data = [
-            'result' =>  $this->model->all(),
+            'result' => ($approval) ? $this->model->notApproved() : $this->model->list(),
             'page' => $this->page,
             'title' => ($approval) ? 'SPK To Approve' : 'SPK List',
             'approval' => $approval
@@ -71,9 +77,10 @@ class OrderController extends Controller
             'page' => $this->page,
             'carType' => CarType::all(),
             'leasing' => Leasing::all(),
+            'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
             'dealer' => UserDealer::where('user_id', Auth::id())->get(),
-            'init' => $this->initValue($type = 'create')
+            'init' => $this->initValue($type = 'create'),
         ];
 
         return view($this->module.".create", $data);
@@ -107,6 +114,13 @@ class OrderController extends Controller
 
         $createPrice = OrderPrice::createData($create);
 
+        //CREATE LOG
+        OrderLog::create([
+            'order_id'      => $createHead->id,
+            'desc'          => 'Created',
+            'created_by'    => Auth::id()
+        ]);
+
 
         if($create['payment_method'] == 2) {
             $createCredit = OrderCredit::createData($create);
@@ -124,11 +138,13 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
+        $this->model->setNotif();
         $data = [
             'page' => $this->page,
             'row' => $this->model->find($id),
             'carType' => CarType::all(),
             'leasing' => Leasing::all(),
+            'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
             'dealer' => UserDealer::where('user_id', Auth::id())->get(),
             'init' => $this->initValue($type = 'update', $id)
@@ -164,6 +180,16 @@ class OrderController extends Controller
 
         $updatePrice = OrderPrice::updateData($id, $update);
 
+        // DELETE ALL APPROVAL
+        OrderApproval::where('order_id', $id)->delete();
+
+        //CREATE LOG
+        OrderLog::create([
+            'order_id'      => $id,
+            'desc'          => 'Updated',
+            'created_by'    => Auth::id()
+        ]);
+
         $update['order_id'] = $id;
         $update['created_by'] = Auth::id();
         OrderCredit::where('order_id', $id)->delete();
@@ -189,24 +215,6 @@ class OrderController extends Controller
     }
 
     /**
-     * @param $id
-     * @param $status
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function changeStatus($id, $status) {
-        $data = $this->model->find($id);
-
-        $data->status = $status;
-
-        $desc = ($status == 1) ? 'activate' : 'deactivate';
-
-        $data->save();
-
-        $message = setDisplayMessage('success', "Success to $desc ".$this->page);
-        return redirect(route($this->page.'.index'))->with('displayMessage', $message);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -214,6 +222,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
+        $this->model->setNotif();
         $data = [
             'page' => $this->page,
             'title' => 'Surat Pesanan Kendaraan',
@@ -223,7 +232,7 @@ class OrderController extends Controller
             'bbn' => Bbn::all(),
             'dealer' => UserDealer::where('user_id', Auth::id())->get(),
             'init' => $this->initValue($type = 'update', $id),
-            'approver' => ApprovalSetting::orderBy('level')->get(), 
+            'approver' => PermissionRole::getSPKApprover(), 
             'approval'  => OrderApproval::getOrderApproval($id),
             'toApprove' => OrderApproval::eligibleToApprove($this->model->find($id)),
             'authId'    => Auth::id()
@@ -291,7 +300,7 @@ class OrderController extends Controller
                 'year_duration'         => old('year_duration'),
                 'owner_name'            => old('owner_name'),
                 'interest_rate'         => old('interest_rate'),
-                'admin_cost'            => old('admin_cost'),
+                'admin_cost'            => (old('admin_cost')) ? old('admin_cost') : moneyFormat(DefaultAdminFee::getCost()),
                 'insurance_cost'        => old('insurance_cost'),
                 'installment_cost'      => old('installment_cost'),
                 'other_cost'            => old('other_cost'),
@@ -361,9 +370,17 @@ class OrderController extends Controller
 
         $approve = OrderApproval::create([
             'order_id'  => $orderId,
-            'level_approved' => $level,
+            'level_approved' => 0,
+            'role_name' => $level,
             'job_position_id' => $user['job_position_id'],
             'approved_by'   => $user['id']
+        ]);
+
+        //CREATE LOG
+        OrderLog::create([
+            'order_id'      => $orderId,
+            'desc'          => 'Approved',
+            'created_by'    => Auth::id()
         ]);
 
         $message = setDisplayMessage('success', "Success to approve SPK");

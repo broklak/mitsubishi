@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\User;
-use App\Models\JobPosition;
+use App\Role;
+use App\RoleUser;
 use App\Models\Dealer;
 use App\Models\UserDealer;
 
@@ -59,7 +60,7 @@ class UserController extends Controller
     {
         $data = [
             'page' => $this->page,
-            'position' => JobPosition::all(),
+            'position' => Role::all(),
             'dealer' => Dealer::all(),
         ];
 
@@ -78,7 +79,6 @@ class UserController extends Controller
             'first_name'     => 'required',
             'last_name'     => 'required',
             'username'     => 'required|unique:users',
-            'job_position_id'     => 'required',
             'dealer_id'     => 'required',
             'password' => 'required|string|min:4',
         ]);
@@ -86,7 +86,7 @@ class UserController extends Controller
         $create = [
             'first_name'  => $request->input('first_name'),
             'last_name'  => $request->input('last_name'),
-            'job_position_id'  => $request->input('job_position_id'),
+            'job_position_id'  => 0,
             'username'  => $request->input('username'),
             'password' => bcrypt($request->input('password')),
             'created_by' => Auth::id()
@@ -96,6 +96,9 @@ class UserController extends Controller
 
         // INSERT USER DEALER MAPPING
         $userDealer = UserDealer::insert($user->id, $request->input('dealer_id'));
+
+        $role = $request->input('roles');
+        $this->assignRole($role, $user);
 
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -117,9 +120,10 @@ class UserController extends Controller
         $data = [
             'page' => $this->page,
             'row' => $this->model->find($id),
-            'position' => JobPosition::all(),
+            'position' => Role::all(),
             'dealer' => Dealer::all(),
-            'assignDealer' => $activeDealer
+            'assignDealer' => $activeDealer,
+            'validRole' => RoleUser::getRoleForUser($id)
         ];
 
         return view($this->module.".edit", $data);
@@ -136,7 +140,6 @@ class UserController extends Controller
     {
         $this->validate($request,[
             'first_name'     => 'required',
-            'job_position_id'     => 'required',
             'dealer_id'     => 'required',
             'last_name'     => 'required'
         ]);
@@ -146,7 +149,7 @@ class UserController extends Controller
         $update = [
             'first_name'  => $request->input('first_name'),
             'last_name'  => $request->input('last_name'),
-            'job_position_id'  => $request->input('job_position_id'),
+            'job_position_id'  => 0,
             'updated_by' => Auth::id()
         ];
 
@@ -158,6 +161,9 @@ class UserController extends Controller
 
         // UPDATE USER DEALER MAPPING
         $userDealer = UserDealer::insert($id, $request->input('dealer_id'));
+
+        $role = $request->input('roles');
+        $this->assignRole($role, $data);
 
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -192,5 +198,12 @@ class UserController extends Controller
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
+    }
+
+    protected function assignRole($role, $user) {
+        RoleUser::where('user_id', $user->id)->delete();
+        foreach ($role as $key => $value) {
+            $user->attachRole($value);
+        }
     }
 }

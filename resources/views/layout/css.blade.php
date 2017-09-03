@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{{ asset('lte') }}/bower_components/font-awesome/css/font-awesome.min.css">
   <!-- Ionicons -->  <link rel="stylesheet" href="{{ asset('lte') }}/bower_components/Ionicons/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('lte') }}/dist/css/AdminLTE.css?v=0.9">
+  <link rel="stylesheet" href="{{ asset('lte') }}/dist/css/AdminLTE.css?v=1.0">
 
   <link rel="stylesheet" href="{{ asset('lte') }}/dist/css/skins/skin-red.css?v=0.8">
 

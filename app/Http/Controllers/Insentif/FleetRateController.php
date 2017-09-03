@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Master;
+namespace App\Http\Controllers\Insentif;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\JobPosition;
+use App\Models\FleetRate;
 
-
-class JobPositionController extends Controller
+class FleetRateController extends Controller
 {
     /**
      * @var string
@@ -27,9 +26,9 @@ class JobPositionController extends Controller
 
 
     public function __construct() {
-        $this->model = new JobPosition();
-        $this->module = 'master.job-position';
-        $this->page = 'job-position';
+        $this->model = new FleetRate();
+        $this->module = 'master.fleet-rate';
+        $this->page = 'fleet-rate';
         $this->middleware('auth');
     }
 
@@ -42,7 +41,7 @@ class JobPositionController extends Controller
     {
         $data = [
             'result' => $this->model->all(),
-            'page' => $this->page
+            'page' => $this->page,
         ];
         return view($this->module . ".index", $data);
     }
@@ -70,11 +69,11 @@ class JobPositionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name'     => 'required'
+            'rate'     => 'required|numeric'
         ]);
 
         $create = [
-            'name'  => $request->input('name'),
+            'rate'  => $request->input('rate'),
             'created_by' => Auth::id()
         ];
 
@@ -110,50 +109,19 @@ class JobPositionController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'name'     => 'required'
+            'rate'     => 'required|numeric'
         ]);
 
         $data = $this->model->find($id);
 
         $update = [
-            'name'  => $request->input('name'),
+            'rate'  => $request->input('rate'),
             'updated_by' => Auth::id()
         ];
 
         $data->update($update);
 
         $message = setDisplayMessage('success', "Success to update ".$this->page);
-        return redirect(route($this->page.'.index'))->with('displayMessage', $message);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $this->model->find($id)->delete();
-        $message = setDisplayMessage('success', "Success to delete ".$this->page);
-        return redirect(route($this->page.'.index'))->with('displayMessage', $message);
-    }
-
-    /**
-     * @param $id
-     * @param $status
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function changeStatus($id, $status) {
-        $data = $this->model->find($id);
-
-        $data->status = $status;
-
-        $desc = ($status == 1) ? 'activate' : 'deactivate';
-
-        $data->save();
-
-        $message = setDisplayMessage('success', "Success to $desc ".$this->page);
-        return redirect(route($this->page.'.index'))->with('displayMessage', $message);
+        return redirect(route($this->page.'.edit', ['id' => $id]))->with('displayMessage', $message);
     }
 }

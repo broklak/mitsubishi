@@ -79,6 +79,7 @@ class CarTypeController extends Controller
         $create = [
             'name'  => $request->input('name'),
             'model_id'  => $request->input('model_id'),
+            'insentif_amount'  => 0,
             'created_by' => Auth::id()
         ];
 
@@ -124,6 +125,7 @@ class CarTypeController extends Controller
         $update = [
             'name'  => $request->input('name'),
             'model_id'  => $request->input('model_id'),
+            'insentif_amount'  => 0,
             'updated_by' => Auth::id()
         ];
 

@@ -16,14 +16,14 @@ class OrderApproval extends Model
      * @var array
      */
     protected $fillable = [
-       'order_id', 'level_approved', 'approved_by', 'job_position_id'
+       'order_id', 'level_approved', 'approved_by', 'job_position_id', 'role_name'
     ];
 
     public static function getOrderApproval($orderId) {
         $data = parent::where('order_id', $orderId)->get();
         $approval = [];
         foreach ($data as $key => $value) {
-            $approval[] = $value->job_position_id;
+            $approval[] = $value->role_name;
         }
 
         return $approval;
@@ -31,7 +31,6 @@ class OrderApproval extends Model
 
     public static function eligibleToApprove($order) {
         $userData = Auth::user();
-        $position = $userData['job_position_id'];
 
         // CHECK IF USER IS ASSIGNED TO DEALER
         $validDealer = UserDealer::where('user_id', $userData['id'])->where('dealer_id', $order->dealer_id)->first();
@@ -40,15 +39,16 @@ class OrderApproval extends Model
         }
 
         // CHECK IF USER IS ONE OF APPROVER
-        $validApprover = ApprovalSetting::where('job_position_id', $userData['job_position_id'])->first();
-        if(!isset($validApprover->id)) {
+        if(!$userData->can('approve.spk')) {
             return false;
-        }        
+        }
 
         // CHECK IF ORDER ID HAS NOT BEEN APPROVED BY THIS USER
-        $checkApproval = parent::where('order_id', $order->id)->where('job_position_id', $userData['job_position_id'])->first();
-        if(isset($checkApproval->id)) {
-            return false;
+        $checkApproval = parent::where('order_id', $order->id)->get();
+        foreach ($checkApproval as $key => $value) {
+            if($userData->hasRole($value->role_name)) {
+                return false;
+            }            
         }        
 
         return true;

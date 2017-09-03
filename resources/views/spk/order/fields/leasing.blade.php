@@ -1,29 +1,34 @@
 <div class="col-md-6" id="leasing-container" style="display:{{($init['payment_method'] == 2) ? 'block' : 'none'}}">
 	          	<div class="box box-info">
 	          		<div class="box-header with-border">
-						<h3 class="box-title">Leasing Data</h3>
+						<h3 class="box-title pull-left">Leasing Data</h3>
+						<a class="btn btn-default pull-right" onclick="clearInterestFormula()">Clear Formula</a>
 					</div>
 	          		<div class="box-body">
 		        		<div class="form-group">
 			               <label for="leasing_id" class="col-sm-3 control-label">Leasing</label>
 			               <div class="col-sm-9">
-				               <select name="leasing_id" class="form-control">
-				               		<option value="0">Choose Leasing</option>
+				               <select name="leasing_id" id="leasing_id" class="form-control">
+				               		<option>Choose Leasing</option>
 				               		@foreach($leasing as $key => $val)
 				               		<option @if($init['leasing_id'] == $val->id) selected="selected" @endif value="{{$val->id}}">{{$val->name}}</option>
 				               		@endforeach
+				               		<option @if($init['leasing_id'] == 0) selected="selected" @endif value="0">Other Leasing</option>
 				               </select>
+				               @foreach($leasing as $key => $val)
+				               <input type="hidden" id="admin_cost_leasing_{{$val->id}}" value="{{$val->admin_cost}}" />
+				               @endforeach
+				               <input type="hidden" id="admin_cost_leasing_0" value="{{$init['admin_cost']}}" />
 			               </div>
 			            </div>
 			            <div class="form-group">
 			               <label for="year_duration" class="col-sm-3 control-label">Credit Duration</label>
 			               <div class="col-sm-9">
-				               <select name="year_duration" class="form-control">
+				               <select name="year_duration" id="credit_duration" class="form-control">
 				               		<option value="0">Choose Duration</option>
-				               		<option @if($init['year_duration'] == 1) selected="selected" @endif value="1">1 Year</option>
-				               		<option @if($init['year_duration'] == 2) selected="selected" @endif value="2">2 Years</option>
-				               		<option @if($init['year_duration'] == 3) selected="selected" @endif value="3">3 Years</option>
-				               		<option @if($init['year_duration'] == 4) selected="selected" @endif value="4">4 Years</option>
+				               		@foreach($months as $key => $val)
+				               		<option @if($init['year_duration'] == $val->months) selected="selected" @endif value="{{$val->months}}">{{$val->months}} Months</option>
+				               		@endforeach
 				               </select>
 			               </div>
 			            </div>
@@ -34,7 +39,7 @@
 			               </div>
 			            </div>
 			            <div class="form-group">
-			               <label for="interest_rate" class="col-sm-3 control-label">Interest Rate</label>
+			               <label for="interest_rate" class="col-sm-3 control-label">Interest Rate (%)</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="interest_rate" value="{{$init['interest_rate']}}" id="interest_rate" placeholder="Enter Rate Percentage">
 			               </div>

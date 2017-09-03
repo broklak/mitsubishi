@@ -9,7 +9,7 @@
 		                  <div class="col-sm-9">
 		                  	<label class="radio-inline"><input @if($init['price_type'] == 1) checked="checked" @endif type="radio" value="1" name="price_type">Off The Road</label>
 		                  	<label class="radio-inline"><input @if($init['price_type'] == 2) checked="checked" @endif type="radio" value="2" name="price_type">On The Road</label>
-		                  	<input type="hidden" id="price_type" />
+		                  	<input type="hidden" id="price_type" value="{{$init['price_type']}}" />
 		                  </div>
 		                </div>
 		        		<div class="form-group" id="oftr-cont" style="display:{{($init['price_type'] == 1) ? 'block' : 'none'}}">

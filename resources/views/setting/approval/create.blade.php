@@ -25,7 +25,7 @@
 	                  <div class="col-sm-10">
 	                  	<select name="job_position_id" class="form-control">
 	                  		@foreach($role as $key => $val)
-	                  		<option value="{{$val->id}}">{{$val->name}}</option>
+	                  		<option value="{{$val->id}}">{{$val->display_name}}</option>
 	                  		@endforeach
 	                  	</select>
 	                  </div>

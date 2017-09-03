@@ -18,6 +18,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Category</th>
+                  <th>Insentif Amount</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -27,6 +28,7 @@
                 <tr>
                 <td>{{$val->name}}</td>
                 <td>{{\App\Models\CarCategory::getName($val->category_id)}}</td>
+                <td>{{moneyFormat($val->insentif_amount)}}</td>
                 <td>{!!setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">

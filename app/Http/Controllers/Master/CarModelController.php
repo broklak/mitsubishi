@@ -79,6 +79,7 @@ class CarModelController extends Controller
         $create = [
             'name'  => $request->input('name'),
             'category_id'  => $request->input('category_id'),
+            'insentif_amount'  => parseMoneyToInteger($request->input('insentif_amount')),
             'created_by' => Auth::id()
         ];
 
@@ -124,6 +125,7 @@ class CarModelController extends Controller
         $update = [
             'name'  => $request->input('name'),
             'category_id'  => $request->input('category_id'),
+            'insentif_amount'  => parseMoneyToInteger($request->input('insentif_amount')),
             'updated_by' => Auth::id()
         ];
 

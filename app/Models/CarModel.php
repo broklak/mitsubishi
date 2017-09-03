@@ -17,7 +17,7 @@ class CarModel extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'category_id', 'status', 'created_by', 'updated_by'
+        'name', 'category_id', 'insentif_amount', 'status', 'created_by', 'updated_by'
     ];
 
     /**
@@ -35,5 +35,10 @@ class CarModel extends Model
     public static function getName($id) {
         $data = parent::find($id);
         return $data->name;
+    }
+
+    public static function getCategory($id) {
+        $data = parent::find($id);
+        return (isset($data->category_id)) ? $data->category_id : null;
     }
 }

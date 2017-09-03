@@ -43,12 +43,11 @@
 	                </div>
 
 	                <div class="form-group">
-	                  <label for="file" class="col-sm-4 control-label">Position</label>
+	                  <label for="file" class="col-sm-4 control-label">Access Role (You can select more than 1)</label>
 	                  <div class="col-sm-8">
-	                  	<select name="job_position_id" class="form-control">
-	                  		<option value="0" disabled="disabled" selected="selected">Choose Position</option>
+	                  	<select name="roles[]" multiple class="form-control">
 	                  		@foreach($position as $key => $val)
-	                  		<option @if($row->job_position_id == $val->id) selected @endif value="{{$val->id}}">{{$val->name}}</option>
+	                  		<option @if(in_array($val->id, $validRole)) selected @endif value="{{$val->id}}">{{$val->display_name}}</option>
 	                  		@endforeach
 	                  	</select>
 	                  </div>

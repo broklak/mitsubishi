@@ -19,9 +19,10 @@
                 <thead>
                 <tr>
                   <th>SPK Number</th>
+                  <th>Date</th>
                   <th>Customer</th>
                   <th>Car</th>
-                  <th>Status</th>
+                  <!-- <th>Status</th> -->
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -29,9 +30,10 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{$val->spk_code}}</td>
-                <td>{{\App\Models\Customer::getName($val->customer_id)}}</td>
+                <td>{{date('j F Y', strtotime($val->date))}}</td>
+                <td>{{$val->first_name . ' ' . $val->last_name}}</td>
                 <td>{{\App\Models\CarModel::getName($val->model_id).' '.\App\Models\CarType::getName($val->type_id)}}</td>
-                <td>{!!setActivationStatus($val->status)!!}</td>
+                <!-- <td>{!! ($val->is_approved == 0) ? setActivationStatus(0, 'Approved') : setActivationStatus(1, 'Approved') !!}</td> -->
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>

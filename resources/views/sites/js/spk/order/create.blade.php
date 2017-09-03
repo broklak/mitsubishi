@@ -11,7 +11,15 @@
     	} else {
     		$('#leasing-container').show();
     	}
-    	
+    	clearInterestFormula();
+    });
+
+    $('#type_id').change(function() {
+        clearInterestFormula();
+    });
+
+    $('#car_year').keyup(function() {
+        clearInterestFormula();
     });
 
     $('input[name="price_type"]').click(function(){
@@ -23,18 +31,35 @@
             $('#oftr-cont').hide(); 
         }
         $('#price_type').val($(this).val());
+        clearInterestFormula();
     });
 
     $('#dp_amount').keyup(function(){
         calculateDPPercent();
+        clearInterestFormula();
     });
 
     $('#dp_percentage').keyup(function(){
         calculateDPAmount();
+        clearInterestFormula();
     });
 
     $('#price_off, #discount, #price_on, #cost_surat').keyup(function(){
         calculateTotalSales();
+    });
+
+    $('#interest_rate, #admin_cost, #installment_cost, #insurance_cost, #other_cost').keyup(function(){
+        calculateTotalDP();
+    });
+
+    $('#leasing_id').change(function(){
+        var val = $(this).val();
+        var cost = $('#admin_cost_leasing_'+val).val();
+        $('#admin_cost').val(toMoney(cost));
+    });
+
+    $('#leasing_id, #credit_duration').change(function() {
+        getInterestRate();
     });
 
   });
@@ -88,7 +113,9 @@
             var dpAmount = calculateDPAmount();
             calculateDPPercent();
             calculateUnpaid(total, dpAmount);
+            calculateTotalDP();
         }
+        clearInterestFormula();
     }
 
     function calculateUnpaid(total, dpAmount) {
@@ -98,5 +125,60 @@
 
     function toMoney(num) {
         return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
+
+    function toInt(money) {
+         return Number(money.replace(/[^0-9\.-]+/g,""));
+    }
+
+    function getInterestRate() {
+        var dp_percentage = $('#dp_percentage').val();
+        var dp_amount = $('#dp_amount').val();
+        var leasing_id = $('#leasing_id').val();
+        var duration = $('#credit_duration').val();
+        var admin_cost = $('#admin_cost').val();
+        var other_cost = $('#other_cost').val();
+        var type_id = $('#type_id').val();
+        var dealer_id = $('#dealer_id').val();
+        var karoseri = $('#karoseri_price').val();
+        var car_year = $('#car_year').val();
+        var unpaid = $('#total_unpaid').val();
+        var total_sales_price = $('#total_sales_price').val();
+
+        if(dp_percentage != undefined && leasing_id != undefined && duration != undefined && type_id != undefined) {
+            $.ajax({
+                method: 'GET',
+                url: '{{route('ajax.getLeasingFormula')}}',
+                data: {'dp':dp_percentage, 'leasing':leasing_id, 'duration':duration, 'car_type':type_id, 'karoseri':karoseri, 'dealer':dealer_id, 'unpaid':unpaid, 'total_sales':total_sales_price, 'car_year': car_year},
+                success: function(result) {
+                    obj = JSON.parse(result);
+                    $('#interest_rate').val(toMoney(obj.interest));
+                    $('#installment_cost').val(toMoney(obj.installment));
+                    $('#insurance_cost').val(toMoney(obj.insurance));
+                    calculateTotalDP();
+                }
+            });
+        }
+    }
+
+    function calculateTotalDP() {
+        var dp_amount = toInt($('#dp_amount').val());
+        var admin_cost = toInt($('#admin_cost').val());
+        var other_cost = toInt($('#other_cost').val());
+        var installment = toInt($('#installment_cost').val());
+        var insurance = toInt($('#insurance_cost').val());
+
+        var total = parseInt(dp_amount) + parseInt(installment) + parseInt(admin_cost) + parseInt(other_cost) + parseInt(insurance);
+        $('#total_down_payment').val(toMoney(total));
+    }
+
+    function clearInterestFormula() {
+        $('#leasing_id').val('');
+        $('#credit_duration').val('0');
+        $('#interest_rate').val('0');
+        $('#installment_cost').val('0');
+        $('#insurance_cost').val('0');
+        $('#admin_cost').val('0');
+        $('#total_down_payment').val('0');
     }
 </script>

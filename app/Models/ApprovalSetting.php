@@ -25,7 +25,7 @@ class ApprovalSetting extends Model
             $approver[] = $value->job_position_id;
         }
 
-        $nonApprover = JobPosition::whereNotIn('id', $approver)->get();
+        $nonApprover = Role::whereNotIn('id', $approver)->get();
 
         return $nonApprover;
     }

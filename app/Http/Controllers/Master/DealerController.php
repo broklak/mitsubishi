@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
 use App\Models\Dealer;
-
+use App\Models\Area;
 
 class DealerController extends Controller
 {
@@ -57,7 +57,8 @@ class DealerController extends Controller
     {
         $data = [
             'page' => $this->page,
-            'company' => Company::all()
+            'company' => Company::all(),
+            'area' => Area::all()
         ];
 
         return view($this->module.".create", $data);
@@ -74,6 +75,7 @@ class DealerController extends Controller
         $this->validate($request,[
             'name'     => 'required',
             'company_id'     => 'required',
+            'area'     => 'required'
         ]);
 
         $create = [
@@ -82,6 +84,7 @@ class DealerController extends Controller
             'contact_name'  => $request->input('contact_name'),
             'phone'  => $request->input('phone'),
             'fax'  => $request->input('fax'),
+            'area' => $request->input('area'),
             'email'  => $request->input('email'),
             'address'  => $request->input('address'),
             'created_by' => Auth::id()
@@ -104,7 +107,8 @@ class DealerController extends Controller
         $data = [
             'page' => $this->page,
             'row' => $this->model->find($id),
-            'company' => Company::all()
+            'company' => Company::all(),
+            'area' => Area::all()
         ];
 
         return view($this->module.".edit", $data);
@@ -122,6 +126,7 @@ class DealerController extends Controller
         $this->validate($request,[
             'name'     => 'required',
             'company_id'     => 'required',
+            'area'     => 'required'
         ]);
 
         $data = $this->model->find($id);
@@ -132,6 +137,7 @@ class DealerController extends Controller
             'contact_name'  => $request->input('contact_name'),
             'phone'  => $request->input('phone'),
             'fax'  => $request->input('fax'),
+            'area' => $request->input('area'),
             'email'  => $request->input('email'),
             'address'  => $request->input('address'),
             'updated_by' => Auth::id()

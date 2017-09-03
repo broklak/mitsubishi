@@ -372,14 +372,14 @@
 	       			<tbody>
 	       				<tr>
 	       					@foreach($approver as $key => $val)
-	       					<td>{{\App\Models\JobPosition::getName($val->job_position_id)}}</td>
+	       					<td>{{\App\Role::getName($key)}}</td>
 	       					@endforeach
 	       				</tr>
 	       				<tr class="sign" style="text-align:center;border:1px solid #555"> 
 	       					@foreach($approver as $key => $val)
-	       						@if($toApprove && $authId == $val->job_position_id)
-	       						<td><a onclick="return confirm('You will approve this SPK, continue')" href="{{route('order.approve', ['id' => $row->id, 'level' => $val->level])}}" class="btn btn-primary">APPROVE SPK</a></td>
-	       						@elseif(in_array($val->job_position_id, $approval))
+	       						@if($toApprove && Auth::user()->hasRole($val))
+	       						<td><a onclick="return confirm('You will approve this SPK, continue')" href="{{route('order.approve', ['id' => $row->id, 'level' => $val])}}" class="btn btn-primary">APPROVE SPK</a></td>
+	       						@elseif(in_array($val, $approval))
 	       						<td><i class="fa fa-check fa-4x"></i></td>
 	       						@else
 	       						<td>&nbsp;</td>

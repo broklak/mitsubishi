@@ -26,7 +26,7 @@
                   <tbody>
                   <?php $__currentLoopData = $result; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <tr>
-                  <td><?php echo e(\App\Models\JobPosition::getName($val->job_position_id)); ?></td>
+                  <td><?php echo e(\App\Role::getName($val->job_position_id)); ?></td>
                   <td>
                     <input style="width:30px;text-align:center" type="number" name="level[<?php echo e($val->id); ?>]" value="<?php echo e($val->level); ?>" />
                   </td>

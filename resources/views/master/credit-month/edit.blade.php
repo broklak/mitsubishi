@@ -21,9 +21,9 @@
 	            	{{csrf_field()}}
 	              <div class="box-body">
 	                <div class="form-group">
-	                  <label for="name" class="col-sm-2 control-label">Name</label>
+	                  <label for="months" class="col-sm-2 control-label">Months</label>
 	                  <div class="col-sm-10">
-	                    <input type="text" class="form-control" name="name" value="{{$row->name}}" id="name" placeholder="Name">
+	                    <input type="text" class="form-control" name="months" value="{{$row->months}}" id="months" placeholder="Total Months">
 	                  </div>
 	                </div>
 
