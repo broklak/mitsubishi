@@ -39,6 +39,7 @@
 	                  <div class="col-sm-10">
 	                  	<label class="radio-inline"><input @if(old('id_type') == 1) selected="selected" @endif type="radio" value="1" name="id_type">KTP</label>
 	                  	<label class="radio-inline"><input @if(old('id_type') == 2) selected="selected" @endif type="radio" value="2" name="id_type">SIM</label>
+	                  	<label class="radio-inline"><input @if(old('id_type') == 3) selected="selected" @endif type="radio" value="3" name="id_type">Passport</label>
 	                  </div>
 	                </div>
 

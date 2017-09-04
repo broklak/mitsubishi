@@ -52,6 +52,10 @@
         calculateTotalDP();
     });
 
+    $('#interest_rate').keyup(function(){
+        calculateInstallment($(this));
+    });
+
     $('#leasing_id').change(function(){
         var val = $(this).val();
         var cost = $('#admin_cost_leasing_'+val).val();
@@ -161,6 +165,26 @@
         }
     }
 
+    function calculateInstallment(interest) {
+        var rate = parseInt(interest.val());
+        var month = parseInt($('#credit_duration').val());
+        var year = Math.floor(month / 12);
+        var unpaid = parseInt(toInt($('#total_unpaid').val()));
+
+        console.log(rate);
+        console.log(month);
+        console.log(year);
+        console.log(unpaid);
+
+        var totalInterest = (rate / 100 * unpaid) * year;
+        var unpaidAndInterest = unpaid + totalInterest;
+        var installment = Math.floor(unpaidAndInterest / month);
+
+        $('#installment_cost').val(toMoney(installment));
+
+        calculateTotalDP();
+    }
+
     function calculateTotalDP() {
         var dp_amount = toInt($('#dp_amount').val());
         var admin_cost = toInt($('#admin_cost').val());
@@ -179,6 +203,7 @@
         $('#installment_cost').val('0');
         $('#insurance_cost').val('0');
         $('#admin_cost').val('0');
+        $('#other_cost').val('0');
         $('#total_down_payment').val('0');
     }
 </script>

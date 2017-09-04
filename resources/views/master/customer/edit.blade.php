@@ -8,7 +8,7 @@
     	<div class="col-md-12">
 			<div class="box box-info">
 	            <div class="box-header with-border">
-	              <h3 class="box-title">Create {{ucwords(str_replace('-',' ', $page))}}</h3>
+	              <h3 class="box-title">Edit {{ucwords(str_replace('-',' ', $page))}}</h3>
 	            </div>
 	            <!-- /.box-header -->
 	            <!-- form start -->
@@ -40,6 +40,7 @@
 	                  <div class="col-sm-10">
 	                  	<label class="radio-inline"><input @if($row->id_type == 1) checked="checked" @endif type="radio" value="1" name="id_type">KTP</label>
 	                  	<label class="radio-inline"><input @if($row->id_type == 2) checked="checked" @endif type="radio" value="2" name="id_type">SIM</label>
+	                  	<label class="radio-inline"><input @if($row->id_type == 3) checked="checked" @endif type="radio" value="3" name="id_type">Passport</label>
 	                  </div>
 	                </div>
 
@@ -86,7 +87,10 @@
 	                </div>
 
 	                <div class="form-group">
-	                  @php $folder = ($row->id_type == 1) ? 'ktp' : 'sim'; @endphp
+	                  @php 
+	                  	$folder = ($row->id_type == 1) ? 'ktp' : 'sim'; 
+	                  	$folder = ($row->id_type == 3) ? 'passport' : $folder; 
+	                  @endphp
 	                  <div class="col-sm-2">
 		               	  <img style="width:170px;height:120px" src="{{ asset('images') . '/customer/' . $folder . '/' . $row->image }}" />
 		                  <label for="file" class="control-label">ID Image File</label>

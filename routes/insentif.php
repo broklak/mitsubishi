@@ -4,3 +4,4 @@ Route::get('insentif/do/change-type/{id}/{status}', 'Insentif\DeliveryOrderContr
 Route::get('insentif/do', 'Insentif\DeliveryOrderController@index')->name('delivery-order.index');
 Route::get('insentif/do/show/{id}', 'Insentif\DeliveryOrderController@show')->name('delivery-order.show');
 Route::resource('insentif/fleet-rate', 'Insentif\FleetRateController');
+Route::resource('insentif/sales-bonus', 'Insentif\SalesBonusController');

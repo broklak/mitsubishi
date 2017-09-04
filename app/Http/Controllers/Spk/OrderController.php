@@ -106,6 +106,17 @@ class OrderController extends Controller
             );
             $create['npwp_image'] = $name;
         }
+
+        if ($request->file('id_image')) {
+            $nameCust = $request->id_image->getClientOriginalName();
+            $folder = ($create['id_type'] == 1) ? 'ktp' : 'sim';
+            $folder = ($create['id_type'] == 3) ? 'passport' : $folder;
+            $request->id_image->move(
+                base_path() . '/public/images/customer/'.$folder.'/', $nameCust
+            );
+            $create['image'] = $nameCust;
+        }
+
         $create['customer_id'] = Customer::validateSpk($create);
 
         $createHead = $this->model->create($create);
@@ -174,6 +185,17 @@ class OrderController extends Controller
             );
             $update['npwp_image'] = $name;
         }
+
+        if ($request->file('id_image')) {
+            $nameCust = $request->id_image->getClientOriginalName();
+            $folder = ($update['id_type'] == 1) ? 'ktp' : 'sim';
+            $folder = ($update['id_type'] == 3) ? 'passport' : $folder;
+            $request->id_image->move(
+                base_path() . '/public/images/customer/'.$folder.'/', $nameCust
+            );
+            $update['image'] = $nameCust;
+        }
+
         $update['customer_id'] = Customer::validateSpk($update);
 
         $updateHead = $this->model->updateData($id, $update);
@@ -312,13 +334,21 @@ class OrderController extends Controller
         $customer = Customer::find($orderHead->customer_id);
         $orderPrice = OrderPrice::where('order_id', $orderId)->first();
         $orderCredit = OrderCredit::where('order_id', $orderId)->first();
-
+        if($customer->id_type == 1) {
+            $folder = 'ktp';
+        } else if($customer->id_type == 2) {
+            $folder = 'sim';
+        } else {
+            $folder = 'passport';
+        }
         return [
             'customer_name'         => $customer->first_name,
             'customer_last_name'    => $customer->last_name,
             'id_type'               => $customer->id_type,
             'id_number'             => $customer->id_number,
             'customer_address'      => $customer->address,
+            'folder_id_image'       => $folder,
+            'id_image'                 => $customer->image,
             'customer_phone'        => $customer->phone,
             'customer_npwp'         => $customer->npwp,
             'stnk_name'             => $orderHead->stnk_name,

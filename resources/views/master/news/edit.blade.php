@@ -8,7 +8,7 @@
     	<div class="col-md-12">
 			<div class="box box-info">
 	            <div class="box-header with-border">
-	              <h3 class="box-title">Create {{ucwords($page)}}</h3>
+	              <h3 class="box-title">Edit {{ucwords($page)}}</h3>
 	            </div>
 	            <!-- /.box-header -->
 	            <!-- form start -->

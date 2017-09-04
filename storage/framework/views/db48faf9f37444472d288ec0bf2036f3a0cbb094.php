@@ -59,7 +59,7 @@
             <ul class="dropdown-menu">
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="<?php echo e(route('user.edit', ['id' => Auth::id()])); ?>?type=profile" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="<?php echo e(url('/logout')); ?>" class="btn btn-default btn-flat">Sign out</a>

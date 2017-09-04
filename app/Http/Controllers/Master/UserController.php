@@ -110,8 +110,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
+        $type = $request->input('type');
         $getAssignDealer = UserDealer::where('user_id', $id)->get();
         $activeDealer = [];
         foreach ($getAssignDealer as $key => $value) {
@@ -123,6 +124,7 @@ class UserController extends Controller
             'position' => Role::all(),
             'dealer' => Dealer::all(),
             'assignDealer' => $activeDealer,
+            'type' => $type,
             'validRole' => RoleUser::getRoleForUser($id)
         ];
 
@@ -165,7 +167,15 @@ class UserController extends Controller
         $role = $request->input('roles');
         $this->assignRole($role, $data);
 
+        $type = $request->input('type');
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
+
+        if($type == 'profile') {
+            $message = setDisplayMessage('success', "Success to update your profile");
+            return redirect(route($this->page.'.edit', ['id' => $id]).'?type=profile')->with('displayMessage', $message);
+        }
+
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 

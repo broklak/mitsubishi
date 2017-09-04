@@ -45,7 +45,8 @@ class Customer extends Model
             'id_number' => $data['id_number'],
             'address'   => $data['customer_address'],
             'phone'     => $data['customer_phone'],
-            'npwp'      => $data['customer_npwp']
+            'npwp'      => $data['customer_npwp'],
+            'image'     => isset($data['image']) ? $data['image'] : null
         ];
 
         if(isset($validateId->id)) { // CUSTOMER EXIST THEN UPDATE DATA

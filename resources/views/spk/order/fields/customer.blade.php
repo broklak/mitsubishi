@@ -22,6 +22,17 @@
 	                  <div class="col-sm-9">
 	                  	<label class="radio-inline"><input @if($init['id_type'] == 1) checked="checked" @endif type="radio" value="1" name="id_type">KTP</label>
 	                  	<label class="radio-inline"><input @if($init['id_type'] == 2) checked="checked" @endif type="radio" value="2" name="id_type">SIM</label>
+	                  	<label class="radio-inline"><input @if($init['id_type'] == 3) checked="checked" @endif type="radio" value="3" name="id_type">Passport</label>
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                	@if(isset($init['id_image']))
+	                	<img style="width:150px;height:100px" src="{{ asset('images') . '/customer/' . $init['folder_id_image'] . '/' . $init['id_image'] }}" />
+	                	@endif
+	                  <label for="id_image" class="col-sm-3 control-label">ID Image</label>
+	                  <div class="col-sm-9">
+	                    <input type="file" class="form-control" name="id_image" id="id_image">
 	                  </div>
 	                </div>
 

@@ -93,6 +93,7 @@ class CustomerController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $folder = ($create['id_type'] == 1) ? 'ktp' : 'sim';
+            $folder = ($create['id_type'] == 3) ? 'passport' : $folder;
             $request->image->move(
                 base_path() . '/public/images/customer/'.$folder.'/', $name
             );
@@ -155,6 +156,7 @@ class CustomerController extends Controller
         if ($request->file('image')) {
             $name = $request->image->getClientOriginalName();
             $folder = ($update['id_type'] == 1) ? 'ktp' : 'sim';
+            $folder = ($update['id_type'] == 3) ? 'passport' : $folder;
             $request->image->move(
                 base_path() . '/public/images/customer/'.$folder.'/', $name
             );
@@ -196,5 +198,19 @@ class CustomerController extends Controller
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
+    }
+
+    public function image() {
+        $ktp        = $this->model->where('id_type', 1)->limit(2)->orderBy('updated_at', 'desc')->get();
+        $sim        = $this->model->where('id_type', 2)->limit(2)->orderBy('updated_at', 'desc')->get();
+        $passport   = $this->model->where('id_type', 3)->limit(2)->orderBy('updated_at', 'desc')->get();
+
+        $data = [
+            'ktp'   =>  $ktp,
+            'sim'   =>  $sim,
+            'passport'   =>  $passport,
+            'page'  =>  'image'
+        ];
+        return view($this->module . ".image", $data);
     }
 }

@@ -8,7 +8,7 @@
     	<div class="col-md-12">
 			<div class="box box-info">
 	            <div class="box-header with-border">
-	              <h3 class="box-title">Create {{ucwords(str_replace('-',' ', $page))}}</h3>
+	              <h3 class="box-title">Edit {{ucwords(str_replace('-',' ', $page))}}</h3>
 	            </div>
 	            <!-- /.box-header -->
 	            <!-- form start -->
@@ -17,6 +17,7 @@
 		                {{$message}}
 		            </div>
 		        @endforeach
+		        {!! session('displayMessage') !!}
 	            <form class="form-horizontal" action="{{route("$page.update", ['id' => $row->id])}}" method="post" enctype="multipart/form-data">
 	            	{{csrf_field()}}
 	              <div class="box-body">
@@ -39,6 +40,7 @@
 	                  <label for="file" class="col-sm-4 control-label">Password *Fill password if you want to change</label>
 	                  <div class="col-sm-8">
 	                    <input type="password" class="form-control" name="password" id="pass">
+	                    <input type="hidden" name="type" value="{{$type}}" />
 	                  </div>
 	                </div>
 
