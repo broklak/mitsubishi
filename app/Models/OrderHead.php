@@ -164,8 +164,9 @@ class OrderHead extends Model
         $userId = $user->id;
         $isSupervisor = $user->hasRole('supervisor');
         $isManager = $user->hasRole('manager');
+        $isSuperUser = $user->hasRole('super_admin');
 
-        if($isManager) {
+        if($isManager || $isSuperUser) {
             return $data;
         }
 
