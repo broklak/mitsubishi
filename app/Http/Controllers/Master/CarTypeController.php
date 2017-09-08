@@ -79,11 +79,13 @@ class CarTypeController extends Controller
         $create = [
             'name'  => $request->input('name'),
             'model_id'  => $request->input('model_id'),
-            'insentif_amount'  => 0,
+            'insentif_amount'  => parseMoneyToInteger($request->input('insentif_amount')),
             'created_by' => Auth::id()
         ];
 
         $this->model->create($create);
+
+        logUser('Create Car Type '.$create['name']);
 
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -125,11 +127,13 @@ class CarTypeController extends Controller
         $update = [
             'name'  => $request->input('name'),
             'model_id'  => $request->input('model_id'),
-            'insentif_amount'  => 0,
+            'insentif_amount'  => parseMoneyToInteger($request->input('insentif_amount')),
             'updated_by' => Auth::id()
         ];
 
         $data->update($update);
+
+        logUser('Update Car Type '.$update['name']);
 
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -143,8 +147,10 @@ class CarTypeController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->find($id)->delete();
+        $data = $this->model->find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Car Type '.$data->name);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -161,6 +167,8 @@ class CarTypeController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Car Type '.$data->name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

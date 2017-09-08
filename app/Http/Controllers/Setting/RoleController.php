@@ -81,6 +81,8 @@ class RoleController extends Controller
         $role->display_name = $request->input('name');
         $role->save();
 
+        logUser('Create Role '.$role->name);
+
         $permission = $request->input('permission');
         $this->assignPermission($permission, $role);
         
@@ -125,6 +127,8 @@ class RoleController extends Controller
 
         $data->save();
 
+        logUser('Update Role '.$data->name);
+
         $permission = $request->input('permission');
         $this->assignPermission($permission, $data);
 
@@ -141,6 +145,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         $role = Role::find($id);
+        logUser('Delete Role '.$role->name);
 
         $role->users()->sync([]); // Delete relationship data
         $role->perms()->sync([]); // Delete relationship data

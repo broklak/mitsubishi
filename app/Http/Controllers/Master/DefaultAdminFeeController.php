@@ -121,6 +121,8 @@ class DefaultAdminFeeController extends Controller
 
         $data->update($update);
 
+        logUser('Update Default Admin Fee');
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.edit', ['id' => $id]))->with('displayMessage', $message);
     }

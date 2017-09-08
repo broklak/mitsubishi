@@ -82,6 +82,8 @@ class BannerController extends Controller
 
         Banner::create($create);
 
+        logUser('Create Banner '.$create['name']);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -144,6 +146,8 @@ class BannerController extends Controller
 
         $data->update($update);
 
+        logUser('Update Banner '.$update['name']);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -156,8 +160,10 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        Banner::find($id)->delete();
+        $data = Banner::find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Banner '.$data->name);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -174,6 +180,8 @@ class BannerController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Banner '.$data->name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

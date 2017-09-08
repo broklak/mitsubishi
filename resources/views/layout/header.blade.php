@@ -32,20 +32,24 @@
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
-                  @if(session('spk_notif'))
-                  <li>
-                    <a href="{{route('order.index')}}?type=approval">
-                      <i class="fa fa-file"></i> {{session('spk_notif')}} SPK to Approve
-                    </a>
-                  </li>
-                  @endif
-                  @if(session('do_notif'))
-                  <li>
-                    <a href="{{route('delivery-order.index')}}?type=checked">
-                      <i class="fa fa-thumbs-o-up"></i> {{session('do_notif')}} DO to Check 
-                    </a>
-                  </li>
-                  @endif
+                  @permission('create.spk')
+                    @if(session('spk_notif'))
+                    <li>
+                      <a href="{{route('order.index')}}?type=approval">
+                        <i class="fa fa-file"></i> {{session('spk_notif')}} SPK to Approve
+                      </a>
+                    </li>
+                    @endif
+                  @endpermission
+                  @permission('*.do')
+                    @if(session('do_notif'))
+                    <li>
+                      <a href="{{route('delivery-order.index')}}?type=checked">
+                        <i class="fa fa-thumbs-o-up"></i> {{session('do_notif')}} DO to Check 
+                      </a>
+                    </li>
+                    @endif
+                  @endpermission
                 </ul>
               </li>
               <li class="footer"><a href="#">View all</a></li>

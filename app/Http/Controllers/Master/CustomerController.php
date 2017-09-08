@@ -102,6 +102,8 @@ class CustomerController extends Controller
 
         $this->model->create($create);
 
+        logUser('Create Customer '.$create['first_name'].' '.$create['last_name']);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -165,6 +167,8 @@ class CustomerController extends Controller
 
         $data->update($update);
 
+        logUser('Update Customer '.$update['first_name'] . ' ' . $update['last_name']);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -177,8 +181,10 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->find($id)->delete();
+        $data = $this->model->find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Customer '.$data->first_name . ' ' . $data->last_name);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -195,6 +201,8 @@ class CustomerController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Customer '.$data->first_name . ' ' . $data->last_name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

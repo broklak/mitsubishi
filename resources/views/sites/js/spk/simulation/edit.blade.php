@@ -19,6 +19,14 @@
         $('#admin_cost').val(toMoney(cost));
     });
 
+    $('#admin_cost, #insurance_cost, #other_cost').keyup(function(){
+        calculateTotalDP();
+    });
+
+    $('#interest_rate').keyup(function(){
+        calculateInstallment($(this));
+    });
+
   });
 
     function calculateDPPercent() {
@@ -128,4 +136,181 @@
         var total = parseInt(dp_amount) + parseInt(installment) + parseInt(admin_cost) + parseInt(insurance);
         $('#total_down_payment').val(toMoney(total));
     }
+
+    function calculateInstallment(interest) {
+        var rate = parseFloat(interest.val());
+        var month = parseInt($('#credit_duration').val());
+        var year = Math.floor(month / 12);
+        var unpaid = parseInt(toInt($('#total_unpaid').val()));
+
+        console.log(rate);
+        console.log(month);
+        console.log(year);
+        console.log(unpaid);
+
+        var totalInterest = (rate / 100 * unpaid) * year;
+        var unpaidAndInterest = unpaid + totalInterest;
+        var installment = Math.floor(unpaidAndInterest / month);
+
+        $('#installment_cost').val(toMoney(installment));
+
+        calculateTotalDP();
+    }
 </script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $( function() {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "name", "customer_phone" )
+          .addClass( "custom-combobox-input form-control" )
+          .autocomplete({
+            delay: 0,
+            minLength: 7,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            classes: {
+              "ui-tooltip": "ui-state-highlight"
+            }
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            // SELECT HANDLER
+            var val = ui.item.option.value;
+
+            // POPULATE
+            $('#customer_name').val($('#firstname-'+val).val());
+            $('#customer_last_name').val($('#lastname-'+val).val());
+            $('#id_number').val($('#idnumber-'+val).val());
+            $('#address').val($('#address-'+val).val());
+            $('#customer_npwp').val($('#npwp-'+val).val());
+            $("input[name='id_type'][value='"+$('#idtype-'+val).val()+"']").prop('checked', 'checked');
+            $('#id_image').attr('src', $('#idimage-'+val).val()).show();
+
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a style='display:none'>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .on( "mousedown", function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .on( "click", function() {
+            input.trigger( "focus" );
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+            return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.autocomplete( "instance" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+ 
+    $( "#combobox" ).combobox();
+
+    $('#type_id').autocomplete({
+        source: "{{route('ajax.getCarType')}}",
+        minLength: 3,
+        select: function( event, data) {
+            $('#type_id_real').val(data.item.id);
+        }
+    });
+  } );
+  </script>

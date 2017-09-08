@@ -45,7 +45,7 @@ class UserController extends Controller
     public function index()
     {
         $data = [
-            'result' => $this->model->all(),
+            'result' => $this->model->where('deleted_at', null)->get(),
             'page' => $this->page
         ];
         return view($this->module . ".index", $data);
@@ -62,6 +62,7 @@ class UserController extends Controller
             'page' => $this->page,
             'position' => Role::all(),
             'dealer' => Dealer::all(),
+            'supervisor' => Role::getSupervisor()
         ];
 
         return view($this->module.".create", $data);
@@ -80,6 +81,7 @@ class UserController extends Controller
             'last_name'     => 'required',
             'username'     => 'required|unique:users',
             'dealer_id'     => 'required',
+            'start_work'     => 'required',
             'password' => 'required|string|min:4',
         ]);
 
@@ -87,6 +89,8 @@ class UserController extends Controller
             'first_name'  => $request->input('first_name'),
             'last_name'  => $request->input('last_name'),
             'job_position_id'  => 0,
+            'supervisor_id'  => ($request->input('supervisor_id') != '0') ? $request->input('supervisor_id') : null,
+            'start_work'  => $request->input('start_work'),
             'username'  => $request->input('username'),
             'password' => bcrypt($request->input('password')),
             'created_by' => Auth::id()
@@ -96,6 +100,8 @@ class UserController extends Controller
 
         // INSERT USER DEALER MAPPING
         $userDealer = UserDealer::insert($user->id, $request->input('dealer_id'));
+
+        logUser('Create User '.$create['first_name'].' '.$create['last_name']);
 
         $role = $request->input('roles');
         $this->assignRole($role, $user);
@@ -123,6 +129,7 @@ class UserController extends Controller
             'row' => $this->model->find($id),
             'position' => Role::all(),
             'dealer' => Dealer::all(),
+            'supervisor' => Role::getSupervisor(),
             'assignDealer' => $activeDealer,
             'type' => $type,
             'validRole' => RoleUser::getRoleForUser($id)
@@ -143,7 +150,8 @@ class UserController extends Controller
         $this->validate($request,[
             'first_name'     => 'required',
             'dealer_id'     => 'required',
-            'last_name'     => 'required'
+            'last_name'     => 'required',
+            'start_work'     => 'required'
         ]);
 
         $data = $this->model->find($id);
@@ -152,6 +160,8 @@ class UserController extends Controller
             'first_name'  => $request->input('first_name'),
             'last_name'  => $request->input('last_name'),
             'job_position_id'  => 0,
+            'start_work'  => $request->input('start_work'),
+            'supervisor_id'  => ($request->input('supervisor_id') != '0') ? $request->input('supervisor_id') : null,
             'updated_by' => Auth::id()
         ];
 
@@ -160,6 +170,8 @@ class UserController extends Controller
         }
 
         $data->update($update);
+
+        logUser('Update User '.$update['first_name'] . ' ' . $update['last_name']);
 
         // UPDATE USER DEALER MAPPING
         $userDealer = UserDealer::insert($id, $request->input('dealer_id'));
@@ -187,8 +199,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->find($id)->delete();
+        $data = $this->model->find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete User '.$data->first_name . ' ' . $data->last_name);
+        $data->deleted_at = date('Y-m-d H:i:s');
+        $data->save();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -205,6 +220,8 @@ class UserController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status User '.$data->first_name . ' ' . $data->last_name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

@@ -9,7 +9,9 @@
 		{!! session('displayMessage') !!}
 		<div class="box">
             <div class="box-header">
-              <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @permission('create.insurance.formula')
+                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @endpermission
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -36,15 +38,19 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
-	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-	                    <li class="divider"></li>
-	                    <li>
-	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
-	                    		{{csrf_field()}}
-	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
-	                    		{{ method_field('DELETE') }}
-	                    	</form>
-	                    </li>
+                      @permission('update.insurance.formula')
+  	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+  	                    <li class="divider"></li>
+                      @endpermission
+                      @permission('delete.insurance.formula')
+  	                    <li>
+  	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
+  	                    		{{csrf_field()}}
+  	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
+  	                    		{{ method_field('DELETE') }}
+  	                    	</form>
+  	                    </li>
+                      @endpermission
 	                  </ul>
                 	</div>
                 </td>

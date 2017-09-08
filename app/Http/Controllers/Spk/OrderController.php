@@ -9,6 +9,7 @@ use App\Models\OrderCredit;
 use App\Models\OrderPrice;
 use App\Models\OrderHead;
 use App\Models\CarType;
+use App\Models\CarModel;
 use App\Models\Leasing;
 use App\PermissionRole;
 use App\Models\OrderApproval;
@@ -56,13 +57,15 @@ class OrderController extends Controller
     {
         $this->model->setNotif();
         $approval = ($request->input('type') == 'approval') ? true : false;
-        $where = [];
         $data = [
-            'result' => ($approval) ? $this->model->notApproved() : $this->model->list(),
+            'result' => $this->model->list($approval),
             'page' => $this->page,
             'title' => ($approval) ? 'SPK To Approve' : 'SPK List',
             'approval' => $approval
         ];
+
+        $data['result'] = $this->model->filterResult($data['result']);
+
         return view($this->module . ".index", $data);
     }
 
@@ -76,6 +79,7 @@ class OrderController extends Controller
         $data = [
             'page' => $this->page,
             'carType' => CarType::all(),
+            'customer' => Customer::all(),
             'leasing' => Leasing::all(),
             'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
@@ -137,6 +141,8 @@ class OrderController extends Controller
             $createCredit = OrderCredit::createData($create);
         }
 
+        logUser('Create SPK '.$createHead->id);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -154,6 +160,7 @@ class OrderController extends Controller
             'page' => $this->page,
             'row' => $this->model->find($id),
             'carType' => CarType::all(),
+            'customer' => Customer::all(),
             'leasing' => Leasing::all(),
             'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
@@ -219,6 +226,8 @@ class OrderController extends Controller
             $createCredit = OrderCredit::createData($update);
         }
 
+        logUser('Update SPK '.$id);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -232,6 +241,17 @@ class OrderController extends Controller
     public function destroy($id)
     {
         $this->model->find($id)->delete();
+        OrderPrice::where('order_id', $id)->delete();
+        OrderCredit::where('order_id', $id)->delete();
+        OrderApproval::where('order_id', $id)->delete();
+        OrderLog::create([
+            'order_id'      => $id,
+            'desc'          => 'Deleted',
+            'created_by'    => Auth::id()
+        ]);
+
+        logUser('Delete SPK '.$id);
+
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -297,6 +317,7 @@ class OrderController extends Controller
                 'stnk_address'          => old('stnk_address'),
                 'faktur_conf'           => old('faktur_conf'),
                 'type_id'               => old('type_id'),
+                'type_name'             => old('type_name'),
                 'color'                 => old('color'),
                 'qty'                   => old('qty'),
                 'car_year'              => old('car_year'),
@@ -355,6 +376,7 @@ class OrderController extends Controller
             'stnk_address'          => $orderHead->stnk_address,
             'faktur_conf'           => $orderHead->faktur_conf,
             'type_id'               => $orderHead->type_id,
+            'type_name'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
             'npwp_image'            => $orderHead->npwp_image,
             'color'                 => $orderHead->color,
             'qty'                   => $orderHead->qty,
@@ -402,6 +424,7 @@ class OrderController extends Controller
             'order_id'  => $orderId,
             'level_approved' => 0,
             'role_name' => $level,
+            'type'  => 1,
             'job_position_id' => $user['job_position_id'],
             'approved_by'   => $user['id']
         ]);
@@ -413,7 +436,38 @@ class OrderController extends Controller
             'created_by'    => Auth::id()
         ]);
 
+        logUser('Approve SPK '.$orderId);
+
         $message = setDisplayMessage('success', "Success to approve SPK");
+        return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
+    }
+
+    public function rejectSPK(Request $request) {
+        $user = Auth::user();
+        $orderId = $request->input('order_id');
+        $role = $request->input('role');
+        $reason = $request->input('reject_reason');
+
+        $approve = OrderApproval::create([
+            'order_id'  => $orderId,
+            'level_approved' => 0,
+            'role_name' => $role,
+            'reject_reason' => $reason,
+            'type'  => 2,
+            'job_position_id' => $user['job_position_id'],
+            'approved_by'   => $user['id']
+        ]);
+
+        //CREATE LOG
+        OrderLog::create([
+            'order_id'      => $orderId,
+            'desc'          => 'Rejected',
+            'created_by'    => Auth::id()
+        ]);
+
+        logUser('Reject SPK '.$orderId);
+
+        $message = setDisplayMessage('success', "Success to reject SPK");
         return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
     }
 }

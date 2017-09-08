@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\LeasingRateHead;
 use App\Models\InsuranceRateHead;
+use App\Models\CarType;
+use App\Models\CarModel;
+
 
 class AjaxController extends Controller
 {
@@ -37,5 +40,21 @@ class AjaxController extends Controller
     	$return['installment'] = ($interestRate != null) ? $installment : 0;
 
     	return json_encode($return);
+    }
+
+    public function getCarType(Request $request) {
+        $term = $request->input('term');
+        $data = CarType::select('car_types.id', 'car_types.name as typeName', 'car_models.name as modelName')
+                        ->where('car_types.name', 'like', "%$term%")
+                        ->orWhere('car_models.name', 'like', "%$term%")
+                        ->join('car_models', 'car_types.model_id', '=', 'car_models.id')
+                        ->get();
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[$key]['id'] = $value->id;
+            $result[$key]['value'] = $value->modelName.' '.$value->typeName;
+        }
+
+        return $result;
     }
 }

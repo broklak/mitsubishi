@@ -39,7 +39,12 @@
 	                  </div>
 	                </div>
 
-	                
+	                <div class="form-group">
+	                  <label for="cost" class="col-sm-2 control-label">Insentif Amount</label>
+	                  <div class="col-sm-10">
+	                    <input type="text" class="form-control" name="insentif_amount" onkeyup="formatMoney($(this))" value="{{old('insentif_amount')}}" id="insentif_amount" placeholder="Enter Insentif Amount">
+	                  </div>
+	                </div>
 
 	              </div>
 	              <!-- /.box-body -->

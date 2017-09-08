@@ -93,3 +93,58 @@
 
         return $years;
     }
+
+    function dateHumanFormat($date) {
+        if($date == null) {
+            return null;
+        }
+
+        return date('j F Y', strtotime($date));
+    }
+
+    function logUser($desc) {
+        return App\UserLogs::createLog($desc);
+    }
+
+    function detailApprover($role, $orderId) {
+        $approval = App\Models\OrderApproval::getDetailApprover($role, $orderId);
+        if($approval == null) {
+            return null;
+        }
+
+        $detail = '<span>'.$approval->first_name . ' ' . $approval->last_name . '<br />' . date('j F Y', strtotime($approval->created_at)).'</span><br />';
+        if($approval->type == 1) { // APPROVED
+            $icon = 'check';
+            $button = '';
+            $modal = '';
+        } else { // REJECTED
+            $icon = 'times';
+            $button = '<a data-toggle="modal" data-target="#modal-reason-'.$approval->role_name.'" class="btn btn-danger">View Reason</a>';
+            $modal = modalRejectReason($approval);
+        }
+
+        $html = '<i class="fa fa-'.$icon.' fa-3x"></i><br />'.$detail.$button.$modal;
+        return $html;
+    }
+
+    function modalRejectReason($approval) {
+        return '<div class="modal modal-danger fade" id="modal-reason-'.$approval->role_name.'">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Reject SPK '.$approval->spk_code.'</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label for="reject_reason">Reason to reject</label>
+                                <textarea id="reject_reason" name="reject_reason" readonly class="form-control">'.$approval->reject_reason.'</textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+    }

@@ -116,6 +116,8 @@ class LeasingRateController extends Controller
             LeasingRateDetail::create($createDetail);
         }
 
+        logUser('Create Leasing Formula '.$head->id);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -193,6 +195,8 @@ class LeasingRateController extends Controller
             }
         }
 
+        logUser('Update Leasing Formula '.$id);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -208,6 +212,7 @@ class LeasingRateController extends Controller
         $this->model->find($id)->delete();
         LeasingRateDetail::where('leasing_rate_id', $id)->delete();
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Leasing Formula '.$id);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -224,6 +229,8 @@ class LeasingRateController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Leasing Formula '.$id);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

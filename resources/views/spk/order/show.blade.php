@@ -5,10 +5,9 @@
 @section('content')
     <!-- Main content -->
     <section class="content">
-    <form class="form-horizontal" action="{{route("$page.update", ['id' => $row->id])}}" method="post" enctype="multipart/form-data">
     	{!! session('displayMessage') !!}
-	    {{csrf_field()}}
 	    <div class="col-md-12">
+	    	<form class="form-horizontal">
 			<div class="box box-info">
 				<div class="box-header with-border" style="text-align:center">
 					<div class="pull-left">
@@ -364,6 +363,8 @@
 		            </div>
 				</div>
 	       	</div>
+	       	</form>
+	       	</div>
 	       	<div>
 	       		<table class="table approver" style="border:1px solid #555">
 	       			<thead>
@@ -378,9 +379,46 @@
 	       				<tr class="sign" style="text-align:center;border:1px solid #555"> 
 	       					@foreach($approver as $key => $val)
 	       						@if($toApprove && Auth::user()->hasRole($val))
-	       						<td><a onclick="return confirm('You will approve this SPK, continue')" href="{{route('order.approve', ['id' => $row->id, 'level' => $val])}}" class="btn btn-primary">APPROVE SPK</a></td>
+	       						<td>
+	       							<a style="margin-bottom:15px;" onclick="return confirm('You will approve this SPK, continue')" href="{{route('order.approve', ['id' => $row->id, 'level' => $val])}}" class="btn btn-success">APPROVE SPK</a>
+	       							<br />
+	       							<a data-toggle="modal" data-target="#modal-reject-{{$val}}" class="btn btn-danger">REJECT SPK</a>
+	       						</td>
+
+		       						 <!-- START MODAL REJECT REASON -->
+		       						<div class="modal modal-danger fade" id="modal-reject-{{$val}}">
+		       							<form class="form" method="post" action="{{route('order.reject')}}">
+		       							{{csrf_field()}}
+								          <div class="modal-dialog">
+								            <div class="modal-content">
+								              <div class="modal-header">
+								                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								                  <span aria-hidden="true">&times;</span>
+								                 </button>
+								                <h4 class="modal-title">Reject SPK {{$row->spk_code}}</h4>
+								              </div>
+								              <div class="modal-body">
+								                	<label for="reject_reason">Reason to reject</label>
+								                	<textarea id="reject_reason" name="reject_reason" placeholder="" class="form-control"></textarea>
+								                	<input type="hidden" name="role" value="{{$val}}">
+								                	<input type="hidden" name="order_id" value="{{$row->id}}">
+								              </div>
+								              <div class="modal-footer">
+								                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-outline">Reject SPK</button>
+								              </div>
+								              </form>
+								            </div>
+								            <!-- /.modal-content -->
+								          </div>
+								          <!-- /.modal-dialog -->
+								    </div>
+								    <!-- END MODAL REJECT REASON -->
+
 	       						@elseif(in_array($val, $approval))
-	       						<td><i class="fa fa-check fa-4x"></i></td>
+	       						<td>
+	       							{!! detailApprover($val, $row->id) !!}
+	       						</td>
 	       						@else
 	       						<td>&nbsp;</td>
 	       						@endif
@@ -389,8 +427,7 @@
 	       			</tbody>
 	       		</table>
 	       	</div>
-        </div>
-    </form>
+    
     </section>
 
 @endsection

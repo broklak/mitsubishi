@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class OrderHead extends Model
 {
@@ -35,26 +36,24 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($where = []) {
+    public function list($approval = false) {
         $user = Auth::user();
+        $userId = $user->id;
         $job = $user->job_position_id;
-        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, model_id, type_id,date, 
-                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved"))
-                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
-                        ->where($where)
-                        ->orderBy('date', 'desc')
-                        ->get();
+        $where = 'order_head.status <> 0 ';
 
-        return $data;
-    }
+        if($approval) {
+            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0";
+        }
 
-    public static function notApproved() {
-        $user = Auth::user();
-        $job = $user->job_position_id;
-        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, model_id, type_id,date,
-                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved"))
+        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, date, qty, order_head.created_by,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            car_types.name as type_name, car_models.name as model_name"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
-                        ->whereRaw("(select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0")
+                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->whereRaw($where)
                         ->orderBy('date', 'desc')
                         ->get();
 
@@ -83,7 +82,7 @@ class OrderHead extends Model
     		'karoseri_type'	=> $data['karoseri_type'],
     		'karoseri_spec'	=> $data['karoseri_spec'],
     		'karoseri_price'	=> parseMoneyToInteger($data['karoseri_price']),
-    		'status'		=> 0,
+    		'status'		=> 1,
     		'created_by'	=> $data['created_by']
     	]);
     }
@@ -133,8 +132,9 @@ class OrderHead extends Model
     }
 
     public function setNotif() {
-        $spkNotApproved = count($this->notApproved());
-        $doNotChecked = count(DeliveryOrder::notChecked());
+        $data = Auth::user();
+        $spkNotApproved = ($data->can('approve.spk')) ? count($this->list($approval = true)) : 0;
+        $doNotChecked = ($data->can('*.do')) ? count(DeliveryOrder::notChecked()) : 0;
         $session = [
             'spk_notif' => $spkNotApproved,
             'do_notif' => $doNotChecked,
@@ -143,11 +143,47 @@ class OrderHead extends Model
         session($session);
     }
 
-    public static function getInsentifByType($orderId) {
+    public static function getInsentifByModel($orderId) {
         $data = parent::select('car_models.insentif_amount', 'order_head.created_by')
                     ->where('order_head.id', $orderId)
                     ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
                     ->first();
         return $data;
+    }
+
+    public static function getInsentifByType($orderId) {
+        $data = parent::select('car_types.insentif_amount', 'order_head.created_by')
+                    ->where('order_head.id', $orderId)
+                    ->join('car_types', 'car_types.id', '=', 'order_head.model_id')
+                    ->first();
+        return $data;
+    }
+
+    public function filterResult($data) {
+        $user= Auth::user();
+        $userId = $user->id;
+        $isSupervisor = $user->hasRole('supervisor');
+        $isManager = $user->hasRole('manager');
+
+        if($isManager) {
+            return $data;
+        }
+
+        if($isSupervisor) {
+            $salesOwned = User::salesOwned($userId);
+
+            foreach ($data as $key => $value) {
+                if(!in_array($value->created_by, $salesOwned)) unset($data[$key]);
+            }
+
+            return $data;
+        }
+
+        foreach ($data as $key => $value) {
+            if($value->created_by != $userId) unset($data[$key]);
+        }
+
+        return $data;
+
     }
 }

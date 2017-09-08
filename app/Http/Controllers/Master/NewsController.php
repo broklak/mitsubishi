@@ -85,6 +85,8 @@ class NewsController extends Controller
 
         News::create($create);
 
+        logUser('Create News '.$create['title']);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -149,6 +151,8 @@ class NewsController extends Controller
 
         $data->update($update);
 
+        logUser('Update News '.$update['title']);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -161,8 +165,10 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        News::find($id)->delete();
+        $data = News::find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete News '.$data->title);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -179,6 +185,8 @@ class NewsController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status News '.$data->news);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

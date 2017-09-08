@@ -17,6 +17,7 @@
                 <thead>
                 <tr>
                   <th>Car</th>
+                  <th>Customer</th>
                   <th>Sales Price</th>
                   <th>DP (%)</th>
                   <th>DP (IDR)</th>
@@ -28,6 +29,7 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{\App\Models\CarModel::getName($val->car_model_id)}}</td>
+                <td>{{$val->customer_name}}</td>
                 <td>{{moneyFormat($val->price)}}</td>
                 <td>{{$val->dp_percentage}}%</td>
                 <td>{{moneyFormat($val->dp_amount)}}</td>

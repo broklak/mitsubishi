@@ -10,7 +10,9 @@
 		<div class="box">
             @if(!$approval)
             <div class="box-header">
-              <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @permission('create.spk')
+                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @endpermission
             </div>
             @endif
             <!-- /.box-header -->
@@ -22,7 +24,7 @@
                   <th>Date</th>
                   <th>Customer</th>
                   <th>Car</th>
-                  <!-- <th>Status</th> -->
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -32,8 +34,8 @@
                 <td>{{$val->spk_code}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{\App\Models\CarModel::getName($val->model_id).' '.\App\Models\CarType::getName($val->type_id)}}</td>
-                <!-- <td>{!! ($val->is_approved == 0) ? setActivationStatus(0, 'Approved') : setActivationStatus(1, 'Approved') !!}</td> -->
+                <td>{{$val->model_name . ' ' . $val->type_name}}</td>
+                <td>{!! App\Models\OrderApproval::getLabelStatus($val) !!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>
@@ -42,19 +44,23 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
-                      @if(!$approval)
-                      <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-                      @endif
+                      @permission('update.spk')
+                        @if(!$approval)
+                          <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+                        @endif
+                      @endpermission
                       <li><a href="{{ route($page.'.show', ['id' => $val->id]) }}">Show</a></li>
                       @if(!$approval)
 	                    <li class="divider"></li>
-	                    <li>
-	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
-	                    		{{csrf_field()}}
-	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
-	                    		{{ method_field('DELETE') }}
-	                    	</form>
-	                    </li>
+                        @permission('delete.spk')
+    	                    <li>
+    	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
+    	                    		{{csrf_field()}}
+    	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
+    	                    		{{ method_field('DELETE') }}
+    	                    	</form>
+    	                    </li>
+                        @endpermission
                       @endif
 	                  </ul>
                 	</div>

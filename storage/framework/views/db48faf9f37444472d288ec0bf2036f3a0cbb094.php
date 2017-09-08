@@ -32,20 +32,24 @@
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
-                  <?php if(session('spk_notif')): ?>
-                  <li>
-                    <a href="<?php echo e(route('order.index')); ?>?type=approval">
-                      <i class="fa fa-file"></i> <?php echo e(session('spk_notif')); ?> SPK to Approve
-                    </a>
-                  </li>
-                  <?php endif; ?>
-                  <?php if(session('do_notif')): ?>
-                  <li>
-                    <a href="<?php echo e(route('delivery-order.index')); ?>?type=checked">
-                      <i class="fa fa-thumbs-o-up"></i> <?php echo e(session('do_notif')); ?> DO to Check 
-                    </a>
-                  </li>
-                  <?php endif; ?>
+                  <?php if (\Entrust::can('create.spk')) : ?>
+                    <?php if(session('spk_notif')): ?>
+                    <li>
+                      <a href="<?php echo e(route('order.index')); ?>?type=approval">
+                        <i class="fa fa-file"></i> <?php echo e(session('spk_notif')); ?> SPK to Approve
+                      </a>
+                    </li>
+                    <?php endif; ?>
+                  <?php endif; // Entrust::can ?>
+                  <?php if (\Entrust::can('*.do')) : ?>
+                    <?php if(session('do_notif')): ?>
+                    <li>
+                      <a href="<?php echo e(route('delivery-order.index')); ?>?type=checked">
+                        <i class="fa fa-thumbs-o-up"></i> <?php echo e(session('do_notif')); ?> DO to Check 
+                      </a>
+                    </li>
+                    <?php endif; ?>
+                  <?php endif; // Entrust::can ?>
                 </ul>
               </li>
               <li class="footer"><a href="#">View all</a></li>

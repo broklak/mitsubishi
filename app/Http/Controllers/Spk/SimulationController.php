@@ -91,6 +91,7 @@ class SimulationController extends Controller
             'leasing_id'  => $request->input('leasing_id'),
             'car_category_id'  => CarModel::getCategory($carModel),
             'car_model_id'  => $carModel,
+            'customer_name'  => $request->input('customer_name'),
             'car_type_id'   => $request->input('type_id'),
             'car_year'  => $request->input('car_year'),
             'price'  => parseMoneyToInteger($request->input('total_sales_price')),
@@ -106,6 +107,8 @@ class SimulationController extends Controller
         ];
 
         $head = $this->model->create($create);
+
+        logUser('Create Simulation '.$head->id);
 
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
@@ -158,6 +161,7 @@ class SimulationController extends Controller
             'car_category_id'  => CarModel::getCategory($carModel),
             'car_model_id'  => $carModel,
             'car_type_id'   => $request->input('type_id'),
+            'customer_name'  => $request->input('customer_name'),
             'car_year'  => $request->input('car_year'),
             'price'  => parseMoneyToInteger($request->input('total_sales_price')),
             'dp_amount'  => parseMoneyToInteger($request->input('dp_amount')),
@@ -173,6 +177,8 @@ class SimulationController extends Controller
 
         $data->update($update);
 
+        logUser('Update Simulation '.$id);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -187,6 +193,7 @@ class SimulationController extends Controller
     {
         $this->model->find($id)->delete();
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Simulation '.$id);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 }

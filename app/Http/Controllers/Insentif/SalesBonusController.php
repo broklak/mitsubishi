@@ -98,6 +98,8 @@ class SalesBonusController extends Controller
             SalesBonusDetail::create($createDetail);
         }
 
+        logUser('Create Sales Bonus Formula '.$head->id);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -160,6 +162,8 @@ class SalesBonusController extends Controller
             }
         }
 
+        logUser('Update Sales Bonus Formula '.$id);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -174,6 +178,7 @@ class SalesBonusController extends Controller
     {
         $this->model->find($id)->delete();
         SalesBonusDetail::where('insurance_rate_id', $id)->delete();
+        logUser('Delete Sales Bonus Formula '.$id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }

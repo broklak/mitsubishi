@@ -87,6 +87,8 @@ class BbnController extends Controller
 
         $this->model->create($create);
 
+        logUser('Create BBN '.$create['name']);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -130,6 +132,8 @@ class BbnController extends Controller
 
         $data->update($update);
 
+        logUser('Update BBN '.$update['name']);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -142,8 +146,10 @@ class BbnController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->find($id)->delete();
+        $data = $this->model->find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete BBN '.$data->name);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -160,6 +166,8 @@ class BbnController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status BBN '.$data->name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

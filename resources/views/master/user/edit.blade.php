@@ -37,12 +37,19 @@
 	                </div>
 
 	                <div class="form-group">
+			            <label for="start_work" class="col-sm-4 control-label">Start Working Date</label>
+			            <div class="col-sm-8">
+			               	<input type="text" class="form-control datepicker" name="start_work" value="{{$row->start_work}}" id="start_work" placeholder="Start Working Date">
+			            </div>
+			         </div>
+
+	                <div class="form-group">
 	                  <label for="file" class="col-sm-4 control-label">Password *Fill password if you want to change</label>
 	                  <div class="col-sm-8">
 	                    <input type="password" class="form-control" name="password" id="pass">
 	                    <input type="hidden" name="type" value="{{$type}}" />
 	                  </div>
-	                </div>
+	                </div>	  
 
 	                <div class="form-group">
 	                  <label for="file" class="col-sm-4 control-label">Access Role (You can select more than 1)</label>
@@ -50,6 +57,18 @@
 	                  	<select name="roles[]" multiple class="form-control">
 	                  		@foreach($position as $key => $val)
 	                  		<option @if(in_array($val->id, $validRole)) selected @endif value="{{$val->id}}">{{$val->display_name}}</option>
+	                  		@endforeach
+	                  	</select>
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                  <label for="supervisor_id" class="col-sm-4 control-label">Supervisor (only for sales)</label>
+	                  <div class="col-sm-8">
+	                  	<select name="supervisor_id" class="form-control">
+	                  		<option value="0" selected disabled>Choose Supervisor</option>
+	                  		@foreach($supervisor as $key => $val)
+	                  		<option @if($val->id == $row->supervisor_id) selected @endif value="{{$val->id}}">{{$val->first_name . ' ' . $val->last_name}}</option>
 	                  		@endforeach
 	                  	</select>
 	                  </div>

@@ -110,6 +110,8 @@ class InsuranceRateController extends Controller
             InsuranceRateDetail::create($createDetail);
         }
 
+        logUser('Create Insurance Formula '.$head->id);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -180,6 +182,8 @@ class InsuranceRateController extends Controller
             }
         }
 
+        logUser('Update Insurance Formula '.$id);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -195,6 +199,7 @@ class InsuranceRateController extends Controller
         $this->model->find($id)->delete();
         InsuranceRateDetail::where('insurance_rate_id', $id)->delete();
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Insurance Formula '.$id);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -211,6 +216,8 @@ class InsuranceRateController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Insurance Formula '.$id);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

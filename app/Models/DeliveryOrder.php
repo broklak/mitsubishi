@@ -87,6 +87,9 @@ class DeliveryOrder extends Model
         $result = [];
         foreach ($data as $key => $value) {
             $spk = OrderHead::getInsentifByType($value->spk_id);
+            if(!isset($spk->insentif_amount) || $spk->insentif_amount == 0) { // IF INSENTIF IN TYPE IS ZERO, TAKE IT FROM MODEL
+                $spk = OrderHead::getInsentifByModel($value->spk_id);
+            }
             $insentif = (isset($spk->insentif_amount)) ? $spk->insentif_amount : 0;
             $user = $spk->created_by;
 

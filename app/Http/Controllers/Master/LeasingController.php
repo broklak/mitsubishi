@@ -88,6 +88,8 @@ class LeasingController extends Controller
 
         $this->model->create($create);
 
+        logUser('Create Master Leasing '.$create['name']);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -138,6 +140,8 @@ class LeasingController extends Controller
 
         $data->update($update);
 
+        logUser('Update Master Leasing '.$update['name']);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -150,8 +154,10 @@ class LeasingController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->find($id)->delete();
+        $data = $this->model->find($id);
         $message = setDisplayMessage('success', "Success to delete ".$this->page);
+        logUser('Delete Master Leasing '.$data->name);
+        $data->delete();
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
 
@@ -168,6 +174,8 @@ class LeasingController extends Controller
         $desc = ($status == 1) ? 'activate' : 'deactivate';
 
         $data->save();
+
+        logUser('Change Status Master Leasing '.$data->name);
 
         $message = setDisplayMessage('success', "Success to $desc ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);

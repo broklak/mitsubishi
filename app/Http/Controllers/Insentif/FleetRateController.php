@@ -121,6 +121,8 @@ class FleetRateController extends Controller
 
         $data->update($update);
 
+        logUser('Update Default Fleet Rate');
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.edit', ['id' => $id]))->with('displayMessage', $message);
     }

@@ -19,4 +19,17 @@ class RoleUser extends Model
     	}
     	return $results;
     }
+
+    public static function roleWordList($userId) {
+        $data = self::getRoleForUser($userId);
+        $word = [];
+        foreach ($data as $key => $value) {
+            $role = Role::find($value);
+            if(isset($role->display_name)) {
+                $word[] = $role->display_name;
+            }
+        }
+
+        return implode(',', $word);
+    }
 }

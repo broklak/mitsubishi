@@ -9,7 +9,9 @@
 		{!! session('displayMessage') !!}
 		<div class="box">
             <div class="box-header">
-              <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @permission('create.leasing.formula')
+                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @endpermission
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -40,8 +42,11 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
+                      @permission('update.leasing.formula')
 	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
 	                    <li class="divider"></li>
+                      @endpermission
+                      @permission('delete.leasing.formula')
 	                    <li>
 	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
 	                    		{{csrf_field()}}
@@ -49,6 +54,7 @@
 	                    		{{ method_field('DELETE') }}
 	                    	</form>
 	                    </li>
+                      @endpermission
 	                  </ul>
                 	</div>
                 </td>

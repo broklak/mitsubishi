@@ -143,6 +143,8 @@ class DeliveryOrderController extends Controller
 
         $data->save();
 
+        logUser('Update DO '.$id.' Type');
+
         $message = setDisplayMessage('success', "Success to change type of selected DO");
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }

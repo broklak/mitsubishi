@@ -9,7 +9,9 @@
 		{!! session('displayMessage') !!}
 		<div class="box">
             <div class="box-header">
-              <a href="{{route('banner.create')}}" class="btn btn-info">Create New Banner</a>
+              @permission('create.banner')
+                <a href="{{route('banner.create')}}" class="btn btn-info">Create New Banner</a>
+              @endpermission
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -36,20 +38,24 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
-	                    <li><a href="{{ route('banner.edit', ['id' => $val->id]) }}">Edit</a></li>
-	                    @if($val->status == 1)
-	                    <li><a href="{{ route('banner.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
-	                    @else
-	                    <li><a href="{{ route('banner.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
-	                    @endif
-	                    <li class="divider"></li>
-	                    <li>
-	                    	<form class="deleteForm" method="post" action="{{route("banner.destroy", ['id' => $val->id])}}">
-	                    		{{csrf_field()}}
-	                    		<button onclick="return confirm('You will delete this banner, continue')" type="submit">Delete</button>
-	                    		{{ method_field('DELETE') }}
-	                    	</form>
-	                    </li>
+                      @permission('update.banner')
+  	                    <li><a href="{{ route('banner.edit', ['id' => $val->id]) }}">Edit</a></li>
+  	                    @if($val->status == 1)
+  	                    <li><a href="{{ route('banner.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
+  	                    @else
+  	                    <li><a href="{{ route('banner.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
+  	                    @endif
+  	                    <li class="divider"></li>
+                      @endpermission
+                      @permission('delete.banner')
+  	                    <li>
+  	                    	<form class="deleteForm" method="post" action="{{route("banner.destroy", ['id' => $val->id])}}">
+  	                    		{{csrf_field()}}
+  	                    		<button onclick="return confirm('You will delete this banner, continue')" type="submit">Delete</button>
+  	                    		{{ method_field('DELETE') }}
+  	                    	</form>
+  	                    </li>
+                      @endpermission
 	                  </ul>
                 	</div>
                 </td>

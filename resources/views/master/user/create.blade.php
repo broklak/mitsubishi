@@ -35,6 +35,13 @@
 	                </div>
 
 	                <div class="form-group">
+			            <label for="start_work" class="col-sm-4 control-label">Start Working Date</label>
+			            <div class="col-sm-8">
+			               	<input type="text" class="form-control datepicker" name="start_work" value="{{old('start_work')}}" id="start_work" placeholder="Start Work Date">
+			            </div>
+			         </div>
+
+	                <div class="form-group">
 	                  <label for="username" class="col-sm-4 control-label">Username *For Login</label>
 	                  <div class="col-sm-8">
 	                  	<input type="text" class="form-control" name="username" value="{{old('username')}}" id="username" placeholder="Username">
@@ -46,7 +53,7 @@
 	                  <div class="col-sm-8">
 	                    <input type="password" class="form-control" name="password" id="pass">
 	                  </div>
-	                </div>
+	                </div>              
 
 	                <div class="form-group">
 	                  <label for="file" class="col-sm-4 control-label">Access Role (You can select more than 1)</label>
@@ -58,6 +65,18 @@
 	                  	</select>
 	                  </div>
 	                </div>
+
+	                <div class="form-group">
+	                  <label for="supervisor_id" class="col-sm-4 control-label">Supervisor (only for sales)</label>
+	                  <div class="col-sm-8">
+	                  	<select name="supervisor_id" class="form-control">
+	                  		<option value="0" selected disabled>Choose Supervisor</option>
+	                  		@foreach($supervisor as $key => $val)
+	                  		<option value="{{$val->id}}">{{$val->first_name . ' ' . $val->last_name}}</option>
+	                  		@endforeach
+	                  	</select>
+	                  </div>
+	                </div>	  
 
 	                <div class="form-group">
 	                  <label for="file" class="col-sm-4 control-label">Assign Dealer *You can choose multiple</label>

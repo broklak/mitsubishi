@@ -46,5 +46,6 @@ class LoginController extends Controller
     {
         $orderHead = new OrderHead();
         $orderHead->setNotif();
+        logUser('Login');
     }
 }

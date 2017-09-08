@@ -37,17 +37,20 @@
 			                </div>
 			             </div>
 
-			             <div class="form-group">
+			            <div class="form-group">
 			               <label for="car_type" class="col-sm-2 control-label">Car Type</label>
 			               <div class="col-sm-10">
-			               		<select class="form-control" name="type_id" id="type_id">
-			               			<option disabled="disabled" selected="selected">Choose Type</option>
-			               			@foreach($carType as $key => $val)
-			               			<option @if(old('type_id') == $val->id) selected @endif value="{{$val->id}}">{{\App\Models\CarModel::getName($val->model_id)}} - {{$val->name}}</option>
-			               			@endforeach
-			               		</select>
+			               		<input type="text" class="form-control" name="type_name" value="{{old('type_name')}}" id="type_id" placeholder="Car Type">
+			               		<input type="hidden" value="{{old('type_id')}}" id="type_id_real" name="type_id" />
 			               </div>
 			            </div>
+
+			            <div class="form-group">
+		                  <label for="customer_name" class="col-sm-2 control-label">Customer Name</label>
+		                  <div class="col-sm-10">
+		                    <input type="text" class="form-control" name="customer_name" value="{{old('customer_name')}}" id="customer_name" placeholder="Enter Customer Name">
+		                  </div>
+		                </div>
 
 			             <div class="form-group">
 			               <label for="car_year" class="col-sm-2 control-label">Car Built Year</label>
@@ -60,7 +63,7 @@
 			               <label for="price" class="col-sm-2 control-label">Car Price</label>
 			               <div class="col-sm-10">
 			                  <input type="text" onkeyup="formatMoney($(this))" class="form-control" name="total_sales_price" value="{{old('total_sales_price')}}" id="total_sales_price" placeholder="Enter Price">
-			                  <input type="hidden" id="total_unpaid" name="total_unpaid">
+			                  <input type="hidden" id="total_unpaid" name="total_unpaid" value="{{old('total_unpaid')}}">
 			               </div>
 			            </div>
 
@@ -106,14 +109,14 @@
 		            	<div class="form-group">
 			               <label for="admin_cost" class="col-sm-2 control-label">Admin Cost</label>
 			               <div class="col-sm-10">
-			                  <input type="text" class="form-control" name="admin_cost" value="{{old('admin_cost')}}" id="admin_cost" readonly>
+			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="admin_cost" value="{{old('admin_cost')}}" id="admin_cost">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
 			               <label for="interest_rate" class="col-sm-2 control-label">Interest Rate</label>
 			               <div class="col-sm-10">
-			                  <input type="text" class="form-control" name="interest_rate" value="{{old('interest_rate')}}" id="interest_rate" readonly>
+			                  <input type="text" class="form-control" name="interest_rate" value="{{old('interest_rate')}}" id="interest_rate">
 			               </div>
 			            </div>
 
@@ -127,7 +130,7 @@
 			            <div class="form-group">
 			               <label for="insurance_cost" class="col-sm-2 control-label">Insurance Cost</label>
 			               <div class="col-sm-10">
-			                  <input type="text" class="form-control" name="insurance_cost" value="{{old('insurance_cost')}}" id="insurance_cost" readonly>
+			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="insurance_cost" value="{{old('insurance_cost')}}" id="insurance_cost">
 			               </div>
 			            </div>
 

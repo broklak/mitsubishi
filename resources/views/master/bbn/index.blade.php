@@ -9,7 +9,9 @@
 		{!! session('displayMessage') !!}
 		<div class="box">
             <div class="box-header">
-              <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @permission('create.bbn')
+                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+              @endpermission
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -34,13 +36,16 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
-	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-	                    @if($val->status == 1)
-	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
-	                    @else
-	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
-	                    @endif
-	                    <li class="divider"></li>
+                      @permission('update.bbn')
+  	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+  	                    @if($val->status == 1)
+  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
+  	                    @else
+  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
+  	                    @endif
+  	                    <li class="divider"></li>
+                      @endpermission
+                      @permission('delete.bbn')
 	                    <li>
 	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
 	                    		{{csrf_field()}}
@@ -48,6 +53,7 @@
 	                    		{{ method_field('DELETE') }}
 	                    	</form>
 	                    </li>
+                      @endpermission
 	                  </ul>
                 	</div>
                 </td>

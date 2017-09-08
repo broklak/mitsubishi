@@ -38,9 +38,11 @@
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
 	                    <li><a href="{{ route('delivery-order.show', ['id' => $val->id]) }}">View</a></li>
-                      <li class="divider"></li>
-                      <li><a href="{{ route('delivery-order.change-type', ['id' => $val->id, 'type' => 1]) }}">Set Fleet</a></li>
-                      <li><a href="{{ route('delivery-order.change-type', ['id' => $val->id, 'type' => 2]) }}">Set Not Fleet</a></li>
+                      @permission('update.do')
+                        <li class="divider"></li>
+                        <li><a href="{{ route('delivery-order.change-type', ['id' => $val->id, 'type' => 1]) }}">Set Fleet</a></li>
+                        <li><a href="{{ route('delivery-order.change-type', ['id' => $val->id, 'type' => 2]) }}">Set Not Fleet</a></li>
+                      @endpermission
 	                  </ul>
                 	</div>
                 </td>
