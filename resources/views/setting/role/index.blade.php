@@ -34,7 +34,7 @@
 	                    <span class="sr-only">Toggle Dropdown</span>
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
-                      @permission('update.role')
+                      @permission('update.role') 
   	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
   	                    <li class="divider"></li>
                       @endpermission
