@@ -8,6 +8,10 @@ use App\Models\News;
 
 class MasterController extends Controller
 {
+	public function __construct() {
+		$this->middleware('auth:api');
+	}
+
     public function news(Request $request) {
     	$token = $request->input('token');
     	$limit = $request->input('limit');
