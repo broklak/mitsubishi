@@ -78,14 +78,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
-          <li <?php if($page == 'role'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('role.index')); ?>"><i class="fa fa-user-circle-o"></i> Role Permission Setting</a></li>
-          <li <?php if($page == 'user'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('user.index')); ?>"><i class="fa fa-user"></i> User Management</a></li>
-            <!-- <?php if (\Entrust::can('*.user')) : ?> -->
+            <?php if (\Entrust::can('*.user')) : ?>
               <li <?php if($page == 'user'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('user.index')); ?>"><i class="fa fa-user"></i> User Management</a></li>
-            <!-- <?php endif; // Entrust::can ?> -->
-            <!-- <?php if (\Entrust::can('*.role')) : ?> -->
+            <?php endif; // Entrust::can ?>
+            <?php if (\Entrust::can('*.role')) : ?>
               <li <?php if($page == 'role'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('role.index')); ?>"><i class="fa fa-user-circle-o"></i> Role Permission Setting</a></li>
-            <!-- <?php endif; // Entrust::can ?> -->
+            <?php endif; // Entrust::can ?>
             <li class="<?php if(\Illuminate\Support\Facades\Request::segment(2) == 'master'): ?> active <?php endif; ?> treeview">
               <a href="#">
                 <i class="fa fa-database"></i> <span>Master</span>
@@ -105,11 +103,9 @@
                   <li <?php if($page == 'car-model'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('car-model.index')); ?>"><i class="fa fa-car"></i> Car Model</a></li>
                   <li <?php if($page == 'car-type'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('car-type.index')); ?>"><i class="fa fa-car"></i> Car Type</a></li>
                 <?php endif; // Entrust::can ?>
-                 <li <?php if($page == 'company'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('company.index')); ?>"><i class="fa fa-building"></i> Company</a></li>
                 <?php if (\Entrust::can('*.company')) : ?>
                   <li <?php if($page == 'company'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('company.index')); ?>"><i class="fa fa-building"></i> Company</a></li>
                 <?php endif; // Entrust::can ?>
-                <li <?php if($page == 'dealer'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('dealer.index')); ?>"><i class="fa fa-building-o"></i> Dealer</a></li>
                 <?php if (\Entrust::can('*.dealer')) : ?>
                   <li <?php if($page == 'dealer'): ?> class="active" <?php endif; ?> ><a href="<?php echo e(route('dealer.index')); ?>"><i class="fa fa-building-o"></i> Dealer</a></li>
                 <?php endif; // Entrust::can ?>
