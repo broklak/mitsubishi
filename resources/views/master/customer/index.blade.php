@@ -3,75 +3,90 @@
 @section('title', 'Home')
 
 @section('content')
-
-<section class="content">
-	<div class="col-md-12">
-		{!! session('displayMessage') !!}
-		<div class="box">
-            <div class="box-header">
-              @permission('create.customer')
-                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
-              @endpermission
+<!-- Main content -->
+    <section class="content">
+      {!! session('displayMessage') !!}
+      <div class="col-md-12">
+          <a style="margin-bottom:15px" href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab">KTP</a></li>
+              <li><a href="#tab_2" data-toggle="tab">SIM</a></li>
+              <li><a href="#tab_3" data-toggle="tab">Passport</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th>Attachment</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($ktp as $key => $val)
+                        <tr>
+                          <td>
+                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/ktp/' . $val->image }}" />
+                          </td>
+                          <td>
+                            <a class="btn btn-primary" href="{{ route('customer.edit', ['id' => $val->id]) }}"">Edit Detail</a>
+                          </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th>Attachment</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($sim as $key => $val)
+                        <tr>
+                          <td>
+                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/sim/' . $val->image }}" />
+                          </td>
+                          <td>
+                            <a class="btn btn-primary" href="{{ route('customer.edit', ['id' => $val->id]) }}"">Edit Detail</a>
+                          </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_3">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th>Attachment</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($passport as $key => $val)
+                        <tr>
+                          <td>
+                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/passport/' . $val->image }}" />
+                          </td>
+                          <td>
+                            <a class="btn btn-primary" href="{{ route('customer.edit', ['id' => $val->id]) }}"">Edit Detail</a>
+                          </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+              </div>
+              <!-- /.tab-pane -->
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover table-striped">
-                <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>ID</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($result as $key => $val)
-                <tr>
-                <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{$val->id_number}} ({{ getIDType($val->id_type) }})</td>
-                <td>{{$val->phone}}</td>
-                <td>{{$val->address}}</td>
-                <td>{{$val->email}}</td>
-                <td>{!!setActivationStatus($val->status)!!}</td>
-                <td>
-                	<div class="btn-group">
-	                  <button type="button" class="btn btn-info">Action</button>
-	                  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-	                    <span class="caret"></span>
-	                    <span class="sr-only">Toggle Dropdown</span>
-	                  </button>
-	                  <ul class="dropdown-menu" role="menu">
-                      @permission('update.customer')
-  	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-  	                    @if($val->status == 1)
-  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
-  	                    @else
-  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
-  	                    @endif
-  	                    <li class="divider"></li>
-                      @endpermission
-                      @permission('delete.customer')
-  	                    <li>
-  	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
-  	                    		{{csrf_field()}}
-  	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
-  	                    		{{ method_field('DELETE') }}
-  	                    	</form>
-  	                    </li>
-                      @endpermission
-	                  </ul>
-                	</div>
-                </td>
-                </tr>
-                @endforeach
-              </table>
-            </div>
-            <!-- /.box-body -->
+            <!-- /.tab-content -->
           </div>
-	</div>
-</section>
-
+        </div>
+    </section>
 @endsection

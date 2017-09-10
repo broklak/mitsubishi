@@ -40,9 +40,16 @@ class CustomerController extends Controller
      */
     public function index()
     {
+        $ktp        = $this->model->where('id_type', 1)->limit(2)->orderBy('updated_at', 'desc')->get();
+        $sim        = $this->model->where('id_type', 2)->limit(2)->orderBy('updated_at', 'desc')->get();
+        $passport   = $this->model->where('id_type', 3)->limit(2)->orderBy('updated_at', 'desc')->get();
+
         $data = [
             'result' => $this->model->all(),
-            'page' => $this->page
+            'page' => $this->page,
+            'ktp'   =>  $ktp,
+            'sim'   =>  $sim,
+            'passport'   =>  $passport,
         ];
         return view($this->module . ".index", $data);
     }
@@ -217,7 +224,7 @@ class CustomerController extends Controller
             'ktp'   =>  $ktp,
             'sim'   =>  $sim,
             'passport'   =>  $passport,
-            'page'  =>  'image'
+            'page'  =>  'customer'
         ];
         return view($this->module . ".image", $data);
     }

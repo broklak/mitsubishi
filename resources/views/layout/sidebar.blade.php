@@ -126,7 +126,6 @@
                 @endpermission
                 @permission('*.customer')
                   <li @if($page == 'customer') class="active" @endif ><a href="{{route('customer.index')}}"><i class="fa fa-users"></i> Customer</a></li>
-                  <li @if($page == 'image') class="active" @endif><a href="{{route('customer.image')}}"><i class="fa fa-picture-o"></i> Customer ID Image</a></li>
                 @endpermission
               </ul>
             </li>
