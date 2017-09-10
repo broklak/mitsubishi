@@ -12,7 +12,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            @permission('create.spk')
+            @permission('create.spk')           
               <li @if($page == 'order') class="active" @endif><a href="{{route('order.create')}}"><i class="fa fa-file-word-o"></i> Create SPK</a></li>
             @endpermission
             @permission('read.spk')

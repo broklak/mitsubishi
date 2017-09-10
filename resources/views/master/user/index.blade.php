@@ -8,7 +8,7 @@
 	<div class="col-md-12">
 		{!! session('displayMessage') !!}
 		<div class="box">
-            <div class="box-header">
+            <div class="box-header">               
               @permission('create.user')
                 <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
               @endpermission

@@ -9,7 +9,7 @@
     	{!! session('displayMessage') !!}
 	    {{csrf_field()}}
 	    <div class="col-md-12">
-			<div class="box box-info">
+			<div class="box box-info"> 
 				<div class="box-header with-border" style="text-align:center">
 					<div class="pull-left">
 						<h3 class="box-title">{{$init['spk_code']}}</h3>
