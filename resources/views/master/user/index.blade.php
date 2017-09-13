@@ -43,22 +43,26 @@
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
                       @permission('update.user')
-  	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-  	                    @if($val->status == 1)
-  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
-  	                    @else
-  	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
-  	                    @endif
+                        @if($val->username != 'admin')
+    	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+    	                    @if($val->status == 1)
+    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
+    	                    @else
+    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
+    	                    @endif
+                        @endif
   	                    <li class="divider"></li>
                       @endpermission
                       @permission('delete.user')
-  	                    <li>
-  	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
-  	                    		{{csrf_field()}}
-  	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
-  	                    		{{ method_field('DELETE') }}
-  	                    	</form>
-  	                    </li>
+                        @if($val->username != 'admin')
+    	                    <li>
+    	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
+    	                    		{{csrf_field()}}
+    	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
+    	                    		{{ method_field('DELETE') }}
+    	                    	</form>
+    	                    </li>
+                        @endif
                       @endpermission
 	                  </ul>
                 	</div>

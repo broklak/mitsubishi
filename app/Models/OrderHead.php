@@ -36,17 +36,22 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
         $where = 'order_head.status <> 0 ';
+        $offset = ($page * $limit) - $limit;
 
         if($approval) {
-            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0";
+            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0 ";
         }
 
-        $data = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, date, qty, order_head.created_by,
+        if($query != null) {
+            $where .= "and (spk_code LIKE '%$query%' OR spk_doc_code LIKE '%$query%') ";   
+        }
+
+        $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
@@ -54,10 +59,39 @@ class OrderHead extends Model
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
                         ->whereRaw($where)
-                        ->orderBy('date', 'desc')
+                        ->orderBy('id', $sort)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
 
         return $data;
+    }
+
+    public function countList($approval = false, $query = null) {
+        $user = Auth::user();
+        $userId = $user->id;
+        $job = $user->job_position_id;
+        $where = 'order_head.status <> 0 ';
+        
+        if($approval) {
+            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0 ";
+        }
+
+        if($query != null) {
+            $where .= "and (spk_code LIKE '%$query%' OR spk_doc_code LIKE '%$query%') ";   
+        }
+
+        $count = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, date, qty, order_head.created_by,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            car_types.name as type_name, car_models.name as model_name"))
+                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->whereRaw($where)
+                        ->count();
+
+        return $count;
     }
 
     public function create($data) {

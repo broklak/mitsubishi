@@ -35,17 +35,21 @@
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
                       @permission('update.role') 
+                        @if($val->name != 'super_admin')
   	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
+                        @endif
   	                    <li class="divider"></li>
                       @endpermission
                       @permission('delete.role')
-  	                    <li>
-  	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
-  	                    		{{csrf_field()}}
-  	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
-  	                    		{{ method_field('DELETE') }}
-  	                    	</form>
-  	                    </li>
+                        @if($val->name != 'super_admin')
+    	                    <li>
+    	                    	<form class="deleteForm" method="post" action="{{route("$page.destroy", ['id' => $val->id])}}">
+    	                    		{{csrf_field()}}
+    	                    		<button onclick="return confirm('You will delete this {{$page}}, continue')" type="submit">Delete</button>
+    	                    		{{ method_field('DELETE') }}
+    	                    	</form>
+    	                    </li>
+                        @endif
                       @endpermission
 	                  </ul>
                 	</div>

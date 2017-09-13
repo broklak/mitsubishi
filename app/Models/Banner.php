@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Banner extends Model
 {
@@ -31,4 +32,20 @@ class Banner extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public function list($sort = 'desc', $limit = 10, $page = 1) {
+        $offset = ($page * $limit) - $limit;
+
+        $data = parent::select(DB::raw('id, name, file'))
+                        ->orderBy('id', $sort)
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+
+        foreach ($data as $key => $value) {
+            $data[$key]->file = asset('images/banner/').'/'.$value->file;
+        }
+
+        return $data;
+    }
 }

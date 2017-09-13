@@ -17,4 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('news', 'Api\MasterController@news')->name('api.news.index');
+Route::get('news', 'Api\MasterController@listNews')->name('api.news.list');
+Route::get('news/{id}', 'Api\MasterController@detailNews')->name('api.news.detail');
+Route::get('banners', 'Api\MasterController@listBanner')->name('api.banner.list');
+
+Route::get('spk', 'Api\OrderController@list')->name('api.spk.list');
