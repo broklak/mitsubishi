@@ -15,7 +15,7 @@ class DeliveryOrder extends Model
      * @var array
      */
     protected $fillable = [
-        'spk_id', 'spk_doc_code', 'is_fleet'
+        'spk_id', 'spk_doc_code', 'is_fleet', 'do_code', 'do_date'
     ];
 
     /**
@@ -124,6 +124,15 @@ class DeliveryOrder extends Model
     }
 
     protected function calculateImbalan($result) {
+        $lastFormula = SalesBonusHead::orderBy('id', 'desc')->first();
+        if(!isset($lastFormula->id)) { // IF NO FORMULA
+            foreach ($result as $key => $value) {
+                $result[$key]['imbalan'] = 0;    
+            }
+
+            return $result;
+        }
+
         foreach ($result as $key => $value) {
             $imbalan = SalesBonusHead::where('start_date', '<=', date('Y-m-d'))
                                     ->where('end_date', '>=', date('Y-m-d'))
@@ -142,5 +151,14 @@ class DeliveryOrder extends Model
         }
 
         return $result;
+    }
+
+    public static function validToDO($spkId) {
+        // GET ALL DO 
+        $do = parent::where('spk_id', $spkId)->count();
+        $unitSold = OrderHead::find($spkId);
+        $qty = $unitSold->qty;
+        
+        return ($do < $qty) ? true : false;
     }
 }

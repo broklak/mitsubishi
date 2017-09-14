@@ -34,6 +34,6 @@ class Leasing extends Model
 
     public static function getName($id) {
         $data = parent::find($id);
-        return (isset($data->name)) ? $data->name : 'Cash';
+        return (isset($data->name)) ? $data->name : 'Others';
     }
 }

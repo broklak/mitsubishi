@@ -12,15 +12,15 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function apiSuccess($payload = null, $request = null, $pagination = null) {
+    public function apiSuccess($payload = null, $request = null, $pagination = null, $statusCode = 200) {
     	$data = [
-    		'request'	=> $request,
     		'data'		=> $payload
     	];
 
-    	if($pagination != null) $data['pagination'] = $pagination;
+        if($pagination != null) $data['pagination'] = $pagination;
+    	if($request != null) $data['request'] = $request;
 
-    	return response($data, 200)
+    	return response($data, $statusCode)
                   ->header('Content-Type', 'application/json');
     }
 

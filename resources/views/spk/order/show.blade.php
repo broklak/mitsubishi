@@ -42,7 +42,7 @@
 			                <label for="date" class="col-sm-4 control-label">Customer Name</label>
 			                <div class="col-sm-8">
 			                   <div class="spk-field">
-			                   		<span>{{$init['customer_name'].' '.$init['customer_last_name']}}</span>
+			                   		<span>{{$init['customer_first_name'].' '.$init['customer_last_name']}}</span>
 			                   	</div>
 			                </div>
 			             </div>
@@ -241,7 +241,7 @@
 				            <label for="date" class="col-sm-4 control-label">Booking Fee</label>
 				            <div class="col-sm-8">
 				                <div class="spk-field">
-				                   	<span>{{$init['down_payment_amount']}}</span>
+				                   	<span>{{$init['booking_fee']}}</span>
 				                </div>
 				            </div>
 			             </div>
@@ -257,7 +257,7 @@
 				            <label for="date" class="col-sm-4 control-label">DP Amount</label>
 				            <div class="col-sm-8">
 				                <div class="spk-field">
-				                   	<span>{{$init['jaminan_cost_amount']}}</span>
+				                   	<span>{{$init['dp_amount']}}</span>
 				                </div>
 				            </div>
 			             </div>
@@ -265,7 +265,7 @@
 				            <label for="date" class="col-sm-4 control-label">DP Percentage</label>
 				            <div class="col-sm-8">
 				                <div class="spk-field">
-				                   	<span>{{$init['jaminan_cost_percentage']}}</span>
+				                   	<span>{{$init['dp_percentage']}}</span>
 				                </div>
 				            </div>
 			             </div>
@@ -299,7 +299,7 @@
 					            <label for="date" class="col-sm-4 control-label">Credit Duration</label>
 					            <div class="col-sm-8">
 					                <div class="spk-field">
-					                   	<span>{{$init['year_duration']}} Years</span>
+					                   	<span>{{$init['credit_duration']}} Month</span>
 					                </div>
 					            </div>
 			             	</div>
@@ -307,7 +307,7 @@
 					            <label for="date" class="col-sm-4 control-label">Credit Person</label>
 					            <div class="col-sm-8">
 					                <div class="spk-field">
-					                   	<span>{{$init['owner_name']}}</span>
+					                   	<span>{{$init['credit_owner_name']}}</span>
 					                </div>
 					            </div>
 			             	</div>

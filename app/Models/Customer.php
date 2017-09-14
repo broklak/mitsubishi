@@ -39,7 +39,7 @@ class Customer extends Model
         $validateId = parent::where($where)->first();
 
         $data = [
-            'first_name' => $data['customer_name'],
+            'first_name' => $data['customer_first_name'],
             'last_name' => $data['customer_last_name'],
             'id_type'   => $data['id_type'],
             'id_number' => $data['id_number'],

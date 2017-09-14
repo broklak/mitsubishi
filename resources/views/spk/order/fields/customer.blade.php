@@ -35,7 +35,7 @@
 					<div class="form-group">
 	                  <label for="customer_name" class="col-sm-3 control-label">First Name</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_name" value="{{$init['customer_name']}}" id="customer_name" placeholder="First Name">
+	                    <input type="text" class="form-control" name="customer_first_name" value="{{$init['customer_first_name']}}" id="customer_name" placeholder="First Name">
 	                  </div>
 	                </div>
 

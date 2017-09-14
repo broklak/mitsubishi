@@ -24,7 +24,7 @@
 			            <div class="form-group">
 			               <label for="year_duration" class="col-sm-3 control-label">Credit Duration</label>
 			               <div class="col-sm-9">
-				               <select name="year_duration" id="credit_duration" class="form-control">
+				               <select name="credit_duration" id="credit_duration" class="form-control">
 				               		<option value="0">Choose Duration</option>
 				               		@foreach($months as $key => $val)
 				               		<option @if($init['year_duration'] == $val->months) selected="selected" @endif value="{{$val->months}}">{{$val->months}} Months</option>
@@ -35,7 +35,7 @@
 			            <div class="form-group">
 			               <label for="owner_name" class="col-sm-3 control-label">Credit Person</label>
 			               <div class="col-sm-9">
-			                  <input type="text" class="form-control" name="owner_name" value="{{$init['owner_name']}}" id="owner_name" placeholder="Enter Person Name">
+			                  <input type="text" class="form-control" name="credit_owner_name" value="{{$init['credit_owner_name']}}" id="owner_name" placeholder="Enter Person Name">
 			               </div>
 			            </div>
 			            <div class="form-group">

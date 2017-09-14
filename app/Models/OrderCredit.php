@@ -28,8 +28,8 @@ class OrderCredit extends Model
     	return parent::create([
     		'order_id'			=> $data['order_id'],
     		'leasing_id'		=> $data['leasing_id'],
-    		'year_duration'		=> $data['year_duration'],
-    		'owner_name'		=> $data['owner_name'],
+    		'year_duration'		=> $data['credit_duration'],
+    		'owner_name'		=> $data['credit_owner_name'],
     		'interest_rate'		=> $data['interest_rate'],
     		'admin_cost'        => parseMoneyToInteger($data['admin_cost']),
             'insurance_cost'    => parseMoneyToInteger($data['insurance_cost']),

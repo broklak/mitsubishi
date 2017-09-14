@@ -104,7 +104,7 @@ class OrderHead extends Model
     		'npwp_image'	=> (isset($data['npwp_image'])) ? $data['npwp_image'] : null,
     		'stnk_name'		=> $data['stnk_name'],
     		'stnk_address'	=> $data['stnk_address'],
-    		'faktur_conf'	=> $data['faktur_conf'],
+    		'faktur_conf'   => (isset($data['faktur_conf'])) ? $data['faktur_conf'] : null,
     		'model_id'		=> CarType::getModel($data['type_id']),
     		'type_id'		=> $data['type_id'],
             'car_year'      => $data['car_year'],
@@ -112,10 +112,10 @@ class OrderHead extends Model
     		'qty'			=> $data['qty'],
     		'plat'			=> $data['plat'],
     		'bbn_type'		=> $data['bbn_type'],
-    		'karoseri'		=> $data['karoseri'],
-    		'karoseri_type'	=> $data['karoseri_type'],
-    		'karoseri_spec'	=> $data['karoseri_spec'],
-    		'karoseri_price'	=> parseMoneyToInteger($data['karoseri_price']),
+    		'karoseri'      => (isset($data['karoseri'])) ? $data['karoseri'] : null,
+            'karoseri_type' => (isset($data['karoseri_type'])) ? $data['karoseri_type'] : null,
+            'karoseri_spec' => (isset($data['karoseri_spec'])) ? $data['karoseri_spec'] : null,
+            'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
     		'status'		=> 1,
     		'created_by'	=> $data['created_by']
     	]);
@@ -130,7 +130,7 @@ class OrderHead extends Model
             'npwp_image'    => (isset($data['npwp_image'])) ? $data['npwp_image'] : null,
             'stnk_name'     => $data['stnk_name'],
             'stnk_address'  => $data['stnk_address'],
-            'faktur_conf'   => $data['faktur_conf'],
+            'faktur_conf'   => (isset($data['faktur_conf'])) ? $data['faktur_conf'] : null,
             'model_id'      => CarType::getModel($data['type_id']),
             'type_id'       => $data['type_id'],
             'car_year'      => $data['car_year'],
@@ -138,10 +138,10 @@ class OrderHead extends Model
             'qty'           => $data['qty'],
             'plat'          => $data['plat'],
             'bbn_type'      => $data['bbn_type'],
-            'karoseri'      => $data['karoseri'],
-            'karoseri_type' => $data['karoseri_type'],
-            'karoseri_spec' => $data['karoseri_spec'],
-            'karoseri_price'    => parseMoneyToInteger($data['karoseri_price']),
+            'karoseri'      => (isset($data['karoseri'])) ? $data['karoseri'] : null,
+            'karoseri_type' => (isset($data['karoseri_type'])) ? $data['karoseri_type'] : null,
+            'karoseri_spec' => (isset($data['karoseri_spec'])) ? $data['karoseri_spec'] : null,
+            'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
             'updated_by'    => $data['updated_by']
         ]);
     }
