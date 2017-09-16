@@ -19,6 +19,7 @@ use App\Models\Bbn;
 use App\Models\DefaultAdminFee;
 use App\Models\UserDealer;
 use App\Models\Customer;
+use App\Models\CustomerImage;
 use App\Models\CreditMonth;
 
 
@@ -112,7 +113,7 @@ class OrderController extends Controller
         }
 
         if ($request->file('id_image')) {
-            $nameCust = $request->id_image->getClientOriginalName();
+            $nameCust = $create['id_number'].'-'.$request->id_image->getClientOriginalName();
             $folder = ($create['id_type'] == 1) ? 'ktp' : 'sim';
             $folder = ($create['id_type'] == 3) ? 'passport' : $folder;
             $request->id_image->move(
@@ -120,8 +121,9 @@ class OrderController extends Controller
             );
             $create['image'] = $nameCust;
         }
-
-        $create['customer_id'] = Customer::validateSpk($create);
+        $customer = Customer::validateSpk($create);
+        $create['customer_id'] = $customer['customerId'];
+        $create['customer_id_image'] = isset($customer['imageId']) ? $customer['imageId'] : null;
 
         $createHead = $this->model->create($create);
 
@@ -194,7 +196,7 @@ class OrderController extends Controller
         }
 
         if ($request->file('id_image')) {
-            $nameCust = $request->id_image->getClientOriginalName();
+            $nameCust = $update['id_number'].'-'.$request->id_image->getClientOriginalName();
             $folder = ($update['id_type'] == 1) ? 'ktp' : 'sim';
             $folder = ($update['id_type'] == 3) ? 'passport' : $folder;
             $request->id_image->move(
@@ -203,7 +205,9 @@ class OrderController extends Controller
             $update['image'] = $nameCust;
         }
 
-        $update['customer_id'] = Customer::validateSpk($update);
+        $customer = Customer::validateSpk($update);
+        $update['customer_id'] = $customer['customerId'];
+        $update['customer_id_image'] = isset($customer['imageId']) ? $customer['imageId'] : null;
 
         $updateHead = $this->model->updateData($id, $update);
 
@@ -292,7 +296,6 @@ class OrderController extends Controller
             'customer_first_name' => 'required',
             'customer_last_name' => 'required',
             'customer_address' => 'required',
-            'customer_npwp' => 'required',
             'customer_phone' => 'required',
             'id_type' => 'required',
             'car_year' => 'required',
@@ -360,21 +363,32 @@ class OrderController extends Controller
         $customer = Customer::find($orderHead->customer_id);
         $orderPrice = OrderPrice::where('order_id', $orderId)->first();
         $orderCredit = OrderCredit::where('order_id', $orderId)->first();
-        if($customer->id_type == 1) {
-            $folder = 'ktp';
-        } else if($customer->id_type == 2) {
-            $folder = 'sim';
+
+        if($orderHead->customer_image_id == null) {
+            $customerImage = CustomerImage::where('customer_id', $orderHead->customer_id)->orderBy('type')->orderBy('id', 'desc')->first();
         } else {
-            $folder = 'passport';
+            $customerImage = CustomerImage::find($orderHead->customer_image_id);
+        }
+        
+
+        $folder = '';
+        if(isset($customerImage->type)) {
+            if($customerImage->type == 1) {
+                $folder = 'ktp';
+            } else if($customerImage->type == 2) {
+                $folder = 'sim';
+            } else {
+                $folder = 'passport';
+            }
         }
         return [
-            'customer_first_name'         => $customer->first_name,
+            'customer_first_name'   => $customer->first_name,
             'customer_last_name'    => $customer->last_name,
-            'id_type'               => $customer->id_type,
-            'id_number'             => $customer->id_number,
+            'id_type'               => (isset($customerImage->type)) ? $customerImage->type : null,
+            'id_number'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
             'customer_address'      => $customer->address,
             'folder_id_image'       => $folder,
-            'id_image'                 => $customer->image,
+            'id_image'              => (isset($customerImage->filename)) ? $customerImage->filename : null,
             'customer_phone'        => $customer->phone,
             'customer_npwp'         => $customer->npwp,
             'stnk_name'             => $orderHead->stnk_name,

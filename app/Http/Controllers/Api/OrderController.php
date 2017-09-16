@@ -14,6 +14,7 @@ use App\Models\CarModel;
 use App\Models\DeliveryOrder;
 use App\Models\CarType;
 use App\Models\Customer;
+use App\Models\CustomerImage;
 use App\User;
 use App\RoleUser;
 use App\Role;
@@ -62,12 +63,24 @@ class OrderController extends Controller
             $customer = Customer::find($orderHead->customer_id);
             $orderPrice = OrderPrice::where('order_id', $id)->first();
             $orderCredit = OrderCredit::where('order_id', $id)->first();
-            if($customer->id_type == 1) {
-                $folder = "ktp";
-            } else if($customer->id_type == 2) {
-                $folder = "/sim/";
+            
+
+            if($orderHead->customer_image_id == null) {
+                $customerImage = CustomerImage::where('customer_id', $orderHead->customer_id)->orderBy('type')->orderBy('id', 'desc')->first();
             } else {
-                $folder = "passport";
+                $customerImage = CustomerImage::find($orderHead->customer_image_id);
+            }
+            
+
+            $folder = '';
+            if(isset($customerImage->type)) {
+                if($customerImage->type == 1) {
+                    $folder = 'ktp';
+                } else if($customerImage->type == 2) {
+                    $folder = 'sim';
+                } else {
+                    $folder = 'passport';
+                }
             }
 
             $data['number'] = $orderHead->spk_code;
@@ -111,10 +124,10 @@ class OrderController extends Controller
             $data['customerData'] = [
                 'customerName'         => $customer->first_name,
                 'customerLastName'    => $customer->last_name,
-                'idType'               => $customer->id_type,
-                'idNumber'             => $customer->id_number,
+                'idType'               => (isset($customerImage->type)) ? $customerImage->type : null,
+                'idNumber'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
                 'customerAddress'      => $customer->address,
-                'idImage'              => asset('images/customer') . $folder . $customer->image,
+                'idImage'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
                 'customerPhone'        => $customer->phone,
                 'customerNpwp'         => $customer->npwp,
                 'npwpImage'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
@@ -179,7 +192,9 @@ class OrderController extends Controller
                 $create['image'] = $nameCust;
             }
 
-            $create['customer_id'] = Customer::validateSpk($create);
+            $customer = Customer::validateSpk($create);
+            $create['customer_id'] = $customer['customerId'];
+            $create['customer_id_image'] = isset($customer['imageId']) ? $customer['imageId'] : null;
 
             $createHead = $orderHead->create($create);
 
@@ -257,7 +272,9 @@ class OrderController extends Controller
                 $update['image'] = $nameCust;
             }
 
-            $update['customer_id'] = Customer::validateSpk($update);
+            $customer = Customer::validateSpk($update);
+            $update['customer_id'] = $customer['customerId'];
+            $update['customer_id_image'] = isset($customer['imageId']) ? $customer['imageId'] : null;
 
             $updateHead = $orderHead->updateData($id, $update);
 
@@ -298,7 +315,6 @@ class OrderController extends Controller
             'customer_first_name' => 'required',
             'customer_last_name' => 'required',
             'customer_address' => 'required',
-            'customer_npwp' => 'required',
             'customer_phone' => 'required',
             'id_type' => 'required',
             'car_year' => 'required',

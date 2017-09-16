@@ -36,22 +36,6 @@
 	                </div>
 
 	                <div class="form-group">
-	                  <label for="id_type" class="col-sm-2 control-label">ID Type</label>
-	                  <div class="col-sm-10">
-	                  	<label class="radio-inline"><input @if($row->id_type == 1) checked="checked" @endif type="radio" value="1" name="id_type">KTP</label>
-	                  	<label class="radio-inline"><input @if($row->id_type == 2) checked="checked" @endif type="radio" value="2" name="id_type">SIM</label>
-	                  	<label class="radio-inline"><input @if($row->id_type == 3) checked="checked" @endif type="radio" value="3" name="id_type">Passport</label>
-	                  </div>
-	                </div>
-
-	                <div class="form-group">
-	                  <label for="id_number" class="col-sm-2 control-label">ID Number</label>
-	                  <div class="col-sm-10">
-	                  	<input type="text" class="form-control" name="id_number" value="{{$row->id_number}}" id="id_number" placeholder="ID Number">
-	                  </div>
-	                </div>
-
-	                <div class="form-group">
 	                  <label for="phone" class="col-sm-2 control-label">Phone Number</label>
 	                  <div class="col-sm-10">
 	                  	<input type="text" class="form-control" name="phone" value="{{$row->phone}}" id="phone" placeholder="Phone Number">
@@ -86,30 +70,217 @@
 	                  </div>
 	                </div>
 
-	                <div class="form-group">
-	                  @php 
-	                  	$folder = ($row->id_type == 1) ? 'ktp' : 'sim'; 
-	                  	$folder = ($row->id_type == 3) ? 'passport' : $folder; 
-	                  @endphp
-	                  <div class="col-sm-2">
-		               	  <img style="width:170px;height:120px" src="{{ asset('images') . '/customer/' . $folder . '/' . $row->image }}" />
-		                  <label for="file" class="control-label">ID Image File</label>
-	                  </div>
-	                  <div class="col-sm-10">
-	                    <input type="file" class="form-control" name="image" id="file">
-	                  </div>
-	                </div>
-
 	              </div>
 	              <!-- /.box-body -->
-	              <div class="box-footer">
-	                <button type="submit" class="btn btn-info pull-right">Submit</button>
-	              </div>
+	              
 	              <!-- /.box-footer -->
 	              {{ method_field('PUT') }}
+
+	              <div class="nav-tabs-custom">
+		            <ul class="nav nav-tabs">
+		              <li class="active"><a href="#tab_1" data-toggle="tab">KTP</a></li>
+		              <li><a href="#tab_2" data-toggle="tab">SIM</a></li>
+		              <li><a href="#tab_3" data-toggle="tab">Passport</a></li>
+		            </ul>
+		            <div class="tab-content">
+		              <div class="tab-pane active" id="tab_1">
+		                  <table class="table table-bordered table-hover table-striped">
+		                    <thead>
+		                      <tr>
+		                        <th>Image <a data-toggle="modal" data-target="#modal-ktp" style="margin-left: 10px" class="btn btn-info">Attach New KTP</a></th>
+		                        <th>Number</th>
+		                        <th>Action</th>
+		                      </tr>
+		                    </thead>
+		                    <tbody>
+		                      @foreach($ktp as $key => $val)
+		                        <tr>
+		                          <td>
+		                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/ktp/' . $val->filename }}" />
+		                          </td>
+		                          <td>{{$val->id_number}}</td>
+		                          <td>
+		                            <a onclick="return confirm('You will delete this ID Image. Continue?')" class="btn btn-primary" href="{{ route('customer.deleteImage', ['id' => $val->id]) }}">Delete</a>
+		                          </td>
+		                        </tr>
+		                      @endforeach
+		                    </tbody>
+		                  </table>
+		              </div>
+		              <!-- /.tab-pane -->
+		              <div class="tab-pane" id="tab_2">
+		                  <table class="table table-bordered table-hover table-striped">
+		                    <thead>
+		                      <tr>
+		                        <th>Image <a data-toggle="modal" data-target="#modal-sim" style="margin-left: 10px" class="btn btn-info">Attach New SIM</a></th>
+		                        <th>Number</th>
+		                        <th>Action</th>
+		                      </tr>
+		                    </thead>
+		                    <tbody>
+		                      @foreach($sim as $key => $val)
+		                        <tr>
+		                          <td>
+		                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/sim/' . $val->filename }}" />
+		                          </td>
+		                          <td>{{$val->id_number}}</td>
+		                          <td>
+		                            <a onclick="return confirm('You will delete this ID Image. Continue?')" class="btn btn-primary" href="{{ route('customer.deleteImage', ['id' => $val->id]) }}"">Delete</a>
+		                          </td>
+		                        </tr>
+		                      @endforeach
+		                    </tbody>
+		                  </table>
+		              </div>
+		              <!-- /.tab-pane -->
+		              <div class="tab-pane" id="tab_3">
+		                  <table class="table table-bordered table-hover table-striped">
+		                    <thead>
+		                      <tr>
+		                        <th>Image <a data-toggle="modal" data-target="#modal-passport" style="margin-left: 10px" class="btn btn-info">Attach New Passport</a></th>
+		                        <th>Number</th>
+		                        <th>Action</th>
+		                      </tr>
+		                    </thead>
+		                    <tbody>
+		                      @foreach($passport as $key => $val)
+		                        <tr>
+		                          <td>
+		                            <img style="max-width:400px;display:block;margin:20px" src="{{ asset('images') . '/customer/passport/' . $val->filename }}" />
+		                          </td>
+		                          <td>{{$val->id_number}}</td>
+		                          <td>
+		                            <a onclick="return confirm('You will delete this ID Image. Continue?')" class="btn btn-primary" href="{{ route('customer.deleteImage', ['id' => $val->id]) }}">Delete</a>
+		                          </td>
+		                        </tr>
+		                      @endforeach
+		                    </tbody>
+		                  </table>
+		              </div>
+		              <!-- /.tab-pane -->
+		            </div>
+		            <!-- /.tab-content -->
+		            <div class="box-footer">
+	                	<button type="submit" class="btn btn-info pull-right">Submit</button>
+	              	</div>
+		          </div>
 	            </form>
 	          </div>
           </div>
+
+          <!-- START MODAL KTP REASON -->
+		       						<div class="modal modal-danger fade" id="modal-ktp">
+		       							<form class="form-horizontal" method="post" action="{{route('customer.image.add')}}" enctype="multipart/form-data">
+		       							{{csrf_field()}}
+								          <div class="modal-dialog">
+								            <div class="modal-content">
+								              <div class="modal-header">
+								                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								                  <span aria-hidden="true">&times;</span>
+								                 </button>
+								                <h4 class="modal-title">Attach New KTP</h4>
+								              </div>
+								              <div class="modal-body">
+								              	<div class="form-group">
+								              		<label class="control-label">KTP Number</label>
+								              		<input class="form-control" type="text" required name="id_number">
+								              	</div>
+								              	<div class="form-group">
+								              		<label class="control-label">Image</label>
+								                	<input type="file" name="image">
+								                	<input type="hidden" name="type" value="1">
+								                	<input type="hidden" name="customer_id" value="{{$row->id}}">
+								              	</div>
+								                	
+								              </div>
+								              <div class="modal-footer">
+								                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-outline">Save</button>
+								              </div>
+								              </form>
+								            </div>
+								            <!-- /.modal-content -->
+								          </div>
+								          <!-- /.modal-dialog -->
+								    </div>
+								    <!-- END MODAL KTP REASON -->
+
+
+	<!-- START MODAL SIM REASON -->
+		       						<div class="modal modal-danger fade" id="modal-sim">
+		       							<form class="form-horizontal" method="post" action="{{route('customer.image.add')}}" enctype="multipart/form-data">
+		       							{{csrf_field()}}
+								          <div class="modal-dialog">
+								            <div class="modal-content">
+								              <div class="modal-header">
+								                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								                  <span aria-hidden="true">&times;</span>
+								                 </button>
+								                <h4 class="modal-title">Attach New SIM</h4>
+								              </div>
+								              <div class="modal-body">
+								              	<div class="form-group">
+								              		<label class="control-label">SIM Number</label>
+								              		<input class="form-control" type="text" required name="id_number">
+								              	</div>
+								              	<div class="form-group">
+								              		<label class="control-label">Image</label>
+								                	<input type="file" name="image">
+								                	<input type="hidden" name="type" value="2">
+								                	<input type="hidden" name="customer_id" value="{{$row->id}}">
+								              	</div>
+								                	
+								              </div>
+								              <div class="modal-footer">
+								                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-outline">Save</button>
+								              </div>
+								              </form>
+								            </div>
+								            <!-- /.modal-content -->
+								          </div>
+								          <!-- /.modal-dialog -->
+								    </div>
+								    <!-- END MODAL SIM REASON -->
+
+
+	<!-- START MODAL Passport REASON -->
+		       						<div class="modal modal-danger fade" id="modal-passport">
+		       							<form class="form-horizontal" method="post" action="{{route('customer.image.add')}}" enctype="multipart/form-data">
+		       							{{csrf_field()}}
+								          <div class="modal-dialog">
+								            <div class="modal-content">
+								              <div class="modal-header">
+								                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								                  <span aria-hidden="true">&times;</span>
+								                 </button>
+								                <h4 class="modal-title">Attach New Passport</h4>
+								              </div>
+								              <div class="modal-body">
+								              	<div class="form-group">
+								              		<label class="control-label">Passport Number</label>
+								              		<input class="form-control" type="text" required name="id_number">
+								              	</div>
+								              	<div class="form-group">
+								              		<label class="control-label">Image</label>
+								                	<input type="file" name="image">
+								                	<input type="hidden" name="type" value="3">
+								                	<input type="hidden" name="customer_id" value="{{$row->id}}">
+								              	</div>
+								                	
+								              </div>
+								              <div class="modal-footer">
+								                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-outline">Save</button>
+								              </div>
+								              </form>
+								            </div>
+								            <!-- /.modal-content -->
+								          </div>
+								          <!-- /.modal-dialog -->
+								    </div>
+								    <!-- END MODAL SIM REASON -->
+
     </section>
 
 @endsection

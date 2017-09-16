@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Spk;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\LeasingRateHead;
 use App\Models\InsuranceRateHead;
 use App\Models\CarType;
 use App\Models\CarModel;
+use App\Models\Customer;
 
 
 class AjaxController extends Controller
@@ -56,5 +58,18 @@ class AjaxController extends Controller
         }
 
         return $result;
+    }
+
+    public function getCustomerData (Request $request) {
+        $phone = $request->input('phone');
+        $data = Customer::select(DB::raw("id, first_name, last_name, address, 
+                                        (select id_number from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_number,
+                                        (select type from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_type,
+                                        (select filename from customer_image where customer_id = customers.id order by type, id desc limit 1) AS filename"
+                                        ))
+                        ->where('phone', $phone)
+                        ->first();
+
+        return json_encode($data);
     }
 }

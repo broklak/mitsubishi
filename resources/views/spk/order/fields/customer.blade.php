@@ -7,22 +7,7 @@
 					<div class="form-group">
 	                  <label for="customer_phone" class="col-sm-3 control-label">Phone Number</label>
 	                  <div class="col-sm-9">
-	                  	<input type="text" class="form-control" name="customer_phone" value="{{$init['customer_phone']}}" id="customer_phone" placeholder="Phone Number">
-						<input type="hidden" id="idimage-{{$val->id}}" value="{{ asset('images') . '/customer/' . $folder . '/' . $val->image }}" />
-	                  </div>
-	                </div>
-
-					<div class="form-group">
-	                  <label for="customer_name" class="col-sm-3 control-label">First Name</label>
-	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_first_name" value="{{$init['customer_first_name']}}" id="customer_name" placeholder="First Name">
-	                  </div>
-	                </div>
-
-	                <div class="form-group">
-	                  <label for="customer_last_name" class="col-sm-3 control-label">Last Name</label>
-	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_last_name" value="{{$init['customer_last_name']}}" id="customer_last_name" placeholder="Last Name">
+	                  	<input type="text" name="customer_phone" id="customer_phone" value="{{$init['customer_phone']}}" class="form-control">
 	                  </div>
 	                </div>
 
@@ -42,7 +27,7 @@
 	                	<img style="width:150px;height:100px;display:none" id="id_image" />
 	                  <label for="id_image" class="col-sm-3 control-label">ID Image</label>
 	                  <div class="col-sm-9">
-	                    <input type="file" class="form-control" name="id_image" id="id_image">
+	                    <input type="file" class="form-control" name="id_image" id="ids_image">
 	                  </div>
 	                </div>
 
@@ -50,6 +35,20 @@
 	                  <label for="id_number" class="col-sm-3 control-label">ID Number</label>
 	                  <div class="col-sm-9">
 	                  	<input type="text" class="form-control" name="id_number" value="{{$init['id_number']}}" id="id_number" placeholder="ID Number">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                  <label for="customer_name" class="col-sm-3 control-label">First Name</label>
+	                  <div class="col-sm-9">
+	                    <input type="text" class="form-control" name="customer_first_name" value="{{$init['customer_first_name']}}" id="customer_name" placeholder="First Name">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                  <label for="customer_last_name" class="col-sm-3 control-label">Last Name</label>
+	                  <div class="col-sm-9">
+	                    <input type="text" class="form-control" name="customer_last_name" value="{{$init['customer_last_name']}}" id="customer_last_name" placeholder="Last Name">
 	                  </div>
 	                </div>
 

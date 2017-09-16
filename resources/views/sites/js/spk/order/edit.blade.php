@@ -66,6 +66,13 @@
         getInterestRate();
     });
 
+    $('#customer_phone').keyup(function(){
+        var phone = $(this).val();
+        if(phone.length > 10) {
+            getCustomerData(phone); 
+        }
+    });
+
   });
 
     function calculateDPPercent() {
@@ -206,6 +213,34 @@
         $('#other_cost').val('0');
         $('#total_down_payment').val('0');
     }
+
+    function getCustomerData (phone) {
+        $.ajax({
+            method: 'GET',
+            url: '{{route('ajax.getCustomerData')}}',
+            data: {'phone':phone},
+            success: function(result) {
+                if( result != 'null' ) {
+                    obj = JSON.parse(result);
+                    let folder = (obj.id_type == 1) ? 'ktp' : 'sim';
+                    folder = (obj.id_type == 3) ? 'passort' : folder;
+                    $('#customer_name').val(obj.first_name);
+                    $('#customer_last_name').val(obj.last_name);
+                    $('#address').val(obj.address);
+                    $('#id_number').val(obj.id_number);
+                    $("input[name='id_type'][value='"+obj.id_type+"']").prop('checked', 'checked');
+                    $('#id_image').attr('src', '{{asset('images/customer/')}}/'+folder+'/'+obj.filename).show();
+                } else {
+                    $('#customer_name').val('');
+                    $('#customer_last_name').val('');
+                    $('#address').val('');
+                    $('#id_number').val('');
+                    $("input[name='id_type']").prop('checked', false);
+                    $('#id_image').hide();
+                }
+            }
+        });
+    }
 </script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -229,7 +264,6 @@
         this.input = $( "<input>" )
           .appendTo( this.wrapper )
           .val( value )
-          .attr( "name", "customer_phone" )
           .addClass( "custom-combobox-input form-control" )
           .autocomplete({
             delay: 0,
@@ -244,17 +278,6 @@
  
         this._on( this.input, {
           autocompleteselect: function( event, ui ) {
-            // SELECT HANDLER
-            var val = ui.item.option.value;
-
-            // POPULATE
-            $('#customer_name').val($('#firstname-'+val).val());
-            $('#customer_last_name').val($('#lastname-'+val).val());
-            $('#id_number').val($('#idnumber-'+val).val());
-            $('#address').val($('#address-'+val).val());
-            $('#customer_npwp').val($('#npwp-'+val).val());
-            $("input[name='id_type'][value='"+$('#idtype-'+val).val()+"']").prop('checked', 'checked');
-            $('#id_image').attr('src', $('#idimage-'+val).val()).show();
 
             ui.item.option.selected = true;
             this._trigger( "select", event, {

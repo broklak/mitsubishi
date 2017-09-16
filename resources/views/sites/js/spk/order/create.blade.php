@@ -66,6 +66,13 @@
         getInterestRate();
     });
 
+    $('#customer_phone').keyup(function(){
+        var phone = $(this).val();
+        if(phone.length > 10) {
+            getCustomerData(phone); 
+        }
+    });
+
   });
 
     function calculateDPPercent() {
@@ -206,4 +213,177 @@
         $('#other_cost').val('0');
         $('#total_down_payment').val('0');
     }
+
+    function getCustomerData (phone) {
+        $.ajax({
+            method: 'GET',
+            url: '{{route('ajax.getCustomerData')}}',
+            data: {'phone':phone},
+            success: function(result) {
+                if( result != 'null' ) {
+                    obj = JSON.parse(result);
+                    let folder = (obj.id_type == 1) ? 'ktp' : 'sim';
+                    folder = (obj.id_type == 3) ? 'passort' : folder;
+                    $('#customer_name').val(obj.first_name);
+                    $('#customer_last_name').val(obj.last_name);
+                    $('#address').val(obj.address);
+                    $('#id_number').val(obj.id_number);
+                    $("input[name='id_type'][value='"+obj.id_type+"']").prop('checked', 'checked');
+                    $('#id_image').attr('src', '{{asset('images/customer/')}}/'+folder+'/'+obj.filename).show();
+                } else {
+                    $('#customer_name').val('');
+                    $('#customer_last_name').val('');
+                    $('#address').val('');
+                    $('#id_number').val('');
+                    $("input[name='id_type']").prop('checked', false);
+                    $('#id_image').hide();
+                }
+            }
+        });
+    }
 </script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $( function() {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .addClass( "custom-combobox-input form-control" )
+          .autocomplete({
+            delay: 0,
+            minLength: 7,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            classes: {
+              "ui-tooltip": "ui-state-highlight"
+            }
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a style='display:none'>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .on( "mousedown", function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .on( "click", function() {
+            input.trigger( "focus" );
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+            return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        // this.input
+        //   .val( "" )
+        //   .attr( "title", value + " didn't match any item" )
+        //   .tooltip( "open" );
+        // this.element.val( "" );
+        // this._delay(function() {
+        //   this.input.tooltip( "close" ).attr( "title", "" );
+        // }, 2500 );
+        // this.input.autocomplete( "instance" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+ 
+    $( "#combobox" ).combobox();
+
+    $('#type_id').autocomplete({
+        source: "{{route('ajax.getCarType')}}",
+        minLength: 3,
+        select: function( event, data) {
+            $('#type_id_real').val(data.item.id);
+        }
+    });
+  } );
+  </script>

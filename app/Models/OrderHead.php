@@ -21,7 +21,7 @@ class OrderHead extends Model
      */
     protected $fillable = [
         'spk_code', 'spk_doc_code', 'date', 'npwp_image', 'stnk_name', 'stnk_address', 'faktur_conf', 'model_id', 'type_id', 'color', 'dealer_id', 'customer_id',
-        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by'
+        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 'customer_image_id'
     ];
 
     /**
@@ -97,7 +97,8 @@ class OrderHead extends Model
     public function create($data) {
     	return parent::create([
     		'dealer_id'		=> $data['dealer_id'],
-    		'customer_id'	=> $data['customer_id'],
+            'customer_id'   => $data['customer_id'],
+    		'customer_image_id'	=> $data['customer_id_image'],
     		'spk_code'		=> $this->generateSPKCode($data['dealer_id']),
     		'spk_doc_code'	=> $data['spk_doc_code'],
     		'date'			=> $data['date'],
@@ -125,6 +126,7 @@ class OrderHead extends Model
         return parent::find($id)->update([
             'dealer_id'     => $data['dealer_id'],
             'customer_id'   => $data['customer_id'],
+            'customer_image_id' => $data['customer_id_image'],
             'spk_doc_code'  => $data['spk_doc_code'],
             'date'          => $data['date'],
             'npwp_image'    => (isset($data['npwp_image'])) ? $data['npwp_image'] : null,

@@ -3,21 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class CustomerImage extends Model
 {
-    use SoftDeletes;
     /**
      * @var string
      */
-    protected $table = 'companies';
+    protected $table = 'customer_image';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 'contact_name', 'phone', 'fax', 'email', 'address', 'status', 'created_by', 'updated_by'
+        'customer_id', 'type', 'id_number', 'filename', 'created_by'
     ];
 
     /**
@@ -31,9 +29,4 @@ class Company extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-
-    public static function getName($id) {
-        $data = parent::find($id);
-        return isset($data->name) ? $data->name : null;
-    }
 }

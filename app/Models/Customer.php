@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Customer extends Model
 {
@@ -34,34 +35,65 @@ class Customer extends Model
     protected $dates = ['deleted_at'];
 
     public static function validateSpk($data) {
-        $where['id_number'] = $data['id_number'];
-        $where['id_type'] = $data['id_type'];
+        $where['phone'] = $data['customer_phone'];
         $validateId = parent::where($where)->first();
 
-        $data = [
+        $dataChange = [
             'first_name' => $data['customer_first_name'],
             'last_name' => $data['customer_last_name'],
-            'id_type'   => $data['id_type'],
-            'id_number' => $data['id_number'],
+            'id_type'   => '0',
+            'id_number' => '',
             'address'   => $data['customer_address'],
             'phone'     => $data['customer_phone'],
-            'npwp'      => $data['customer_npwp'],
-            'image'     => isset($data['image']) ? $data['image'] : null
+            'npwp'      => $data['customer_npwp']
+        ];
+
+        $image = [
+            'id_number'     => $data['id_number'],
+            'type'          => $data['id_type'],
+            'created_by'    => Auth::id()
         ];
 
         if(isset($validateId->id)) { // CUSTOMER EXIST THEN UPDATE DATA
-            $data['updated_by'] = Auth::id();
-            parent::where($where)->first()->update($data);
-            return $validateId->id;
+            $dataChange['updated_by'] = Auth::id();
+            parent::where($where)->first()->update($dataChange);
+
+            if(isset($data['image'])) {
+                $image['filename'] = $data['image'];
+                $image['customer_id'] = $validateId->id;
+                $createImage = CustomerImage::create($image);
+                $return['imageId'] = $createImage->id; 
+            }
+            $return['customerId'] = $validateId->id;
+            return $return;
         }
 
-        $data['created_by'] = Auth::id();
-        $created = parent::create($data);
-        return $created->id;
+        $dataChange['created_by'] = Auth::id();
+        $created = parent::create($dataChange);
+
+        if(isset($data['image'])) {
+            $image['filename'] = $data['image'];
+            $image['customer_id'] = $created->id;
+            $createImage = CustomerImage::create($image);
+            $return['imageId'] = $createImage->id;
+        }
+        $return['customerId'] = $created->id;
+        return $return;
     }
 
     public static function getName($id) {
         $data = parent::find($id);
         return $data->first_name.' '.$data->last_name;
+    }
+
+    public function list() {
+        $data = parent::select(DB::raw("id, first_name, last_name, phone, address, status, 
+                                        (select type from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_type,
+                                        (select id_number from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_number,
+                                        (select filename from customer_image where customer_id = customers.id order by type, id desc limit 1) AS filename"
+                                        ))
+                        ->where('deleted_at', null)
+                        ->get();
+        return $data;
     }
 }

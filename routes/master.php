@@ -21,7 +21,8 @@ Route::resource('setting/master/company', 'Master\CompanyController');
 Route::get('setting/master/dealer/change-status/{id}/{status}', 'Master\DealerController@changeStatus')->name('dealer.change-status');
 Route::resource('setting/master/dealer', 'Master\DealerController');
 
-Route::get('setting/master/image/', 'Master\CustomerController@image')->name('customer.image');
+Route::get('setting/master/image/delete/{id}', 'Master\CustomerController@deleteImage')->name('customer.deleteImage');
+Route::post('setting/master/image/add', 'Master\CustomerController@addImage')->name('customer.image.add');
 Route::get('setting/master/customer/change-status/{id}/{status}', 'Master\CustomerController@changeStatus')->name('customer.change-status');
 Route::resource('setting/master/customer', 'Master\CustomerController');
 

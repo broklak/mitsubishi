@@ -27,9 +27,11 @@
     function getIDType($type) {
         if($type == 1) {
             return 'KTP';
+        } else if($type == 2) {
+            return 'SIM';
         }
 
-        return 'SIM';
+        return 'Passport';
     }
 
     function parseMoneyToInteger($money) {
