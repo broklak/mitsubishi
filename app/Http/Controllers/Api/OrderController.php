@@ -28,6 +28,12 @@ class OrderController extends Controller
 
     public function list(Request $request) { 
     	try {
+            $type = $request->input('type');
+            $time = $request->input('timestamp');
+            if($type == 'sync') {
+                return $this->shortSpk($request->input());
+            }
+
     		$approval = ($request->input('type') == 'approval') ? true : false;
 	    	$limit = ($request->input('limit')) ? $request->input('limit') : 10;
 	    	$page = ($request->input('page')) ? $request->input('page') : 1;
@@ -485,5 +491,18 @@ class OrderController extends Controller
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');   
         }
         
+    }
+
+    protected function shortSpk($request) {
+        $time = (isset($request['timestamp'])) ? date('Y-m-d H:i:s', $request['timestamp']) : date('Y-m-d H:i:s');
+
+        $data = OrderHead::select('spk_code')
+                            ->where('created_at', '>', $time)
+                            ->get();
+        $spk = [];
+        foreach ($data as $key => $value) {
+            $spk[] = $value->spk_code;
+        }
+        return $this->apiSuccess($spk, $request);
     }
 }

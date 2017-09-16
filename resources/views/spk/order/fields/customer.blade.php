@@ -7,28 +7,8 @@
 					<div class="form-group">
 	                  <label for="customer_phone" class="col-sm-3 control-label">Phone Number</label>
 	                  <div class="col-sm-9">
-	                  	<div class="ui-widget">
-	                  		<select id="combobox" style="background-color=#fff" class="form-control">
-	                  			<option value=""></option>
-	                  			@foreach($customer as $key => $val)
-	                  				<option @if($init['customer_phone'] == $val->phone) selected @endif value="{{$val->id}}">{{$val->phone}}</option>
-	                  			@endforeach
-							  </select>
-							  	@foreach($customer as $key => $val)
-	                  				<input type="hidden" id="firstname-{{$val->id}}" value="{{$val->first_name}}" />
-	                  				<input type="hidden" id="lastname-{{$val->id}}" value="{{$val->last_name}}" />
-	                  				<input type="hidden" id="idnumber-{{$val->id}}" value="{{$val->id_number}}" />
-	                  				<input type="hidden" id="address-{{$val->id}}" value="{{$val->address}}" />
-	                  				<input type="hidden" id="npwp-{{$val->id}}" value="{{$val->npwp}}" />
-	                  				<input type="hidden" id="idtype-{{$val->id}}" value="{{$val->id_type}}" />
-	                  				@php 
-	                  					if($val->id_type == 1) $folder = 'ktp';
-	                  					elseif($val->id_type == 2) $folder = 'sim';
-	                  					else $folder = 'passport';
-	                  				@endphp
-	                  				<input type="hidden" id="idimage-{{$val->id}}" value="{{ asset('images') . '/customer/' . $folder . '/' . $val->image }}" />
-	                  			@endforeach
-						</div>
+	                  	<input type="text" class="form-control" name="customer_phone" value="{{$init['customer_phone']}}" id="customer_phone" placeholder="Phone Number">
+						<input type="hidden" id="idimage-{{$val->id}}" value="{{ asset('images') . '/customer/' . $folder . '/' . $val->image }}" />
 	                  </div>
 	                </div>
 

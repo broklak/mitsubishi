@@ -27,7 +27,7 @@
 				               <select name="credit_duration" id="credit_duration" class="form-control">
 				               		<option value="0">Choose Duration</option>
 				               		@foreach($months as $key => $val)
-				               		<option @if($init['year_duration'] == $val->months) selected="selected" @endif value="{{$val->months}}">{{$val->months}} Months</option>
+				               		<option @if($init['credit_duration'] == $val->months) selected="selected" @endif value="{{$val->months}}">{{$val->months}} Months</option>
 				               		@endforeach
 				               </select>
 			               </div>
