@@ -15,6 +15,9 @@ use App\Models\DeliveryOrder;
 use App\Models\CarType;
 use App\Models\Customer;
 use App\User;
+use App\RoleUser;
+use App\Role;
+use App\PermissionRole;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -201,6 +204,17 @@ class OrderController extends Controller
     public function put(Request $request, $id)
     {
         try {
+            $type = $request->input('type');
+
+            if($type == 'approve') {
+                return $this->approveSpk($id);
+            }
+
+            if($type == 'reject') {
+                $reason = ($request->input('reason')) ? $request->input('reason') : null;
+                return $this->rejectSpk($id, $reason);
+            }
+
             $orderHead = new OrderHead();
             $validator = Validator::make($request->input(), $this->rules());
             if ($validator->fails()) {    
@@ -376,5 +390,100 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');        
         }
+    }
+
+    protected function approveSpk($orderId) {
+        try {
+            $eligible = OrderApproval::eligibleToApprove(OrderHead::find($orderId));
+
+            if(!$eligible) {
+                return $this->apiError($statusCode = 401, 'Unauthorized', 'You are not eligible to approve');
+            }
+
+            $roles = RoleUser::getRoleForUser(Auth::id());
+            if(count($roles) == 1) {
+                $roleName = Role::getRoleName($roles[0]);
+            } else {
+                $approver = PermissionRole::getSPKApprover();
+                foreach ($roles as $key => $value) {
+                    if(isset($approver[$value])) {
+                        $roleName = $approver[$value];
+                    }
+                }
+            }
+
+            $approve = OrderApproval::create([
+                'order_id'  => $orderId,
+                'level_approved' => 0,
+                'role_name' => $roleName,
+                'type'  => 1,
+                'job_position_id' => 0,
+                'approved_by'   => Auth::id()
+            ]);
+
+            //CREATE LOG
+            OrderLog::create([
+                'order_id'      => $orderId,
+                'desc'          => 'Approved',
+                'created_by'    => Auth::id()
+            ]);
+
+            logUser('Approve SPK '.$orderId);    
+            $data = [
+                'message'   => 'Success to approve SPK'
+            ];
+            return $this->apiSuccess($data);
+        } catch (Exception $e) {
+            return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');   
+        }
+        
+    }
+
+    protected function rejectSpk($orderId, $reason = null) {
+        try {
+            $eligible = OrderApproval::eligibleToApprove(OrderHead::find($orderId));
+
+            if(!$eligible) {
+                return $this->apiError($statusCode = 401, 'Unauthorized', 'You are not eligible to approve');
+            }
+
+            $roles = RoleUser::getRoleForUser(Auth::id());
+            if(count($roles) == 1) {
+                $roleName = Role::getRoleName($roles[0]);
+            } else {
+                $approver = PermissionRole::getSPKApprover();
+                foreach ($roles as $key => $value) {
+                    if(isset($approver[$value])) {
+                        $roleName = $approver[$value];
+                    }
+                }
+            }
+
+            $approve = OrderApproval::create([
+                'order_id'  => $orderId,
+                'level_approved' => 0,
+                'role_name' => $roleName,
+                'reject_reason' => $reason,
+                'type'  => 2,
+                'job_position_id' => 0,
+                'approved_by'   => Auth::id()
+            ]);
+
+            //CREATE LOG
+            OrderLog::create([
+                'order_id'      => $orderId,
+                'desc'          => 'Rejected',
+                'created_by'    => Auth::id()
+            ]);
+
+            logUser('Reject SPK '.$orderId);    
+            $data = [
+                'message'   => 'Success to reject SPK'
+            ];
+            return $this->apiSuccess($data);
+        } catch (Exception $e) {
+            return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');   
+        }
+        
     }
 }

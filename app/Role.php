@@ -20,6 +20,11 @@ class Role extends EntrustRole
         return $data->display_name;
     }
 
+    public static function getRoleName($id) {
+        $data = parent::find($id);
+        return $data->name;
+    }
+
     public static function getSupervisor() {
     	$data = parent::select('first_name', 'last_name', 'users.id')
     				->join('role_user', 'role_user.role_id', '=', 'roles.id')
