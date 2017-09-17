@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class CarType extends Model
 {
@@ -40,5 +41,13 @@ class CarType extends Model
     public static function getName($id) {
         $data = parent::find($id);
         return $data->name;
+    }
+
+    public static function getOptionValue() {
+        $data = parent::select(DB::raw('car_types.id as value, CONCAT(car_models.name," ",car_types.name) AS display'))
+                        ->join('car_models', 'car_models.id', '=', 'car_types.model_id')
+                        ->get();
+
+        return $data;
     }
 }

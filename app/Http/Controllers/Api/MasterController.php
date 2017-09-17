@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\News;
 use App\Models\Banner;
 use Exception;
@@ -70,5 +71,17 @@ class MasterController extends Controller
         }
 
         return $this->apiSuccess($data, $request->input(), $pagination);
+    }
+
+    public function logoutAPI() {
+        if (Auth::check()) {
+             Auth::user()->token()->revoke();
+             $data = [
+                'message'   => 'Success to logout'
+             ];
+             return $this->apiSuccess($data);
+        }
+
+        return $this->apiError($statusCode = 401, $msg = 'You are not logged in', 'You are not logged in');
     }
 }

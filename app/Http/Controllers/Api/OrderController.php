@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Models\OrderHead;
 use App\Models\OrderPrice;
@@ -11,10 +12,18 @@ use App\Models\OrderCredit;
 use App\Models\OrderLog;
 use App\Models\OrderApproval;
 use App\Models\CarModel;
-use App\Models\DeliveryOrder;
 use App\Models\CarType;
+use App\Models\Bbn;
+use App\Models\DeliveryOrder;
 use App\Models\Customer;
 use App\Models\CustomerImage;
+use App\Models\Leasing;
+use App\Models\Dealer;
+use App\Models\CreditMonth;
+use App\Models\LeasingRateHead;
+use App\Models\LeasingRateDetail;
+use App\Models\InsuranceRateHead;
+use App\Models\InsuranceRateDetail;
 use App\User;
 use App\RoleUser;
 use App\Role;
@@ -520,5 +529,154 @@ class OrderController extends Controller
             $spk[] = $value->spk_code;
         }
         return $this->apiSuccess($spk, $request);
+    }
+
+    public function fields() {
+        $dealer = Dealer::select('id as value', 'name as display')->get();
+        $carType = CarType::getOptionValue();
+        $idType = [
+            ['value' => 1, 'display' => 'KTP'],
+            ['value' => 2, 'display' => 'SIM'],
+            ['value' => 3, 'display' => 'Passport']
+        ];
+
+        $platType = [
+            ['value' => 1, 'display' => 'Hitam'],
+            ['value' => 2, 'display' => 'Kuning'],
+            ['value' => 3, 'display' => 'Merah'],
+        ];
+
+        $bbnType = Bbn::getOption();
+
+        $priceType = [
+            ['value' => 1, 'display' => 'Off The Road'],
+            ['value' => 2, 'display' => 'On The Road'],
+        ];
+
+        $paymentMethod = [
+            ['value' => 1, 'display' => 'Cash'],
+            ['value' => 2, 'display' => 'Leasing'],
+        ];
+
+        $leasing = Leasing::getOption();
+        $months = CreditMonth::select(DB::raw('months as value, CONCAT(months, " Months") as display'))->get();
+
+        $field['generalField'] = [
+                    generateApiField($fieldName = 'spk_doc_code', $label = 'Document Control Number'),
+                    generateApiField($fieldName = 'date', $label = 'Date', $type = 'date', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
+                    generateApiField($fieldName = 'dealer_id', $label = 'Dealer', $type = 'select', $required = true, $options = $dealer),
+                    generateApiField($fieldName = 'customer_phone', $label = 'Customer Phone'),
+                    generateApiField($fieldName = 'id_type', $label = 'Customer ID Type', $type = 'select', $required = true, $options = $idType),
+                    generateApiField($fieldName = 'id_image', $label = 'Customer ID Image', $type = 'file', $required = false),
+                    generateApiField($fieldName = 'id_number', $label = 'Customer ID Number'),
+                    generateApiField($fieldName = 'first_name', $label = 'Customer First Name'),
+                    generateApiField($fieldName = 'last_name', $label = 'Customer Last Name'),
+                    generateApiField($fieldName = 'last_name', $label = 'Customer Last Name', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'npwp', $label = 'Customer NPWP', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'npwp_image', $label = 'Customer NPWP Image', $type = 'file', $required = false),
+                    generateApiField($fieldName = 'stnk_name', $label = 'STNK Name'),
+                    generateApiField($fieldName = 'stnk_address', $label = 'STNK Address'),
+                    generateApiField($fieldName = 'faktur_conf', $label = 'Faktur Confirmation', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'type_id', $label = 'Car Type', $type = 'select', $required = true, $options = $carType),
+                    generateApiField($fieldName = 'color', $label = 'Car Color'),
+                    generateApiField($fieldName = 'car_year', $label = 'Car Year', $type = 'string', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
+                    generateApiField($fieldName = 'qty', $label = 'Total Unit', $type = 'integer'),
+                    generateApiField($fieldName = 'plat', $label = 'Car Plat Type', $type = 'select', $required = true, $options = $platType),
+                    generateApiField($fieldName = 'bbn_type', $label = 'BBN Type', $type = 'select', $required = true, $options = $bbnType),
+                    generateApiField($fieldName = 'bbn_type', $label = 'BBN Type', $type = 'select', $required = true, $options = $bbnType),
+                    generateApiField($fieldName = 'karoseri', $label = 'Karoseri', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_type', $label = 'Karoseri Type', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_spec', $label = 'Karoseri Spesification', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_price', $label = 'Karoseri Price', $type = 'integer', $required = false),
+                    generateApiField($fieldName = 'price_type', $label = 'Price Type', $type = 'select', $required = true, $options = $priceType),
+                    generateApiField($fieldName = 'discount', $label = 'Discount', $type = 'integer'),
+                    generateApiField($fieldName = 'price_off', $label = 'Price Off The Road', $type = 'integer'),
+                    generateApiField($fieldName = 'price_on', $label = 'Price On The Road', $type = 'integer'),
+                    generateApiField($fieldName = 'cost_surat', $label = 'STNK Cost', $type = 'integer'),
+                    generateApiField($fieldName = 'total_sales_price', $label = 'Total Sales Price', $type = 'integer'),
+                    generateApiField($fieldName = 'booking_fee', $label = 'Booking Fee', $type = 'integer'),
+                    generateApiField($fieldName = 'down_payment_date', $label = 'Down Payment Date', $type = 'date'),
+                    generateApiField($fieldName = 'dp_percentage', $label = 'DP Percentage', $type = 'integer'),
+                    generateApiField($fieldName = 'dp_amount', $label = 'DP Amount', $type = 'integer'),
+                    generateApiField($fieldName = 'total_unpaid', $label = 'Total Unpaid', $type = 'integer'),
+                    generateApiField($fieldName = 'payment_method', $label = 'Payment Method', $type = 'select', $required = true, $options = $paymentMethod),
+        ];
+
+        $field['leasingField'] = [
+            generateApiField($fieldName = 'leasing_id', $label = 'Leasing', $type = 'select', $required = true, $options = $leasing),
+            generateApiField($fieldName = 'credit_duration', $label = 'Credit Duration', $type = 'select', $required = true, $options = $months),
+            generateApiField($fieldName = 'credit_owner_name', $label = 'Credit Owner'),
+            generateApiField($fieldName = 'interest_rate', $label = 'Interest Rate', $type = 'float'),
+            generateApiField($fieldName = 'admin_cost', $label = 'Admin Cost', $type = 'integer'),
+            generateApiField($fieldName = 'insurance_cost', $label = 'Insurance Cost', $type = 'integer'),
+            generateApiField($fieldName = 'installment_cost', $label = 'Installment Cost', $type = 'integer'),
+            generateApiField($fieldName = 'other_cost', $label = 'Other Cost', $type = 'integer'),
+            generateApiField($fieldName = 'total_down_payment', $label = 'Total Down Payment', $type = 'integer')
+        ];
+
+        return $this->apiSuccess($field);
+    }
+
+    public function leasingFormula(Request $request) {
+        try {
+            $data['dp'] = $request->input('dp_percentage');
+            $data['leasing'] = $request->input('leasing');
+            $data['duration'] = $request->input('credit_duration');
+            $data['carType'] = $request->input('car_type');
+            $data['dealer'] = $request->input('dealer');
+            $data['karoseri'] = $request->input('karoseri_price');
+            $data['car_year'] = $request->input('car_built_year');
+
+            $interestRate = LeasingRateHead::getRate($data);
+            $insuranceRate = InsuranceRateHead::getRate($data);
+            $unpaid = parseMoneyToInteger($request->input('unpaid'));
+            $year = floor($data['duration'] / 12);
+
+            // INSTALLMENT FORMULA
+            $interest = ($interestRate / 100 * $unpaid) * $year;
+            $unpaidAndInterest = $unpaid + $interest;
+            $installment =  floor($unpaidAndInterest / $data['duration']);
+
+            // INSURANCE FORMULA
+            $totalSales = parseMoneyToInteger($request->input('total_sales_price'));
+            $insuranceCost = $totalSales * ($insuranceRate / 100);
+
+            $return['interestRate'] = ($interestRate != null) ? $interestRate : 0;
+            $return['insuranceCost'] = ($insuranceRate != null) ? $insuranceCost : 0;
+            $return['insuranceCostHuman'] = moneyFormat($return['insuranceCost']);
+            $return['installmentCost'] = ($interestRate != null) ? $installment : 0;
+            $return['installmentCostHuman'] = moneyFormat($return['installmentCost']);
+
+            return $this->apiSuccess($return, $request->input());
+
+        } catch (Exception $e) {
+            return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');               
+        }
+    }
+
+    public function customerData (Request $request) {
+        try {
+            $phone = $request->input('phone');
+            $data = Customer::select(DB::raw("id, first_name, last_name, address, 
+                                            (select id_number from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_number,
+                                            (select type from customer_image where customer_id = customers.id order by type, id desc limit 1) AS id_type,
+                                            (select filename from customer_image where customer_id = customers.id order by type, id desc limit 1) AS idImage"
+                                            ))
+                            ->where('phone', $phone)
+                            ->first();
+
+            if($data->id_type == 1) {
+                $folder = 'ktp/';
+            } else if($data->id_type == 2) {
+                $folder = 'sim/';
+            } else {
+                $folder = 'passport/';
+            }
+
+            $data->idImage = asset('images/customer').'/'.$folder.$data->idImage;
+            return $this->apiSuccess($data, $request->input());
+        } catch (Exception $e) {
+            return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');   
+        }
     }
 }

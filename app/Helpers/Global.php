@@ -150,3 +150,22 @@
                     </div>
                 </div>';
     }
+
+    function generateApiField($fieldName, $label, $type = 'string', $required = true, $options = null, $desc = null) {
+        $field = [
+            'fieldName' => $fieldName,
+            'type'      => $type,
+            'label'     => $label,
+            'required'  => $required
+        ];
+
+        if($options != null) {
+            $field['options'] = $options;
+        }
+
+        if($desc != null) {
+            $field['desc'] = $desc;
+        }
+
+        return $field;
+    } 

@@ -36,4 +36,18 @@ class Bbn extends Model
         $data = parent::find($id);
         return (isset($data->name)) ? $data->name : 'Others';
     }
+
+    public static function getOption() {
+        $data = parent::select('id as value', 'name as display')->get();
+
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[$key]['value'] = $value->value;
+            $result[$key]['display'] = $value->display;
+        }
+
+        $others = ['value' => 1000, 'display' => 'Others'];
+        array_push($result, $others);
+        return $result;
+    }
 }
