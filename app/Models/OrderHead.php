@@ -264,9 +264,11 @@ class OrderHead extends Model
             }
         }
 
+        $total = $status['processed'] + $status['approved'] + $status['rejected'];
+
         $result = [
             [
-                'label' => 'Active SPK', 
+                'label' => "Active SPK ($total)", 
                 'processed' => $status['processed'],
                 'approved' => $status['approved'],
                 'rejected' => $status['rejected'],
