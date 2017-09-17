@@ -223,4 +223,57 @@ class OrderHead extends Model
         return $data;
 
     }
+
+    public function graphDo() {
+        $data = parent::select(DB::raw("SUM(order_head.qty) as totalSales, 
+                                        CONCAT(MONTHNAME(date), ' ', YEAR(date)) AS period"))
+                        ->whereRaw('date > DATE_SUB(now(), INTERVAL 12 MONTH)')
+                        ->groupBy(DB::raw("period"))
+                        ->get();
+
+        foreach ($data as $key => $value) {
+            $start = date('Y-m-01', strtotime($value->period));
+            $end = date('Y-m-t', strtotime($value->period));
+            $do = DeliveryOrder::whereBetween('do_date', [$start, $end])->count();
+
+            $data[$key]['totalDo'] = $do;
+        }
+
+        return $data;
+    }
+
+    public function graphSPK() {
+        $data = parent::whereRaw('date > DATE_SUB(now(), INTERVAL 12 MONTH)')
+                        ->get();
+
+        $status = [
+            'processed' => 0,
+            'approved' => 0,
+            'rejected' => 0,
+        ];
+        foreach ($data as $key => $value) {
+            $monthYear = date('F-Y', strtotime($value->date));
+            $label = OrderApproval::getLabelStatus($value);
+
+            if(stristr(strtolower($label), 'pending')) { // APPROVED
+                $status['processed'] += 1;
+            } else if(stristr(strtolower($label), 'reject')) { // REJECTED
+                $status['rejected'] += 1;
+            } else if(stristr(strtolower($label), 'approve')) {
+                $status['approved'] += 1;
+            }
+        }
+
+        $result = [
+            [
+                'label' => 'Active SPK', 
+                'processed' => $status['processed'],
+                'approved' => $status['approved'],
+                'rejected' => $status['rejected'],
+            ]
+        ];
+
+        return $result;
+    }
+
 }

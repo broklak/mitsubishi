@@ -10,7 +10,7 @@ use App\Models\InsuranceRateHead;
 use App\Models\CarType;
 use App\Models\CarModel;
 use App\Models\Customer;
-
+use App\Models\OrderHead;
 
 class AjaxController extends Controller
 {
@@ -71,5 +71,25 @@ class AjaxController extends Controller
                         ->first();
 
         return json_encode($data);
+    }
+
+    public function getGraphDO(Request $request) {
+        $order = new OrderHead();
+        $month = ($request->input('month')) ? $request->input('month') : date('m');
+        $year = ($request->input('year')) ? $request->input('year') : date('Y');
+
+        $result = $order->graphDo();
+
+        return json_encode($result);
+    }
+
+    public function getGraphSPK(Request $request) {
+        $order = new OrderHead();
+        $month = ($request->input('month')) ? $request->input('month') : date('m');
+        $year = ($request->input('year')) ? $request->input('year') : date('Y');
+
+        $result = $order->graphSPK();
+
+        return json_encode($result);
     }
 }
