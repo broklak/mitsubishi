@@ -103,13 +103,13 @@
         var duration = $('#credit_duration').val();
         var admin_cost = $('#admin_cost').val();
         var other_cost = $('#other_cost').val(); 
-        var type_id = $('#type_id').val();
+        var type_id = $('#type_id_real').val();
         var car_year = $('#car_year').val();
         var unpaid = $('#total_unpaid').val();
         var total_sales_price = $('#total_sales_price').val();
 
         if(dp_percentage != undefined && leasing_id != undefined && duration != undefined && type_id != undefined) {
-            $.ajax({
+            $.ajax({ 
                 method: 'GET',
                 url: '{{route('ajax.getLeasingFormula')}}',
                 data: {'dp':dp_percentage, 'leasing':leasing_id, 'duration':duration, 'car_type':type_id, 'total_sales':total_sales_price, 'unpaid':unpaid, 'car_year': car_year},

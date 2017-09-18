@@ -34,7 +34,7 @@ class CarModel extends Model
 
     public static function getName($id) {
         $data = parent::find($id);
-        return $data->name;
+        return isset($data->name) ? $data->name : null;
     }
 
     public static function getCategory($id) {

@@ -44,7 +44,7 @@ class SimulationController extends Controller
     public function index()
     {
         $data = [
-            'result' => $this->model->all(),
+            'result' => $this->model->where('created_by', Auth::id())->get(),
             'page' => $this->page
         ];
         return view($this->module . ".index", $data);

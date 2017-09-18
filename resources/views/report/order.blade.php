@@ -47,7 +47,7 @@
                 <td>{{$val->spk_code}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{\App\Models\CarModel::getName($val->model_id).' '.\App\Models\CarType::getName($val->type_id)}}</td>
+                <td>{{$val->model_name.' '.$val->type_name}}</td>
                 <td>{!! ($val->is_approved == 0) ? setActivationStatus(0, 'Approved') : setActivationStatus(1, 'Approved') !!}</td>
                 </tr>
                 @endforeach

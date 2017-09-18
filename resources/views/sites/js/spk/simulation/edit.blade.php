@@ -103,7 +103,7 @@
         var duration = $('#credit_duration').val();
         var admin_cost = $('#admin_cost').val();
         var other_cost = $('#other_cost').val(); 
-        var type_id = $('#type_id').val();
+        var type_id = $('#type_id_real').val();
         var car_year = $('#car_year').val();
         var unpaid = $('#total_unpaid').val();
         var total_sales_price = $('#total_sales_price').val();
