@@ -1,0 +1,1 @@
+insert into `permissions` set display_name='View Dashboard', name='read.dashboard'
