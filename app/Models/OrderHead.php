@@ -229,6 +229,7 @@ class OrderHead extends Model
                                         CONCAT(MONTHNAME(date), ' ', YEAR(date)) AS period"))
                         ->whereRaw('date > DATE_SUB(now(), INTERVAL 12 MONTH)')
                         ->groupBy(DB::raw("period"))
+                        ->orderBy(DB::raw("period"))
                         ->get();
 
         foreach ($data as $key => $value) {
@@ -238,6 +239,17 @@ class OrderHead extends Model
 
             $data[$key]['totalDo'] = $do;
         }
+
+        $data = json_decode(json_encode($data), True);
+
+        usort($data, function ($a, $b) {
+          $a_val = strtotime($a['period']);
+          $b_val = strtotime($b['period']);
+
+          if($a_val > $b_val) return 1;
+          if($a_val < $b_val) return -1;
+          return 0;
+        });
 
         return $data;
     }
