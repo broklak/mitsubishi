@@ -41,7 +41,7 @@ class News extends Model
 
         $offset = ($page * $limit) - $limit;
 
-        $data = parent::select(DB::raw('id, title, SUBSTRING(content, 1, 50) AS contentShort, image'))
+        $data = parent::select(DB::raw('id, title, SUBSTRING(content, 1, 50) AS contentShort, image, created_at'))
                         ->where($where)
                         ->orderBy('id', $sort)
                         ->offset($offset)
