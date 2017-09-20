@@ -4,6 +4,13 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
+        @permission('read.dashboard')
+          <li @if($page == 'do-graph') class="active" @endif>
+            <a href="/">
+            <i class="fa fa-tachometer"></i> <span>Dashboard</span>
+            </a>
+          </li>
+          @endpermission
         <li class="@if(\Illuminate\Support\Facades\Request::segment(1) == 'order') active @endif treeview">
           <a href="#">
             <i class="fa fa-file"></i> <span>SPK</span>
@@ -29,14 +36,6 @@
             @endpermission
           </ul>
         </li>
-
-        @permission('read.dashboard')
-        <li @if($page == 'do-graph') class="active" @endif>
-          <a href="/">
-          <i class="fa fa-tachometer"></i> <span>Dashboard</span>
-          </a>
-        </li>
-        @endpermission
 
         <li class="@if(\Illuminate\Support\Facades\Request::segment(1) == 'insentif') active @endif treeview">
           <a href="#">
