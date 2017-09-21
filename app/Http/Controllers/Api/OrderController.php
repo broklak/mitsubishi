@@ -369,6 +369,9 @@ class OrderController extends Controller
                 'approved_by'   => Auth::id()
             ]);
 
+            //EXTEND USER CREATOR SPK
+            Auth::user()->extendLoginValidity($orderHead->created_by);
+
             //CREATE LOG
             OrderLog::create([
                 'order_id'      => $orderId,
