@@ -18,7 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'username', 'password', 'last_name', 'job_position_id', 'created_by', 'updated_by', 'status', 'start_work', 'supervisor_id'
+        'first_name', 'username', 'password', 'last_name', 'job_position_id', 'created_by', 'updated_by', 'status', 'start_work', 'supervisor_id',
+        'valid_login', 'extend_duration'
     ];
 
     /**
@@ -48,4 +49,23 @@ class User extends Authenticatable
         }
         return $result;
     }
+
+    public static function checkLoginValidity($validLogin) {
+        if(strtotime($validLogin) > time()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function extendLoginValidity($userId) {
+        $user = parent::find($userId);
+        $extend = isset($user->extend_duration) ? $user->extend_duration : 0;
+        $newDate = date('Y-m-d', strtotime("+$extend days"));
+
+        $user->update([
+            'valid_login'   => $newDate
+        ]);
+    }
+
 }

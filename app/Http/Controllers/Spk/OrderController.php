@@ -432,7 +432,8 @@ class OrderController extends Controller
 
     public function approveSpk($orderId, $level) {
         $user = Auth::user();
-        $eligible = OrderApproval::eligibleToApprove($this->model->find($orderId));
+        $orderHead = $this->model->find($orderId);
+        $eligible = OrderApproval::eligibleToApprove($orderHead);
 
         if(!$eligible) {
             $message = setDisplayMessage('error', "You are not eligible to approve this SPK");
@@ -454,6 +455,9 @@ class OrderController extends Controller
             'desc'          => 'Approved',
             'created_by'    => Auth::id()
         ]);
+
+        //EXTEND USER CREATOR SPK
+        Auth::user()->extendLoginValidity($orderHead->created_by);
 
         logUser('Approve SPK '.$orderId);
 

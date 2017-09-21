@@ -43,6 +43,18 @@
 			            </div>
 			         </div>
 
+			         <div class="form-group">
+	                  <label for="duration" class="col-sm-4 control-label">Login Validity Duration *days</label>
+	                  <div class="col-sm-4">
+	                  	<input type="number" style="display: {{($row->extend_duration >365) ? 'none' : 'block' }}" class="form-control" name="duration" 
+	                  	value="{{($row->extend_duration > 365) ? 90 : $row->extend_duration}}" id="duration" placeholder="Total days without approved SPK">
+	                  	<span style="display: {{($row->extend_duration >365) ? 'block' : 'none' }};font-size: 16px;font-weight: 600" id="alltimespan">All Time</span>
+	                  </div>
+	                  <div class="col-sm-4">
+	                  	<input type="checkbox" @if($row->extend_duration > 365) checked @endif style="margin-right: 7px" name="alltime" value="1" id="alltime"><label for="alltime">All Time</label>
+	                  </div>
+	                </div>
+
 	                <div class="form-group">
 	                  <label for="file" class="col-sm-4 control-label">Password *Fill password if you want to change</label>
 	                  <div class="col-sm-8">

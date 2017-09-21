@@ -169,3 +169,13 @@
 
         return $field;
     }
+
+    function getUserValidityStatus($validLogin) {
+        $valid = App\User::checkLoginValidity($validLogin);
+
+        if($valid) {
+            return '<span class="btn btn-success">Active</span>';            
+        }
+
+        return '<span class="btn btn-danger">Suspended</span>';
+    }

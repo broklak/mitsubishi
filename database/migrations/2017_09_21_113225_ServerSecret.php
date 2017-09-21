@@ -20,6 +20,7 @@ class ServerSecret extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
+            $table->integer('extend_duration')->after('start_work')->default(90);
             $table->date('valid_login')->nullable()->after('start_work');
         });
     }
@@ -35,6 +36,7 @@ class ServerSecret extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('valid_login');
+            $table->dropColumn('extend_duration');
         });
     }
 }

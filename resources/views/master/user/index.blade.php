@@ -33,7 +33,7 @@
                 <td>{{$val->username}}</td>
                 <td>{{App\RoleUser::roleWordList($val->id)}}</td>
                 <td>{{dateHumanFormat($val->start_work)}}</td>
-                <td>{!!setActivationStatus($val->status)!!}</td>
+                <td>{!!getUserValidityStatus($val->valid_login)!!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>
@@ -45,10 +45,10 @@
                       @permission('update.user')
                         @if($val->username != 'admin')
     	                    <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
-    	                    @if($val->status == 1)
-    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Set Non Active</a></li>
+    	                    @if(Auth::user()->checkLoginValidity($val->valid_login))
+    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 0]) }}">Suspend User</a></li>
     	                    @else
-    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Set Active</a></li>
+    	                    <li><a href="{{ route($page.'.change-status', ['id' => $val->id, 'status' => 1]) }}">Activate User</a></li>
     	                    @endif
                         @endif
   	                    <li class="divider"></li>

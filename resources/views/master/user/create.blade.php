@@ -41,6 +41,17 @@
 			            </div>
 			         </div>
 
+			         <div class="form-group">
+	                  <label for="duration" class="col-sm-4 control-label">Login Validity Duration</label>
+	                  <div class="col-sm-4">
+	                  	<input type="number" class="form-control" name="duration" value="{{old('duration')}}" id="duration" placeholder="Total days without approved SPK">
+	                  	<span style="display: none;font-size: 16px;font-weight: 600" id="alltimespan">All Time</span>
+	                  </div>
+	                  <div class="col-sm-4">
+	                  	<input type="checkbox" style="margin-right: 7px" name="alltime" value="1" id="alltime"><label for="alltime">All Time</label>
+	                  </div>
+	                </div>
+
 	                <div class="form-group">
 	                  <label for="username" class="col-sm-4 control-label">Username *For Login</label>
 	                  <div class="col-sm-8">
@@ -72,7 +83,7 @@
 	                  	<select name="supervisor_id" class="form-control">
 	                  		<option value="0" selected disabled>Choose Supervisor</option>
 	                  		@foreach($supervisor as $key => $val)
-	                  		<option value="{{$val->id}}">{{$val->first_name . ' ' . $val->last_name}}</option>
+	                  		<option @if(old('supervisor_id') == $val->id) selected @endif value="{{$val->id}}">{{$val->first_name . ' ' . $val->last_name}}</option>
 	                  		@endforeach
 	                  	</select>
 	                  </div>

@@ -7,5 +7,15 @@
         changeYear: true,
         maxDate: '0'
     });
+
+    $('#alltime').click(function(){
+    	if(this.checked) {
+    		$('#duration').hide();
+    		$('#alltimespan').show();
+    	} else {
+    		$('#duration').show();
+    		$('#alltimespan').hide();
+    	}
+    });
   });
 </script>

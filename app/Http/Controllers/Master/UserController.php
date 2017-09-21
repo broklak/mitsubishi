@@ -93,8 +93,16 @@ class UserController extends Controller
             'start_work'  => $request->input('start_work'),
             'username'  => $request->input('username'),
             'password' => bcrypt($request->input('password')),
+            'extend_duration' => ($request->input('duration')) ? $request->input('duration') : 90,
             'created_by' => Auth::id()
         ];
+
+        $create['valid_login'] = date('Y-m-d', strtotime("+".$create['extend_duration']." days"));
+
+        if($request->input('alltime')) {
+            $create['valid_login']   = '2100-01-01';
+            $create['extend_duration'] = '36500';
+        }
 
         $user = $this->model->create($create);
 
@@ -161,9 +169,17 @@ class UserController extends Controller
             'last_name'  => $request->input('last_name'),
             'job_position_id'  => 0,
             'start_work'  => $request->input('start_work'),
+            'extend_duration' => ($request->input('duration')) ? $request->input('duration') : 90,
             'supervisor_id'  => ($request->input('supervisor_id') != '0') ? $request->input('supervisor_id') : null,
             'updated_by' => Auth::id()
         ];
+
+        $update['valid_login'] = date('Y-m-d', strtotime("+".$update['extend_duration']." days"));
+
+        if($request->input('alltime')) {
+            $update['valid_login']   = '2100-01-01';
+            $update['extend_duration'] = '36500';
+        }
 
         if($request->input('password')) {
             $update['password'] = bcrypt($request->input('password'));
@@ -215,9 +231,14 @@ class UserController extends Controller
     public function changeStatus($id, $status) {
         $data = $this->model->find($id);
 
-        $data->status = $status;
-
-        $desc = ($status == 1) ? 'activate' : 'deactivate';
+        if($status == 1) { // ACTIVATE USER
+            $desc = 'activate';
+            $duration = $data->extend_duration;
+            $data->valid_login = date('Y-m-d', strtotime("+$duration days"));
+        } else {
+            $desc = 'suspend';
+            $data->valid_login = date('Y-m-d', strtotime("-1 days"));
+        }
 
         $data->save();
 

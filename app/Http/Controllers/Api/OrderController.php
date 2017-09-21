@@ -341,7 +341,8 @@ class OrderController extends Controller
 
     protected function approveSpk($orderId) {
         try {
-            $eligible = OrderApproval::eligibleToApprove(OrderHead::find($orderId));
+            $orderHead = OrderHead::find($orderId);
+            $eligible = OrderApproval::eligibleToApprove($orderHead);
 
             if(!$eligible) {
                 return $this->apiError($statusCode = 401, 'Unauthorized', 'You are not eligible to approve');
@@ -375,7 +376,7 @@ class OrderController extends Controller
                 'created_by'    => Auth::id()
             ]);
 
-            logUser('Approve SPK '.$orderId);    
+            logUser('Approve SPK '.$orderId);
             $data = [
                 'message'   => 'Success to approve SPK'
             ];
