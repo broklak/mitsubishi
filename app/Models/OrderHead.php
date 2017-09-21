@@ -36,7 +36,7 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
@@ -49,6 +49,10 @@ class OrderHead extends Model
 
         if($query != null) {
             $where .= "and (spk_code LIKE '%$query%' OR spk_doc_code LIKE '%$query%') ";   
+        }
+
+        if($timestamp != null) {
+            $where .= "and order_head.created_at > '$timestamp' ";      
         }
 
         $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
@@ -195,12 +199,17 @@ class OrderHead extends Model
         return $data;
     }
 
-    public function filterResult($data) {
+    public function filterResult($data, $api = false) {
         $user= Auth::user();
         $userId = $user->id;
         $isSupervisor = $user->hasRole('supervisor');
         $isManager = $user->hasRole('manager');
         $isSuperUser = $user->hasRole('super_admin');
+
+        foreach ($data as $key => $value) {
+            $head = parent::find($value->id);
+            if($api)  $data[$key]->detail = $this->detailSpk($head, $value->id);
+        }
 
         if($isManager || $isSuperUser) {
             return $data;
@@ -288,6 +297,97 @@ class OrderHead extends Model
         ];
 
         return $result;
+    }
+
+    public function detailSpk($orderHead, $orderId) {
+        $customer = Customer::find($orderHead->customer_id);
+        $orderPrice = OrderPrice::where('order_id', $orderId)->first();
+        $orderCredit = OrderCredit::where('order_id', $orderId)->first();
+        
+
+        if($orderHead->customer_image_id == null) {
+            $customerImage = CustomerImage::where('customer_id', $orderHead->customer_id)->orderBy('type')->orderBy('id', 'desc')->first();
+        } else {
+            $customerImage = CustomerImage::find($orderHead->customer_image_id);
+        }
+        
+
+        $folder = '';
+        if(isset($customerImage->type)) {
+            if($customerImage->type == 1) {
+                $folder = 'ktp';
+            } else if($customerImage->type == 2) {
+                $folder = 'sim';
+            } else {
+                $folder = 'passport';
+            }
+        }
+
+        $data['number'] = $orderHead->spk_code;
+        $data['documentNumber'] = $orderHead->spk_doc_code;
+        $data['createdBy'] = User::find($orderHead->created_by)->value('username');
+        $data['date'] = $orderHead->date;
+        $data['dateHuman'] = date('j F Y', strtotime($orderHead->date));
+
+        $data['carData'] = [
+            'stnkName'             => $orderHead->stnk_name,
+            'stnkAddress'          => $orderHead->stnk_address,
+            'fakturConf'           => $orderHead->faktur_conf,
+            'typeId'               => $orderHead->type_id,
+            'typeName'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
+            'color'                => $orderHead->color,
+            'qty'                  => $orderHead->qty,
+            'plat'                 => $orderHead->plat,
+            'carYear'              => $orderHead->car_year,
+            'bbnType'              => $orderHead->bbn_type,
+            'karoseri'             => $orderHead->karoseri,
+            'karoseriType'         => $orderHead->karoseri_type,
+            'karoseriSpec'         => $orderHead->karoseri_spec,
+            'karoseriPrice'        => $orderHead->karoseri_price
+        ];   
+
+        $data['priceData'] = [
+            'priceType'            => ($orderPrice->price_off == 0) ? 2 : 1,
+            'priceOff'             => moneyFormat($orderPrice->price_off),
+            'priceOn'              => moneyFormat($orderPrice->price_on),
+            'costSurat'            => moneyFormat($orderPrice->cost_surat),
+            'discount'             => moneyFormat($orderPrice->discount),
+            'totalSalesPrice'      => moneyFormat($orderPrice->total_sales_price),
+            'downPaymentAmount'    => moneyFormat($orderPrice->down_payment_amount),
+            'downPaymentDate'      => $orderPrice->down_payment_date,
+            'jaminanCostAmount'    => moneyFormat($orderPrice->jaminan_cost_amount),
+            'jaminanCostPercentage' => $orderPrice->jaminan_cost_percentage,
+            'totalUnpaid'          => moneyFormat($orderPrice->total_unpaid),
+            'paymentMethod'        => $orderPrice->payment_method
+        ];
+
+        $data['customerData'] = [
+            'customerName'         => (isset($customer->id)) ? $customer->first_name : null,
+            'customerLastName'      => (isset($customer->id)) ? $customer->last_name : null,
+            'idType'               => (isset($customerImage->type)) ? $customerImage->type : null,
+            'idNumber'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
+            'customerAddress'      => (isset($customer->id)) ?  $customer->address : null,
+            'idImage'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
+            'customerPhone'        => (isset($customer->id)) ? $customer->phone : null,
+            'customerNpwp'         => (isset($customer->id)) ? $customer->npwp : null,
+            'npwpImage'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
+        ];
+
+        if(isset($orderCredit->leasing_id)) {
+            $data['leasingData'] = [
+                'leasingId'            => (isset($orderCredit->leasing_id)) ? $orderCredit->leasing_id : null,
+                'yearDuration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
+                'ownerName'            => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,
+                'interestRate'         => (isset($orderCredit->interest_rate)) ? $orderCredit->interest_rate : null,
+                'adminCost'            => (isset($orderCredit->admin_cost)) ? moneyFormat($orderCredit->admin_cost) : null,
+                'insuranceCost'        => (isset($orderCredit->insurance_cost)) ? moneyFormat($orderCredit->insurance_cost) : null,
+                'installmentCost'      => (isset($orderCredit->installment_cost)) ? moneyFormat($orderCredit->installment_cost) : null,
+                'otherCost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
+                'totalDownPayment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
+            ];
+        }
+
+        return $data;
     }
 
 }

@@ -24,6 +24,7 @@ Route::get('news/{id}', 'Api\MasterController@detailNews')->name('api.news.detai
 Route::get('banners', 'Api\MasterController@listBanner')->name('api.banner.list');
 
 Route::get('spk', 'Api\OrderController@list')->name('api.spk.list');
+Route::get('sync', 'Api\OrderController@syncSpk')->name('api.spk.sync');
 Route::get('spk/field', 'Api\OrderController@fields')->name('api.spk.field');
 Route::get('spk/{id}', 'Api\OrderController@detail')->name('api.order.detail');
 Route::post('spk', 'Api\OrderController@post')->name('api.order.create');

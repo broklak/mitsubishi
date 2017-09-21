@@ -13,6 +13,7 @@ use App\Models\OrderLog;
 use App\Models\OrderApproval;
 use App\Models\CarModel;
 use App\Models\CarType;
+use App\Models\ServerSecret;
 use App\Models\Bbn;
 use App\Models\DeliveryOrder;
 use App\Models\Customer;
@@ -33,7 +34,7 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
 	public function __construct() {
-		$this->middleware('auth:api');
+		$this->middleware('auth:api', ['except' => ['syncSpk']]);
 	}
 
     public function list(Request $request) { 
@@ -53,8 +54,8 @@ class OrderController extends Controller
 	        if($limit < 1) return $this->apiError($statusCode = 400, 'Limit data must be greater than zero', 'Something went wrong with the request');	
 
 	        $order = new OrderHead();
-            $data = $order->list($approval, $query, $sort, $limit, $page);
-            $data = $order->filterResult($data);
+            $data = $order->list($approval, $query, $sort, $limit, $page, $time);
+            $data = $order->filterResult($data, $api = true);
             $pagination = $this->getPagination($data, $order->countList($approval, $query), $page, $limit);
     	} catch (Exception $e) {
     		return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');          
@@ -69,92 +70,7 @@ class OrderController extends Controller
             $orderHead = $head->find($id);
             if(!isset($orderHead->id)) return $this->apiError($statusCode = 400, "SPK with ID $id is not found", 'No result found');
 
-            $customer = Customer::find($orderHead->customer_id);
-            $orderPrice = OrderPrice::where('order_id', $id)->first();
-            $orderCredit = OrderCredit::where('order_id', $id)->first();
-            
-
-            if($orderHead->customer_image_id == null) {
-                $customerImage = CustomerImage::where('customer_id', $orderHead->customer_id)->orderBy('type')->orderBy('id', 'desc')->first();
-            } else {
-                $customerImage = CustomerImage::find($orderHead->customer_image_id);
-            }
-            
-
-            $folder = '';
-            if(isset($customerImage->type)) {
-                if($customerImage->type == 1) {
-                    $folder = 'ktp';
-                } else if($customerImage->type == 2) {
-                    $folder = 'sim';
-                } else {
-                    $folder = 'passport';
-                }
-            }
-
-            $data['number'] = $orderHead->spk_code;
-            $data['documentNumber'] = $orderHead->spk_doc_code;
-            $data['createdBy'] = User::find($orderHead->created_by)->value('username');
-            $data['date'] = $orderHead->date;
-            $data['dateHuman'] = date('j F Y', strtotime($orderHead->date));
-
-            $data['carData'] = [
-                'stnkName'             => $orderHead->stnk_name,
-                'stnkAddress'          => $orderHead->stnk_address,
-                'fakturConf'           => $orderHead->faktur_conf,
-                'typeId'               => $orderHead->type_id,
-                'typeName'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
-                'color'                => $orderHead->color,
-                'qty'                  => $orderHead->qty,
-                'plat'                 => $orderHead->plat,
-                'carYear'              => $orderHead->car_year,
-                'bbnType'              => $orderHead->bbn_type,
-                'karoseri'             => $orderHead->karoseri,
-                'karoseriType'         => $orderHead->karoseri_type,
-                'karoseriSpec'         => $orderHead->karoseri_spec,
-                'karoseriPrice'        => $orderHead->karoseri_price
-            ];   
-
-            $data['priceData'] = [
-                'priceType'            => ($orderPrice->price_off == 0) ? 2 : 1,
-                'priceOff'             => moneyFormat($orderPrice->price_off),
-                'priceOn'              => moneyFormat($orderPrice->price_on),
-                'costSurat'            => moneyFormat($orderPrice->cost_surat),
-                'discount'             => moneyFormat($orderPrice->discount),
-                'totalSalesPrice'      => moneyFormat($orderPrice->total_sales_price),
-                'downPaymentAmount'    => moneyFormat($orderPrice->down_payment_amount),
-                'downPaymentDate'      => $orderPrice->down_payment_date,
-                'jaminanCostAmount'    => moneyFormat($orderPrice->jaminan_cost_amount),
-                'jaminanCostPercentage' => $orderPrice->jaminan_cost_percentage,
-                'totalUnpaid'          => moneyFormat($orderPrice->total_unpaid),
-                'paymentMethod'        => $orderPrice->payment_method
-            ];
-
-            $data['customerData'] = [
-                'customerName'         => $customer->first_name,
-                'customerLastName'    => $customer->last_name,
-                'idType'               => (isset($customerImage->type)) ? $customerImage->type : null,
-                'idNumber'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
-                'customerAddress'      => $customer->address,
-                'idImage'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
-                'customerPhone'        => $customer->phone,
-                'customerNpwp'         => $customer->npwp,
-                'npwpImage'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
-            ];
-
-            if(isset($orderCredit->leasing_id)) {
-                $data['leasingData'] = [
-                    'leasingId'            => (isset($orderCredit->leasing_id)) ? $orderCredit->leasing_id : null,
-                    'yearDuration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
-                    'ownerName'            => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,
-                    'interestRate'         => (isset($orderCredit->interest_rate)) ? $orderCredit->interest_rate : null,
-                    'adminCost'            => (isset($orderCredit->admin_cost)) ? moneyFormat($orderCredit->admin_cost) : null,
-                    'insuranceCost'        => (isset($orderCredit->insurance_cost)) ? moneyFormat($orderCredit->insurance_cost) : null,
-                    'installmentCost'      => (isset($orderCredit->installment_cost)) ? moneyFormat($orderCredit->installment_cost) : null,
-                    'otherCost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
-                    'totalDownPayment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
-                ];
-            }
+            $data = $head->detailSpk($orderHead, $id);
 
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');
@@ -227,7 +143,7 @@ class OrderController extends Controller
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');
         }
         
-        $data['message'] = 'Success to create SPK';
+        $data['created'] = $createHead;
         return $this->apiSuccess($data, $request->input(), $pagination = null, $statusCode = 201);
     }
 
@@ -518,17 +434,24 @@ class OrderController extends Controller
         
     }
 
-    protected function shortSpk($request) {
-        $time = (isset($request['timestamp'])) ? date('Y-m-d H:i:s', $request['timestamp']) : date('Y-m-d H:i:s');
+    public function syncSpk(Request $request) {
+        $secret = $request->input('secret');
 
-        $data = OrderHead::select('spk_code')
-                            ->where('created_at', '>', $time)
-                            ->get();
-        $spk = [];
-        foreach ($data as $key => $value) {
-            $spk[] = $value->spk_code;
+        $validSecret = ServerSecret::find(1)->value('secret');
+
+        if($secret != $validSecret) {
+            return $this->apiError($statusCode = 401, 'Wrong Server Secret', 'Unauthenticated');   
         }
-        return $this->apiSuccess($spk, $request);
+
+        $where = [];
+        if($request->input('timestamp')) {
+            $where[] = ['created_at', '>', $request->input('timestamp')];
+        }
+
+        $data = OrderHead::where($where)
+                            ->get();
+
+        return $this->apiSuccess($data, $request->input());
     }
 
     public function fields() {

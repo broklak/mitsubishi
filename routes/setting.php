@@ -9,3 +9,5 @@ Route::resource('setting/role', 'Setting\RoleController');
 
 Route::get('setting/user/change-status/{id}/{status}', 'Master\UserController@changeStatus')->name('user.change-status');
 Route::resource('setting/user', 'Master\UserController');
+
+Route::resource('setting/server-secret', 'Setting\ServerSecretController');

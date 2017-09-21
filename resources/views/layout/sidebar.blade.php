@@ -88,6 +88,9 @@
             @permission('*.user')
               <li @if($page == 'user') class="active" @endif ><a href="{{route('user.index')}}"><i class="fa fa-user"></i> User Management</a></li>
             @endpermission
+            @permission('update.serverkey')
+              <li @if($page == 'server-secret') class="active" @endif ><a href="{{route('server-secret.edit', ['id' => 1])}}"><i class="fa fa-key"></i> Server Secret Key</a></li>
+            @endpermission
             @permission('*.role')
               <li @if($page == 'role') class="active" @endif ><a href="{{route('role.index')}}"><i class="fa fa-user-circle-o"></i> Role Permission Setting</a></li>
             @endpermission
