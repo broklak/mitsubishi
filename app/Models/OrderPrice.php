@@ -38,8 +38,8 @@ class OrderPrice extends Model
     public static function createData($data) {
     	return parent::create([
     		'order_id'			=> $data['order_id'],
-    		'price_off'			=> ($data['price_type'] == 1) ? parseMoneyToInteger($data['price_off']) : 0,
-    		'price_on'			=> ($data['price_type'] == 2) ? parseMoneyToInteger($data['price_on']) : 0,
+    		'price_off'			=> ($data['price_type'] == 2) ? parseMoneyToInteger($data['price_off']) : 0,
+    		'price_on'			=> ($data['price_type'] == 1) ? parseMoneyToInteger($data['price_on']) : 0,
     		'cost_surat'		=> ($data['price_type'] == 2) ? parseMoneyToInteger($data['cost_surat']) : 0,
     		'discount'			=> parseMoneyToInteger($data['discount']),
     		'total_sales_price' => parseMoneyToInteger($data['total_sales_price']),
@@ -56,8 +56,8 @@ class OrderPrice extends Model
 
     public static function updateData($orderId, $data) {
         return parent::where('order_id', $orderId)->update([
-            'price_off'         => ($data['price_type'] == 1) ? parseMoneyToInteger($data['price_off']) : 0,
-            'price_on'          => ($data['price_type'] == 2) ? parseMoneyToInteger($data['price_on']) : 0,
+            'price_off'         => ($data['price_type'] == 2) ? parseMoneyToInteger($data['price_off']) : 0,
+            'price_on'          => ($data['price_type'] == 1) ? parseMoneyToInteger($data['price_on']) : 0,
             'cost_surat'        => ($data['price_type'] == 2) ? parseMoneyToInteger($data['cost_surat']) : 0,
             'discount'          => parseMoneyToInteger($data['discount']),
             'total_sales_price' => parseMoneyToInteger($data['total_sales_price']),

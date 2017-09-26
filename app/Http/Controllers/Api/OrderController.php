@@ -476,8 +476,8 @@ class OrderController extends Controller
         $bbnType = Bbn::getOption();
 
         $priceType = [
-            ['value' => 1, 'display' => 'Off The Road'],
-            ['value' => 2, 'display' => 'On The Road'],
+            ['value' => 1, 'display' => 'On The Road'],
+            ['value' => 2, 'display' => 'Off The Road'],
         ];
 
         $paymentMethod = [

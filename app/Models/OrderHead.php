@@ -36,7 +36,7 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $month = null, $year = null) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
@@ -55,6 +55,13 @@ class OrderHead extends Model
             $where .= "and order_head.created_at > '$timestamp' ";      
         }
 
+        if($month != null && $year != null) {
+            $start = $year.'-'.$month.'-01';
+            $end = $year.'-'.$month.'-'.date('t', strtotime($start));
+            $where .= "and (date >= '$start' && date <= '$end') ";   
+        }
+
+
         $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
@@ -66,7 +73,7 @@ class OrderHead extends Model
                         ->orderBy('id', $sort)
                         ->offset($offset)
                         ->limit($limit)
-                        ->get();
+                        ->paginate($limit);
 
         return $data;
     }

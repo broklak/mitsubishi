@@ -31,7 +31,7 @@
               </form>
             </div>
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover table-striped">
+              <table class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
                   <th>SPK Number</th>
@@ -48,7 +48,7 @@
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
                 <td>{{$val->model_name.' '.$val->type_name}}</td>
-                <td>{!! ($val->is_approved == 0) ? setActivationStatus(0, 'Approved') : setActivationStatus(1, 'Approved') !!}</td>
+                <td>{!! App\Models\OrderApproval::getLabelStatus($val) !!}</td>
                 </tr>
                 @endforeach
               </table>

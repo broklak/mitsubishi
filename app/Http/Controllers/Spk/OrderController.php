@@ -58,11 +58,13 @@ class OrderController extends Controller
     {
         $this->model->setNotif();
         $approval = ($request->input('type') == 'approval') ? true : false;
+        $query = $request->input('query');
         $data = [
-            'result' => $this->model->list($approval),
+            'result' => $this->model->list($approval, $query, $sort = 'desc', $limit = 10),
             'page' => $this->page,
             'title' => ($approval) ? 'SPK To Approve' : 'SPK List',
-            'approval' => $approval
+            'approval' => $approval,
+            'query' => $query
         ];
 
         $data['result'] = $this->model->filterResult($data['result']);
@@ -406,7 +408,7 @@ class OrderController extends Controller
             'karoseri_type'         => $orderHead->karoseri_type,
             'karoseri_spec'         => $orderHead->karoseri_spec,
             'karoseri_price'        => $orderHead->karoseri_price,
-            'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
+            'price_type'            => ($orderPrice->price_off == 0) ? 1 : 2,
             'price_off'             => moneyFormat($orderPrice->price_off),
             'price_on'              => moneyFormat($orderPrice->price_on),
             'cost_surat'            => moneyFormat($orderPrice->cost_surat),

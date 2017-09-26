@@ -10,14 +10,27 @@
 		<div class="box">
             @if(!$approval)
             <div class="box-header">
-              @permission('create.spk')
-                <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
-              @endpermission
+              <div class="col-md-3">
+                @permission('create.spk')
+                  <a href="{{route($page.'.create')}}" class="btn btn-info">Create {{ucwords(str_replace('-',' ', $page))}}</a>
+                @endpermission
+              </div>
+
+              <div class="col-md-9">
+                <form class="form-inline" style="float: right">
+                  <div class="form-group">
+                    <label for="query">Search SPK:</label>
+                    <input type="text" class="form-control" id="query" value="{{$query}}" name="query" placeholder="Search by SPK Number" >
+                  </div>
+                  <button type="submit" class="btn btn-default">Search</button>
+                </form>
+              </div>
+
             </div>
             @endif
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover table-striped">
+              <table class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
                   <th>SPK Number</th>
@@ -68,6 +81,7 @@
                 </tr>
                 @endforeach
               </table>
+              {{$result->links()}}
             </div>
             <!-- /.box-body -->
           </div>

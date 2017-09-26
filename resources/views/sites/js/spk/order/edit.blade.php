@@ -23,7 +23,7 @@
     });
 
     $('input[name="price_type"]').click(function(){
-        if($(this).val() == '1'){
+        if($(this).val() == '2'){
             $('#oftr-cont').show(); 
             $('#ontr-cont').hide(); 
         } else {
@@ -112,10 +112,10 @@
         var discount = ($('#discount').val()) ? parseInt($('#discount').val().replace(/,/gi, '')) : 0;
         var type = $('#price_type').val();
 
-        if(type == '1') {
-            var total = (isNaN(price_off)) ? 0 : price_off - discount;
+        if(type == '2') {
+            var total = (isNaN(price_off) || isNaN(cost_surat)) ? 0 :  price_off + cost_surat - discount;
         } else {
-            var total = (isNaN(price_on) || isNaN(cost_surat)) ? 0 :  price_on + cost_surat - discount;
+            var total = (isNaN(price_on)) ? 0 : price_on - discount;
         }
 
         $('#total_sales_price').val(toMoney(total));

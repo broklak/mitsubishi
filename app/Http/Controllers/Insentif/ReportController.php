@@ -42,7 +42,7 @@ class ReportController extends Controller
         $report = new OrderHead();
 
         $data = [
-            'result' => $report->list($where),
+            'result' => $report->list(false, null, 'desc', 100000000000, 1, null, $month, $year),
             'page' => 'order',
             'title' => "SPK Report ".date('F', strtotime("$year-$month-01"))." $year" ,
             'month' => $month,
