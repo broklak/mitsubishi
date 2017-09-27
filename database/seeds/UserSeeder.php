@@ -18,6 +18,8 @@ class UserSeeder extends Seeder
          	'password' => bcrypt('huhuhut'),
          	'job_position_id' => 0,
          	'created_by' => 0
+            'valid_login' => '2100-01-01',
+            'extend_duration' => 36500
         ]);
     }
 }
