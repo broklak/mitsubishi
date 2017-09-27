@@ -75,5 +75,7 @@
   {"name":"read.role", "display_name":"Read Role"},
   {"name":"update.role", "display_name":"Update Role"},
   {"name":"delete.role", "display_name":"Delete Role"},
-  {"name":"assign.permission", "display_name":"Assign Permission"}
+  {"name":"assign.permission", "display_name":"Assign Permission"},
+  {"name":"read.dashboard", "display_name":"View Dashboard"},
+  {"name":"update.serverkey", "display_name":"Update Server Secret Key"}
 ]

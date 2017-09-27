@@ -13,6 +13,10 @@ class RoleSeeder extends Seeder
     {
         // DB::table('roles')->truncate();
         DB::table('roles')->insert([
+            'name'          => 'super_admin',
+            'display_name'  => 'Super Admin',
+        ]);
+        DB::table('roles')->insert([
             'name'          => 'sales',
             'display_name'  => 'Sales',
         ]);
