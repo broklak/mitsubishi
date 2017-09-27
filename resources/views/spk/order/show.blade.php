@@ -285,6 +285,14 @@
 				                </div>
 				            </div>
 			             </div>
+			             <div class="form-group">
+				            	<label class="col-sm-4 control-label">Attachment</label>
+				            	<div class="col-sm-8 spk-field" >
+				            	@foreach($attachment as $key => $val)
+				                	<a style="margin:0 20px 10px 20px;display: block;" target="__blank" href="{{asset('images/order').'/'.$row->id.'/'.$val->file}}">{{$val->file}}</a>
+				                @endforeach
+				                </div>
+				            </div>
 			             <div style="display:{{($init['payment_method'] == 2) ? 'block' : 'none'}}">
 			             	<hr />
 			             	<div class="form-group">

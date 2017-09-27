@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\OrderCredit;
 use App\Models\OrderPrice;
 use App\Models\OrderHead;
+use App\Models\OrderAttachment;
 use App\Models\CarType;
 use App\Models\CarModel;
 use App\Models\Leasing;
@@ -133,6 +134,9 @@ class OrderController extends Controller
 
         $createPrice = OrderPrice::createData($create);
 
+        //CREATE ATTACHMENT
+        OrderAttachment::createData($request->file('attachment'), $createHead->id);
+
         //CREATE LOG
         OrderLog::create([
             'order_id'      => $createHead->id,
@@ -165,6 +169,7 @@ class OrderController extends Controller
             'row' => $this->model->find($id),
             'carType' => CarType::all(),
             'customer' => Customer::all(),
+            'attachment' => OrderAttachment::where('order_id', $id)->get(),
             'leasing' => Leasing::all(),
             'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
@@ -214,6 +219,9 @@ class OrderController extends Controller
         $updateHead = $this->model->updateData($id, $update);
 
         $updatePrice = OrderPrice::updateData($id, $update);
+
+        //CREATE ATTACHMENT
+        OrderAttachment::createData($request->file('attachment'), $id);
 
         // DELETE ALL APPROVAL
         OrderApproval::where('order_id', $id)->delete();
@@ -279,6 +287,7 @@ class OrderController extends Controller
             'leasing' => Leasing::all(),
             'bbn' => Bbn::all(),
             'dealer' => UserDealer::where('user_id', Auth::id())->get(),
+            'attachment' => OrderAttachment::where('order_id', $id)->get(),
             'init' => $this->initValue($type = 'update', $id),
             'approver' => PermissionRole::getSPKApprover(), 
             'approval'  => OrderApproval::getOrderApproval($id),
@@ -494,5 +503,13 @@ class OrderController extends Controller
 
         $message = setDisplayMessage('success', "Success to reject SPK");
         return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
+    }
+
+    public function deleteAttachment($id) {
+        $data = OrderAttachment::find($id);
+        $orderId = $data->order_id;
+        $data->delete();
+        $message = setDisplayMessage('success', "Success to delete attachment");
+        return redirect(route($this->page.'.edit', ['id' => $orderId]))->with('displayMessage', $message);   
     }
 }

@@ -6,6 +6,7 @@
 /public/images/news
 /public/images/banner
 /public/images/npwp
+/public/images/order
 /storage/*.key
 /vendor
 /.idea

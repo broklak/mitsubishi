@@ -59,6 +59,22 @@
 
 	        @include('spk.order.fields.leasing')
 
+	        <div class="col-md-6">
+	        	<div class="box box-info">
+	        		<div class="box-header with-border">
+						<h3 class="box-title">Attachment</h3>
+					</div>
+					<div class="box-body">
+						<div class="form-group">
+		                  <label for="attachment" class="col-sm-3 control-label">SPK Attachment</label>
+		                  <div class="col-sm-9">
+		                    <input type="file" multiple class="form-control" name="attachment[]" id="attachment">
+		                  </div>
+		                </div>
+					</div>
+	        	</div>
+	        </div>
+
         </div>
        <div class="col-md-12">
        		<button type="submit" style="width:100%" class="btn btn-primary">CREATE SPK</button>
