@@ -11,6 +11,7 @@ use App\Models\OrderPrice;
 use App\Models\OrderCredit;
 use App\Models\OrderLog;
 use App\Models\OrderApproval;
+use App\Models\OrderAttachment;
 use App\Models\CarModel;
 use App\Models\CarType;
 use App\Models\ServerSecret;
@@ -126,6 +127,9 @@ class OrderController extends Controller
             $create['order_id'] = $createHead->id;
 
             $createPrice = OrderPrice::createData($create);
+
+            //CREATE ATTACHMENT
+            OrderAttachment::createData($request->file('attachment'), $createHead->id);
 
             //CREATE LOG
             OrderLog::create([
