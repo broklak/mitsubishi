@@ -78,6 +78,7 @@ class DeliveryOrder extends Model
             $result[$key]['for_supervisor'] = $supervisorDeduct;
             $result[$key]['insentif_fleet'] = $insentifFleet;
             $result[$key]['sales_accepted'] = $value['imbalan'] + $totalInsentif;
+            $result[$key]['spk_list']['accept_amount'] = $result[$key]['sales_accepted'];
         }
 
         return $result;
@@ -118,6 +119,8 @@ class DeliveryOrder extends Model
                     $result[$user]['insentif_fleet'] = $insentif;
                 }
             }
+
+            $result[$user]['spk_list']['code'] = $spk->spk_code;
         }
 
         return $result;

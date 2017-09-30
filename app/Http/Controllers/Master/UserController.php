@@ -100,7 +100,7 @@ class UserController extends Controller
         $create['valid_login'] = date('Y-m-d', strtotime("+".$create['extend_duration']." days"));
 
         if($request->input('alltime')) {
-            $create['valid_login']   = '2100-01-01';
+            $create['valid_login']   = '2080-01-01';
             $create['extend_duration'] = '36500';
         }
 
@@ -177,7 +177,7 @@ class UserController extends Controller
         $update['valid_login'] = date('Y-m-d', strtotime("+".$update['extend_duration']." days"));
 
         if($request->input('alltime')) {
-            $update['valid_login']   = '2100-01-01';
+            $update['valid_login']   = '2080-01-01';
             $update['extend_duration'] = '36500';
         }
 

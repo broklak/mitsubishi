@@ -330,7 +330,7 @@ class OrderController extends Controller
 
             $do = new DeliveryOrder();
 
-            $insentif = $do->getInsentif($month, $year);    
+            $insentif = $do->getInsentif($month, $year);
 
             if(!isset($insentif[$userId])) {
                 return $this->apiError($statusCode = 400, 'No insentif data for this user', 'No insentif data for this user');     
