@@ -38,6 +38,7 @@
         if($money == null){
             return 0;
         }
+        $money = str_replace('.', '', $money); 
         return str_replace(',', '', $money);
     }
 
