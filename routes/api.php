@@ -30,6 +30,11 @@ Route::get('spk/{id}', 'Api\OrderController@detail')->name('api.order.detail');
 Route::post('spk', 'Api\OrderController@post')->name('api.order.create');
 Route::put('spk/{id}', 'Api\OrderController@put')->name('api.order.update');
 
+Route::get('simulation', 'Api\SimulationController@list')->name('api.simulation.list');
+Route::get('simulation/{id}', 'Api\SimulationController@detail')->name('api.simulation.detail');
+Route::post('simulation', 'Api\SimulationController@store')->name('api.simulation.create');
+Route::put('simulation/{id}', 'Api\SimulationController@update')->name('api.simulation.update');
+
 Route::post('do', 'Api\OrderController@doPost')->name('api.order.do');
 Route::get('insentif', 'Api\OrderController@insentif')->name('api.insentif');
 Route::get('leasing-formula', 'Api\OrderController@leasingFormula')->name('api.leasingFormula');

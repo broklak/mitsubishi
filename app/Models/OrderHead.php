@@ -21,7 +21,7 @@ class OrderHead extends Model
      */
     protected $fillable = [
         'spk_code', 'spk_doc_code', 'date', 'npwp_image', 'stnk_name', 'stnk_address', 'faktur_conf', 'model_id', 'type_id', 'color', 'dealer_id', 'customer_id',
-        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 'customer_image_id'
+        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 'customer_image_id', 'uuid'
     ];
 
     /**
@@ -129,7 +129,8 @@ class OrderHead extends Model
             'karoseri_spec' => (isset($data['karoseri_spec'])) ? $data['karoseri_spec'] : null,
             'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
     		'status'		=> 1,
-    		'created_by'	=> $data['created_by']
+    		'created_by'	=> $data['created_by'],
+            'uuid'          => isset($data['uuid']) ? $data['uuid'] : null
     	]);
     }
 
@@ -155,7 +156,8 @@ class OrderHead extends Model
             'karoseri_type' => (isset($data['karoseri_type'])) ? $data['karoseri_type'] : null,
             'karoseri_spec' => (isset($data['karoseri_spec'])) ? $data['karoseri_spec'] : null,
             'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
-            'updated_by'    => $data['updated_by']
+            'updated_by'    => $data['updated_by'],
+            'uuid'          => isset($data['uuid']) ? $data['uuid'] : null
         ]);
     }
 
