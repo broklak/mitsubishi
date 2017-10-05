@@ -31,6 +31,7 @@ Route::post('spk', 'Api\OrderController@post')->name('api.order.create');
 Route::put('spk/{id}', 'Api\OrderController@put')->name('api.order.update');
 
 Route::get('simulation', 'Api\SimulationController@list')->name('api.simulation.list');
+Route::get('simulation/field', 'Api\SimulationController@fields')->name('api.simulation.field');
 Route::get('simulation/{id}', 'Api\SimulationController@detail')->name('api.simulation.detail');
 Route::post('simulation', 'Api\SimulationController@store')->name('api.simulation.create');
 Route::put('simulation/{id}', 'Api\SimulationController@update')->name('api.simulation.update');

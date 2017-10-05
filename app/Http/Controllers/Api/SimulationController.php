@@ -126,6 +126,24 @@ class SimulationController extends Controller
     	}
     }
 
+    public function fields() {
+    	$leasing = Leasing::getOption();
+    	$carType = CarType::getOptionValue();
+    	$field = [
+    		generateApiField($fieldName = 'leasing_id', $label = 'Leasing', $type = 'select', $required = true, $options = $leasing),
+    		generateApiField($fieldName = 'type_id', $label = 'Car Type', $type = 'select', $required = true, $options = $carType),
+    		generateApiField($fieldName = 'car_year', $label = 'Car Year'),
+    		generateApiField($fieldName = 'total_sales_price', $label = 'Total Sales Price', $type = 'integer'),
+    		generateApiField($fieldName = 'duration', $label = 'Credit Month Duration', $type = 'integer'),
+    		generateApiField($fieldName = 'dp_amount', $label = 'DP Amount', $type = 'integer'),
+    		generateApiField($fieldName = 'dp_percentage', $label = 'DP Percentage', $type = 'integer'),
+    		generateApiField($fieldName = 'total_dp', $label = 'Total Down Payment', $type = 'integer'),
+    		generateApiField($fieldName = 'customer_name', $label = 'Customer Name'),
+    	];
+
+    	return $this->apiSuccess($field);
+    }
+
     protected function rules() {
         return [
 	        'leasing_id'     => 'required',
