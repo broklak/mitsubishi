@@ -325,12 +325,14 @@ class OrderController extends Controller
     protected function initValue($type, $orderId = null) {
         if($type == 'create') {
             return [
-                'customer_first_name'         => old('customer_first_name'),
+                'customer_first_name'   => old('customer_first_name'),
                 'customer_last_name'    => old('customer_last_name'),
                 'id_type'               => old('id_type'),
                 'id_number'             => old('id_number'),
                 'customer_address'      => old('customer_address'),
                 'customer_phone'        => old('customer_phone'),
+                'customer_phone_home'   => old('customer_phone_home'),
+                'customer_business'     => old('customer_business'),
                 'customer_npwp'         => old('customer_npwp'),
                 'stnk_name'             => old('stnk_name'),
                 'stnk_address'          => old('stnk_address'),
@@ -401,6 +403,8 @@ class OrderController extends Controller
             'folder_id_image'       => $folder,
             'id_image'              => (isset($customerImage->filename)) ? $customerImage->filename : null,
             'customer_phone'        => $customer->phone,
+            'customer_phone_home'   => $customer->phone_home,
+            'customer_business'     => $customer->job,
             'customer_npwp'         => $customer->npwp,
             'stnk_name'             => $orderHead->stnk_name,
             'stnk_address'          => $orderHead->stnk_address,

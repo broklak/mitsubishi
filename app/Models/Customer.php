@@ -19,7 +19,8 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'first_name', 'last_name', 'phone', 'id_type', 'id_number', 'email', 'address', 'job', 'npwp', 'image', 'status', 'created_by', 'updated_by'
+        'name', 'first_name', 'last_name', 'phone', 'id_type', 'id_number', 'email', 'address', 'job', 'npwp', 'image', 'status', 'created_by', 'updated_by',
+        'phone_home'
     ];
 
     /**
@@ -41,6 +42,8 @@ class Customer extends Model
         $dataChange = [
             'first_name' => $data['customer_first_name'],
             'last_name' => $data['customer_last_name'],
+            'phone_home' => $data['customer_phone_home'],
+            'job'       => $data['customer_business'],
             'id_type'   => '0',
             'id_number' => '',
             'address'   => $data['customer_address'],

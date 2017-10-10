@@ -59,6 +59,20 @@
 	                  </div>
 	                </div>
 
+	                <div class="form-group">
+	                  <label for="customer_phone_home" class="col-sm-3 control-label">Home / Office Phone Number</label>
+	                  <div class="col-sm-9">
+	                    <input type="text" class="form-control" name="customer_phone_home" value="{{$init['customer_phone_home']}}" id="customer_phone_home" placeholder="Home / Office Phone Number">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                  <label for="customer_business" class="col-sm-3 control-label">Business Type</label>
+	                  <div class="col-sm-9">
+	                    <input type="text" class="form-control" name="customer_business" value="{{$init['customer_business']}}" id="customer_business" placeholder="Business Type">
+	                  </div>
+	                </div>
+
 	                <!-- <div class="form-group">
 	                  <label for="customer_phone" class="col-sm-3 control-label">Phone Number</label>
 	                  <div class="col-sm-9">

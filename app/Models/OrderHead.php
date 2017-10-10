@@ -373,11 +373,13 @@ class OrderHead extends Model
         $data['customerData'] = [
             'customerName'         => (isset($customer->id)) ? $customer->first_name : null,
             'customerLastName'      => (isset($customer->id)) ? $customer->last_name : null,
+            'customerBusiness'      => (isset($customer->id)) ? $customer->job : null,
             'idType'               => (isset($customerImage->type)) ? $customerImage->type : null,
             'idNumber'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
             'customerAddress'      => (isset($customer->id)) ?  $customer->address : null,
             'idImage'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
             'customerPhone'        => (isset($customer->id)) ? $customer->phone : null,
+            'customerPhoneHome'        => (isset($customer->id)) ? $customer->phone_home : null,
             'customerNpwp'         => (isset($customer->id)) ? $customer->npwp : null,
             'npwpImage'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
         ];

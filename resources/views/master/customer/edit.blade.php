@@ -43,6 +43,13 @@
 	                </div>
 
 	                <div class="form-group">
+	                  <label for="phone_home" class="col-sm-2 control-label">Office / Home Phone Number</label>
+	                  <div class="col-sm-10">
+	                  	<input type="text" class="form-control" name="phone_home" value="{{$row->phone_home}}" id="phone_home" placeholder="Phone Number">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
 	                  <label for="email" class="col-sm-2 control-label">Email</label>
 	                  <div class="col-sm-10">
 	                  	<input type="email" class="form-control" name="email" value="{{$row->email}}" id="email" placeholder="Email Address">

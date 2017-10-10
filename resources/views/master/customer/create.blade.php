@@ -51,9 +51,16 @@
 	                </div>
 
 	                <div class="form-group">
-	                  <label for="phone" class="col-sm-2 control-label">Phone</label>
+	                  <label for="phone" class="col-sm-2 control-label">Handphone Number</label>
 	                  <div class="col-sm-10">
 	                  	<input type="text" class="form-control" name="phone" value="{{old('phone')}}" id="phone" placeholder="Phone Number">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
+	                  <label for="phone_home" class="col-sm-2 control-label">Home / Office Phone Number</label>
+	                  <div class="col-sm-10">
+	                  	<input type="text" class="form-control" name="phone_home" value="{{old('phone_home')}}" id="phone_home" placeholder="Office / Home Phone Number">
 	                  </div>
 	                </div>
 

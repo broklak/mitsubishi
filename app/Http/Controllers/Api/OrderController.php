@@ -501,7 +501,6 @@ class OrderController extends Controller
                     generateApiField($fieldName = 'id_image', $label = 'Customer ID Image', $type = 'file', $required = false),
                     generateApiField($fieldName = 'id_number', $label = 'Customer ID Number'),
                     generateApiField($fieldName = 'first_name', $label = 'Customer First Name'),
-                    generateApiField($fieldName = 'last_name', $label = 'Customer Last Name'),
                     generateApiField($fieldName = 'last_name', $label = 'Customer Last Name', $type = 'string', $required = false),
                     generateApiField($fieldName = 'npwp', $label = 'Customer NPWP', $type = 'string', $required = false),
                     generateApiField($fieldName = 'npwp_image', $label = 'Customer NPWP Image', $type = 'file', $required = false),
