@@ -1,7 +1,7 @@
 			<!-- <div class="col-md-6"> -->
 	          	<div class="box box-info">
 	          		<div class="box-header with-border">
-						<h3 class="box-title">Karoseri Data</h3>
+						<h3 class="box-title">Data Karoseri</h3>
 					</div>
 		          	<div class="box-body">
 		        		<div class="form-group">
@@ -12,7 +12,7 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="karoseri_type" class="col-sm-3 control-label">Karoseri Type</label>
+			               <label for="karoseri_type" class="col-sm-3 control-label">Jenis Karoseri</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="karoseri_type" value="{{$init['karoseri_type']}}" id="karoseri_type" placeholder="Karoseri Type">
 			               </div>

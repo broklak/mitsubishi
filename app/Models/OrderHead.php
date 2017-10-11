@@ -36,7 +36,7 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $month = null, $year = null) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $month = null, $year = null, $api = false) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
@@ -62,7 +62,34 @@ class OrderHead extends Model
         }
 
 
-        $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
+        if($api){
+            if($page == 0 || $limit == 0) {
+                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            car_types.name as type_name, car_models.name as model_name"))
+                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->whereRaw($where)
+                        ->orderBy('id', $sort)
+                        ->get();
+            } else {
+                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            car_types.name as type_name, car_models.name as model_name"))
+                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->whereRaw($where)
+                        ->orderBy('id', $sort)
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+            }
+        } else {
+            $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
@@ -74,6 +101,7 @@ class OrderHead extends Model
                         ->offset($offset)
                         ->limit($limit)
                         ->paginate($limit);
+        }
 
         return $data;
     }
@@ -238,7 +266,13 @@ class OrderHead extends Model
             if($value->created_by != $userId) unset($data[$key]);
         }
 
-        return $data;
+        $clean = [];
+        foreach ($data as $key => $value) {
+            $clean[] = $data[$key];
+        }
+
+
+        return $clean;
 
     }
 
@@ -332,69 +366,69 @@ class OrderHead extends Model
             }
         }
 
-        $data['number'] = $orderHead->spk_code;
-        $data['documentNumber'] = $orderHead->spk_doc_code;
-        $data['createdBy'] = User::find($orderHead->created_by)->value('username');
+        $data['spk_code'] = $orderHead->spk_code;
+        $data['spk_doc_code'] = $orderHead->spk_doc_code;
+        $data['created_by'] = User::find($orderHead->created_by)->value('username');
         $data['date'] = $orderHead->date;
-        $data['dateHuman'] = date('j F Y', strtotime($orderHead->date));
+        $data['date_human'] = date('j F Y', strtotime($orderHead->date));
 
-        $data['carData'] = [
-            'stnkName'             => $orderHead->stnk_name,
-            'stnkAddress'          => $orderHead->stnk_address,
-            'fakturConf'           => $orderHead->faktur_conf,
-            'typeId'               => $orderHead->type_id,
-            'typeName'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
+        $data['car_data'] = [
+            'stnk_name'             => $orderHead->stnk_name,
+            'stnk_address'          => $orderHead->stnk_address,
+            'faktur_conf'           => $orderHead->faktur_conf,
+            'type_id'               => $orderHead->type_id,
+            'type_name'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
             'color'                => $orderHead->color,
             'qty'                  => $orderHead->qty,
             'plat'                 => $orderHead->plat,
-            'carYear'              => $orderHead->car_year,
-            'bbnType'              => $orderHead->bbn_type,
+            'car_year'              => $orderHead->car_year,
+            'bbn_type'              => $orderHead->bbn_type,
             'karoseri'             => $orderHead->karoseri,
-            'karoseriType'         => $orderHead->karoseri_type,
-            'karoseriSpec'         => $orderHead->karoseri_spec,
-            'karoseriPrice'        => $orderHead->karoseri_price
+            'karoseri_type'         => $orderHead->karoseri_type,
+            'karoseri_spec'         => $orderHead->karoseri_spec,
+            'karoseri_price'        => $orderHead->karoseri_price
         ];   
 
-        $data['priceData'] = [
-            'priceType'            => ($orderPrice->price_off == 0) ? 2 : 1,
-            'priceOff'             => moneyFormat($orderPrice->price_off),
-            'priceOn'              => moneyFormat($orderPrice->price_on),
-            'costSurat'            => moneyFormat($orderPrice->cost_surat),
+        $data['price_data'] = [
+            'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
+            'price_off'             => moneyFormat($orderPrice->price_off),
+            'price_on'              => moneyFormat($orderPrice->price_on),
+            'cost_surat'            => moneyFormat($orderPrice->cost_surat),
             'discount'             => moneyFormat($orderPrice->discount),
-            'totalSalesPrice'      => moneyFormat($orderPrice->total_sales_price),
-            'downPaymentAmount'    => moneyFormat($orderPrice->down_payment_amount),
-            'downPaymentDate'      => $orderPrice->down_payment_date,
-            'jaminanCostAmount'    => moneyFormat($orderPrice->jaminan_cost_amount),
-            'jaminanCostPercentage' => $orderPrice->jaminan_cost_percentage,
-            'totalUnpaid'          => moneyFormat($orderPrice->total_unpaid),
-            'paymentMethod'        => $orderPrice->payment_method
+            'total_sales_price'      => moneyFormat($orderPrice->total_sales_price),
+            'booking_fee'    => moneyFormat($orderPrice->down_payment_amount),
+            'down_payment_date'      => $orderPrice->down_payment_date,
+            'dp_amount'    => moneyFormat($orderPrice->jaminan_cost_amount),
+            'dp_percentage' => $orderPrice->jaminan_cost_percentage,
+            'total_unpaid'          => moneyFormat($orderPrice->total_unpaid),
+            'payment_method'        => $orderPrice->payment_method
         ];
 
-        $data['customerData'] = [
-            'customerName'         => (isset($customer->id)) ? $customer->first_name : null,
-            'customerLastName'      => (isset($customer->id)) ? $customer->last_name : null,
-            'customerBusiness'      => (isset($customer->id)) ? $customer->job : null,
-            'idType'               => (isset($customerImage->type)) ? $customerImage->type : null,
-            'idNumber'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
-            'customerAddress'      => (isset($customer->id)) ?  $customer->address : null,
-            'idImage'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
-            'customerPhone'        => (isset($customer->id)) ? $customer->phone : null,
-            'customerPhoneHome'        => (isset($customer->id)) ? $customer->phone_home : null,
-            'customerNpwp'         => (isset($customer->id)) ? $customer->npwp : null,
-            'npwpImage'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
+        $data['customer_data'] = [
+            'first_name'         => (isset($customer->id)) ? $customer->first_name : null,
+            'last_name'      => (isset($customer->id)) ? $customer->last_name : null,
+            'customer_business'      => (isset($customer->id)) ? $customer->job : null,
+            'id_type'               => (isset($customerImage->type)) ? $customerImage->type : null,
+            'id_number'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
+            'customer_address'      => (isset($customer->id)) ?  $customer->address : null,
+            'id_image'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
+            'customer_phone'        => (isset($customer->id)) ? $customer->phone : null,
+            'customer_phone_address'        => (isset($customer->id)) ? $customer->phone_home : null,
+            'npwp'         => (isset($customer->id)) ? $customer->npwp : null,
+            'npwp_image'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
         ];
 
         if(isset($orderCredit->leasing_id)) {
-            $data['leasingData'] = [
-                'leasingId'            => (isset($orderCredit->leasing_id)) ? $orderCredit->leasing_id : null,
-                'yearDuration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
-                'ownerName'            => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,
-                'interestRate'         => (isset($orderCredit->interest_rate)) ? $orderCredit->interest_rate : null,
-                'adminCost'            => (isset($orderCredit->admin_cost)) ? moneyFormat($orderCredit->admin_cost) : null,
-                'insuranceCost'        => (isset($orderCredit->insurance_cost)) ? moneyFormat($orderCredit->insurance_cost) : null,
-                'installmentCost'      => (isset($orderCredit->installment_cost)) ? moneyFormat($orderCredit->installment_cost) : null,
-                'otherCost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
-                'totalDownPayment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
+            $data['leasing_data'] = [
+                'leasing_id'            => (isset($orderCredit->leasing_id)) ? $orderCredit->leasing_id : null,
+                'credit_duration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
+                'credit_owner_name'            => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,
+                'interest_rate'         => (isset($orderCredit->interest_rate)) ? $orderCredit->interest_rate : null,
+                'admin_cost'            => (isset($orderCredit->admin_cost)) ? moneyFormat($orderCredit->admin_cost) : null,
+                'insurance_cost'        => (isset($orderCredit->insurance_cost)) ? moneyFormat($orderCredit->insurance_cost) : null,
+                'installment_cost'      => (isset($orderCredit->installment_cost)) ? moneyFormat($orderCredit->installment_cost) : null,
+                'other_cost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
+                'total_down_payment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
             ];
         }
 

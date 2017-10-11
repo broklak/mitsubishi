@@ -305,7 +305,6 @@ class OrderController extends Controller
             'dealer_id' => 'required',
             'id_number' => 'required',
             'customer_first_name' => 'required',
-            'customer_last_name' => 'required',
             'customer_address' => 'required',
             'customer_phone' => 'required',
             'id_type' => 'required',

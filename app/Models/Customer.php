@@ -41,7 +41,7 @@ class Customer extends Model
 
         $dataChange = [
             'first_name' => $data['customer_first_name'],
-            'last_name' => $data['customer_last_name'],
+            'last_name' => isset($data['customer_last_name']) ? $data['customer_last_name'] : "",
             'phone_home' => $data['customer_phone_home'],
             'job'       => $data['customer_business'],
             'id_type'   => '0',

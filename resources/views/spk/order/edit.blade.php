@@ -22,21 +22,21 @@
 		            <div class="box-body">
 
 		            	<div class="form-group">
-			                <label for="spk_code" class="col-sm-3 control-label">SPK Number</label>
+			                <label for="spk_code" class="col-sm-3 control-label">Nomor SPK</label>
 			                <div class="col-sm-9">
 			                   <input type="text" class="form-control" name="spk_code" value="{{$row->spk_code}}" id="spk_code" readonly="readonly">
 			                </div>
 			            </div>
 
 			            <div class="form-group">
-			                <label for="spk_doc_code" class="col-sm-3 control-label">Control Number</label>
+			                <label for="spk_doc_code" class="col-sm-3 control-label">Nomor Dokumen</label>
 			                <div class="col-sm-9">
 			                   <input type="text" class="form-control" name="spk_doc_code" value="{{$row->spk_doc_code}}" id="spk_doc_code" placeholder="Control Number">
 			                </div>
 			            </div>
 
 			            <div class="form-group">
-			                <label for="date" class="col-sm-3 control-label">Date</label>
+			                <label for="date" class="col-sm-3 control-label">Tanggal</label>
 			                <div class="col-sm-9">
 			                   <input type="text" class="form-control datepicker" name="date" value="{{$row->date}}" id="date" placeholder="Order Date">
 			                </div>
@@ -46,7 +46,7 @@
 			                <label for="date" class="col-sm-3 control-label">Dealer</label>
 			                <div class="col-sm-9">
 			                   <select name="dealer_id" class="form-control">
-			                   		<option disabled="disabled" selected="selected" value="0">Choose Dealer</option>
+			                   		<option disabled="disabled" selected="selected" value="0">Pilih Dealer</option>
 			                   		@foreach($dealer as $key => $val)
 			                   		<option @if($row->dealer_id == $val->dealer_id) selected @endif value="{{$val->dealer_id}}">{{\App\Models\Dealer::getName($val->dealer_id)}}</option>
 			                   		@endforeach

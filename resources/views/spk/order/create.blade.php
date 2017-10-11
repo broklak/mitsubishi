@@ -20,14 +20,14 @@
 					</div>
 		            <div class="box-body">
 			            <div class="form-group">
-			                <label for="spk_doc_code" class="col-sm-3 control-label">Control Number</label>
+			                <label for="spk_doc_code" class="col-sm-3 control-label">Nomor Dokumen</label>
 			                <div class="col-sm-9">
 			                   <input type="text" class="form-control" name="spk_doc_code" value="{{old('spk_doc_code')}}" id="spk_doc_code" placeholder="Control Number">
 			                </div>
 			            </div>
 
 			            <div class="form-group">
-			                <label for="date" class="col-sm-3 control-label">Date</label>
+			                <label for="date" class="col-sm-3 control-label">Tanggal</label>
 			                <div class="col-sm-9">
 			                   <input type="text" class="form-control datepicker" name="date" value="{{old('date')}}" id="date" placeholder="Order Date">
 			                </div>
@@ -37,7 +37,7 @@
 			                <label for="date" class="col-sm-3 control-label">Dealer</label>
 			                <div class="col-sm-9">
 			                   <select name="dealer_id" class="form-control" id="dealer_id">
-			                   		<option disabled="disabled" selected="selected" value="0">Choose Dealer</option>
+			                   		<option disabled="disabled" selected="selected" value="0">Pilih Dealer</option>
 			                   		@foreach($dealer as $key => $val)
 			                   		<option @if(old('dealer_id') == $val->dealer_id) selected @endif value="{{$val->dealer_id}}">{{\App\Models\Dealer::getName($val->dealer_id)}}</option>
 			                   		@endforeach
@@ -77,7 +77,7 @@
 
         </div>
        <div class="col-md-12">
-       		<button type="submit" style="width:100%" class="btn btn-primary">CREATE SPK</button>
+       		<button type="submit" style="width:100%" class="btn btn-primary">BUAT SPK</button>
        </div>
         <div style="clear:both"></div>
     </form>

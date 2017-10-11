@@ -47,17 +47,17 @@ class OrderController extends Controller
             }
 
     		$approval = ($request->input('type') == 'approval') ? true : false;
-	    	$limit = ($request->input('limit')) ? $request->input('limit') : 10;
-	    	$page = ($request->input('page')) ? $request->input('page') : 1;
+	    	$limit = ($request->input('limit')) ? $request->input('limit') : 0;
+	    	$page = ($request->input('page')) ? $request->input('page') : 0;
 	        $sort = ($request->input('sort')) ? $request->input('sort') : 'desc';
 	        $query = $request->input('query');
 
-	        if($limit < 1) return $this->apiError($statusCode = 400, 'Limit data must be greater than zero', 'Something went wrong with the request');	
+	        if($limit < 0) return $this->apiError($statusCode = 400, 'Limit data must not be negative number', 'Something went wrong with the request');	
 
 	        $order = new OrderHead();
-            $data = $order->list($approval, $query, $sort, $limit, $page, $time);
+            $data = $order->list($approval, $query, $sort, $limit, $page, $time, null, null, $api = true);
             $data = $order->filterResult($data, $api = true);
-            $pagination = $this->getPagination($data, $order->countList($approval, $query), $page, $limit);
+            $pagination = ($limit == 0) ? null : $this->getPagination($data, $order->countList($approval, $query), $page, $limit);
     	} catch (Exception $e) {
     		return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');          
     	}
@@ -242,7 +242,6 @@ class OrderController extends Controller
             'dealer_id' => 'required',
             'id_number' => 'required',
             'customer_first_name' => 'required',
-            'customer_last_name' => 'required',
             'customer_address' => 'required',
             'customer_phone' => 'required',
             'id_type' => 'required',
@@ -493,55 +492,57 @@ class OrderController extends Controller
         $months = CreditMonth::select(DB::raw('months as value, CONCAT(months, " Months") as display'))->get();
 
         $field['generalField'] = [
-                    generateApiField($fieldName = 'spk_doc_code', $label = 'Document Control Number'),
+                    generateApiField($fieldName = 'spk_doc_code', $label = 'Nomor Dokumen'),
                     generateApiField($fieldName = 'date', $label = 'Date', $type = 'date', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
                     generateApiField($fieldName = 'dealer_id', $label = 'Dealer', $type = 'select', $required = true, $options = $dealer),
-                    generateApiField($fieldName = 'customer_phone', $label = 'Customer Phone'),
-                    generateApiField($fieldName = 'id_type', $label = 'Customer ID Type', $type = 'select', $required = true, $options = $idType),
-                    generateApiField($fieldName = 'id_image', $label = 'Customer ID Image', $type = 'file', $required = false),
-                    generateApiField($fieldName = 'id_number', $label = 'Customer ID Number'),
-                    generateApiField($fieldName = 'first_name', $label = 'Customer First Name'),
-                    generateApiField($fieldName = 'last_name', $label = 'Customer Last Name', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'npwp', $label = 'Customer NPWP', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'npwp_image', $label = 'Customer NPWP Image', $type = 'file', $required = false),
-                    generateApiField($fieldName = 'stnk_name', $label = 'STNK Name'),
-                    generateApiField($fieldName = 'stnk_address', $label = 'STNK Address'),
-                    generateApiField($fieldName = 'faktur_conf', $label = 'Faktur Confirmation', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'type_id', $label = 'Car Type', $type = 'select', $required = true, $options = $carType),
-                    generateApiField($fieldName = 'color', $label = 'Car Color'),
-                    generateApiField($fieldName = 'car_year', $label = 'Car Year', $type = 'string', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
-                    generateApiField($fieldName = 'qty', $label = 'Total Unit', $type = 'integer'),
-                    generateApiField($fieldName = 'plat', $label = 'Car Plat Type', $type = 'select', $required = true, $options = $platType),
-                    generateApiField($fieldName = 'bbn_type', $label = 'BBN Type', $type = 'select', $required = true, $options = $bbnType),
-                    generateApiField($fieldName = 'bbn_type', $label = 'BBN Type', $type = 'select', $required = true, $options = $bbnType),
+                    generateApiField($fieldName = 'customer_phone', $label = 'Nomor Handphone Pemesan'),
+                    generateApiField($fieldName = 'customer_address', $label = 'Alamat'),
+                    generateApiField($fieldName = 'customer_phone_home', $label = 'Nomor Telepon Pemesan'),
+                    generateApiField($fieldName = 'customer_business', $label = 'Jenis Usaha'),
+                    generateApiField($fieldName = 'id_type', $label = 'Jenis Identitas', $type = 'select', $required = true, $options = $idType),
+                    generateApiField($fieldName = 'id_image', $label = 'Foto Tanda Identitas', $type = 'file', $required = false),
+                    generateApiField($fieldName = 'id_number', $label = 'Nomor Tanda Identitas'),
+                    generateApiField($fieldName = 'first_name', $label = 'Nama Pemesan'),
+                    generateApiField($fieldName = 'last_name', $label = 'Nama Belakang Pemesan', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'npwp', $label = 'NPWP', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'npwp_image', $label = 'Foto NPWP', $type = 'file', $required = false),
+                    generateApiField($fieldName = 'stnk_name', $label = 'Nama STNK'),
+                    generateApiField($fieldName = 'stnk_address', $label = 'Alamat STNK'),
+                    generateApiField($fieldName = 'faktur_conf', $label = 'Faktur Konfirmasi', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'type_id', $label = 'Tipe Mobil', $type = 'select', $required = true, $options = $carType),
+                    generateApiField($fieldName = 'color', $label = 'Warna'),
+                    generateApiField($fieldName = 'car_year', $label = 'Tahun Kendaraan', $type = 'string', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
+                    generateApiField($fieldName = 'qty', $label = 'Quantity', $type = 'integer'),
+                    generateApiField($fieldName = 'plat', $label = 'Jenis Plat', $type = 'select', $required = true, $options = $platType),
+                    generateApiField($fieldName = 'bbn_type', $label = 'Jenis BBN', $type = 'select', $required = true, $options = $bbnType),
                     generateApiField($fieldName = 'karoseri', $label = 'Karoseri', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'karoseri_type', $label = 'Karoseri Type', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'karoseri_spec', $label = 'Karoseri Spesification', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'karoseri_price', $label = 'Karoseri Price', $type = 'integer', $required = false),
-                    generateApiField($fieldName = 'price_type', $label = 'Price Type', $type = 'select', $required = true, $options = $priceType),
+                    generateApiField($fieldName = 'karoseri_type', $label = 'Jenis Karosei', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_spec', $label = 'Spesifikasi', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_price', $label = 'Harga', $type = 'integer', $required = false),
+                    generateApiField($fieldName = 'price_type', $label = 'Jenis Harga', $type = 'select', $required = true, $options = $priceType),
                     generateApiField($fieldName = 'discount', $label = 'Discount', $type = 'integer'),
-                    generateApiField($fieldName = 'price_off', $label = 'Price Off The Road', $type = 'integer'),
-                    generateApiField($fieldName = 'price_on', $label = 'Price On The Road', $type = 'integer'),
-                    generateApiField($fieldName = 'cost_surat', $label = 'STNK Cost', $type = 'integer'),
-                    generateApiField($fieldName = 'total_sales_price', $label = 'Total Sales Price', $type = 'integer'),
-                    generateApiField($fieldName = 'booking_fee', $label = 'Booking Fee', $type = 'integer'),
-                    generateApiField($fieldName = 'down_payment_date', $label = 'Down Payment Date', $type = 'date'),
-                    generateApiField($fieldName = 'dp_percentage', $label = 'DP Percentage', $type = 'integer'),
-                    generateApiField($fieldName = 'dp_amount', $label = 'DP Amount', $type = 'integer'),
-                    generateApiField($fieldName = 'total_unpaid', $label = 'Total Unpaid', $type = 'integer'),
-                    generateApiField($fieldName = 'payment_method', $label = 'Payment Method', $type = 'select', $required = true, $options = $paymentMethod),
+                    generateApiField($fieldName = 'price_off', $label = 'Harga Off The Road', $type = 'integer'),
+                    generateApiField($fieldName = 'price_on', $label = 'Harga On The Road', $type = 'integer'),
+                    generateApiField($fieldName = 'cost_surat', $label = 'Biaya Surat Kendaraan', $type = 'integer'),
+                    generateApiField($fieldName = 'total_sales_price', $label = 'Total Harga Jual', $type = 'integer'),
+                    generateApiField($fieldName = 'booking_fee', $label = 'Uang Panjar', $type = 'integer'),
+                    generateApiField($fieldName = 'down_payment_date', $label = 'Tanggal Pembayaran', $type = 'date'),
+                    generateApiField($fieldName = 'dp_percentage', $label = 'DP (%)', $type = 'integer'),
+                    generateApiField($fieldName = 'dp_amount', $label = 'DP (Rp)', $type = 'integer'),
+                    generateApiField($fieldName = 'total_unpaid', $label = 'Sisa Pembayaran', $type = 'integer'),
+                    generateApiField($fieldName = 'payment_method', $label = 'Cara Pembayaran', $type = 'select', $required = true, $options = $paymentMethod),
         ];
 
         $field['leasingField'] = [
             generateApiField($fieldName = 'leasing_id', $label = 'Leasing', $type = 'select', $required = true, $options = $leasing),
-            generateApiField($fieldName = 'credit_duration', $label = 'Credit Duration', $type = 'select', $required = true, $options = $months),
-            generateApiField($fieldName = 'credit_owner_name', $label = 'Credit Owner'),
-            generateApiField($fieldName = 'interest_rate', $label = 'Interest Rate', $type = 'float'),
-            generateApiField($fieldName = 'admin_cost', $label = 'Admin Cost', $type = 'integer'),
-            generateApiField($fieldName = 'insurance_cost', $label = 'Insurance Cost', $type = 'integer'),
-            generateApiField($fieldName = 'installment_cost', $label = 'Installment Cost', $type = 'integer'),
-            generateApiField($fieldName = 'other_cost', $label = 'Other Cost', $type = 'integer'),
-            generateApiField($fieldName = 'total_down_payment', $label = 'Total Down Payment', $type = 'integer')
+            generateApiField($fieldName = 'credit_duration', $label = 'Lama Kredit', $type = 'select', $required = true, $options = $months),
+            generateApiField($fieldName = 'credit_owner_name', $label = 'Kontrak atas Nama'),
+            generateApiField($fieldName = 'interest_rate', $label = 'Suku Bunga', $type = 'float'),
+            generateApiField($fieldName = 'admin_cost', $label = 'Biaya Administrasi', $type = 'integer'),
+            generateApiField($fieldName = 'insurance_cost', $label = 'Biaya Asuransi', $type = 'integer'),
+            generateApiField($fieldName = 'installment_cost', $label = 'Cicilan Perbulan', $type = 'integer'),
+            generateApiField($fieldName = 'other_cost', $label = 'Biaya Lain', $type = 'integer'),
+            generateApiField($fieldName = 'total_down_payment', $label = 'TDP', $type = 'integer')
         ];
 
         return $this->apiSuccess($field);

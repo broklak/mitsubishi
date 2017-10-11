@@ -1,32 +1,32 @@
 				<!-- <div class="col-md-6"> -->
 	          	<div class="box box-info">
 		          	<div class="box-header with-border">
-						<h3 class="box-title">Car Data</h3>
+						<h3 class="box-title">Data Mobil</h3>
 					</div>
 		          	<div class="box-body">
 		        		<div class="form-group">
-			               <label for="stnk_name" class="col-sm-3 control-label">STNK Name</label>
+			               <label for="stnk_name" class="col-sm-3 control-label">Nama STNK</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="stnk_name" value="{{$init['stnk_name']}}" id="stnk_name" placeholder="Car Owner Name">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="stnk_address" class="col-sm-3 control-label">STNK Address</label>
+			               <label for="stnk_address" class="col-sm-3 control-label">Alamat STNK</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="stnk_address" value="{{$init['stnk_address']}}" id="stnk_name" placeholder="Car Owner Address">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="faktur_conf" class="col-sm-3 control-label">Faktur</label>
+			               <label for="faktur_conf" class="col-sm-3 control-label">Konfirmasi Faktur</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="faktur_conf" value="{{$init['faktur_conf']}}" id="faktur_conf" placeholder="Faktur Confirmation">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="car_type" class="col-sm-3 control-label">Car Type</label>
+			               <label for="car_type" class="col-sm-3 control-label">Tipe</label>
 			               <div class="col-sm-9">
 			               		<input type="text" class="form-control" name="type_name" value="{{$init['type_name']}}" id="type_id" placeholder="Car Type">
 			               		<input type="hidden" value="{{$init['type_id']}}" id="type_id_real" name="type_id" />
@@ -34,28 +34,28 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="color" class="col-sm-3 control-label">Car Color</label>
+			               <label for="color" class="col-sm-3 control-label">Warna</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="color" value="{{$init['color']}}" id="color" placeholder="Color">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="qty" class="col-sm-3 control-label">Total Unit</label>
+			               <label for="qty" class="col-sm-3 control-label">Quantity</label>
 			               <div class="col-sm-9">
 			                  <input type="number" class="form-control" name="qty" value="{{$init['qty']}}" id="qty" placeholder="Total Unit">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="car_year" class="col-sm-3 control-label">Car Built Year</label>
+			               <label for="car_year" class="col-sm-3 control-label">Tahun Kendaraan</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="car_year" value="{{$init['car_year']}}" id="car_year" placeholder="Year">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="plat" class="col-sm-3 control-label">Plat Type</label>
+			               <label for="plat" class="col-sm-3 control-label">Jenis Plat</label>
 			               <div class="col-sm-9">
 			               		<select name="plat" class="form-control">
 			               			<option @if($init['car_year'] == 1) selected="selected" @endif value="1">Hitam</option>
@@ -66,10 +66,10 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="bbn_type" class="col-sm-3 control-label">BBN Type</label>
+			               <label for="bbn_type" class="col-sm-3 control-label">Jenis BBN</label>
 			               <div class="col-sm-9">
 			                  	<select class="form-control" name="bbn_type">
-			               			<option disabled="disabled" selected="selected">Choose BBN Type</option>
+			               			<option disabled="disabled" selected="selected">Pilih Jenis BBN</option>
 			               			@foreach($bbn as $key => $val)
 			               			<option @if($init['bbn_type'] == $val->id) selected="selected" @endif value="{{$val->id}}">{{$val->name}}</option>
 			               			@endforeach

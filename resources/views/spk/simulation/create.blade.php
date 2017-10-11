@@ -17,7 +17,7 @@
 	    		<form>
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title">Credit Simulation</h3>
+						<h3 class="box-title">Simulasi Kredit</h3>
 					</div>
 		            <div class="box-body">
 
@@ -25,7 +25,7 @@
 			                <label for="date" class="col-sm-2 control-label">Leasing</label>
 			                <div class="col-sm-10">
 			                   <select name="leasing_id" class="form-control" id="leasing_id">
-			                   		<option disabled="disabled" selected="selected" value="0">Choose Leasing</option>
+			                   		<option disabled="disabled" selected="selected" value="0">Pilih Leasing</option>
 			                   		@foreach($leasing as $key => $val)
 			                   		<option @if(old('leasing_id') == $val->id) selected @endif value="{{$val->id}}">{{$val->name}}</option>
 			                   		@endforeach
@@ -38,7 +38,7 @@
 			             </div>
 
 			            <div class="form-group">
-			               <label for="car_type" class="col-sm-2 control-label">Car Type</label>
+			               <label for="car_type" class="col-sm-2 control-label">Tipe Mobil</label>
 			               <div class="col-sm-10">
 			               		<input type="text" class="form-control" name="type_name" value="{{old('type_name')}}" id="type_id" placeholder="Car Type">
 			               		<input type="hidden" value="{{old('type_id')}}" id="type_id_real" name="type_id" />
@@ -46,21 +46,21 @@
 			            </div>
 
 			            <div class="form-group">
-		                  <label for="customer_name" class="col-sm-2 control-label">Customer Name</label>
+		                  <label for="customer_name" class="col-sm-2 control-label">Nama Pemesan</label>
 		                  <div class="col-sm-10">
 		                    <input type="text" class="form-control" name="customer_name" value="{{old('customer_name')}}" id="customer_name" placeholder="Enter Customer Name">
 		                  </div>
 		                </div>
 
 			             <div class="form-group">
-			               <label for="car_year" class="col-sm-2 control-label">Car Built Year</label>
+			               <label for="car_year" class="col-sm-2 control-label">Tahun Kendaraan</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="car_year" value="{{old('car_year')}}" id="car_year" placeholder="Enter Year">
 			               </div>
 			             </div>
 
 			             <div class="form-group">
-			               <label for="price" class="col-sm-2 control-label">Car Price</label>
+			               <label for="price" class="col-sm-2 control-label">Harga Mobil</label>
 			               <div class="col-sm-10">
 			                  <input type="text" onkeyup="formatMoney($(this))" class="form-control" name="total_sales_price" value="{{old('total_sales_price')}}" id="total_sales_price" placeholder="Enter Price">
 			                  <input type="hidden" id="total_unpaid" name="total_unpaid" value="{{old('total_unpaid')}}">
@@ -82,10 +82,10 @@
 			            </div>
 
 			            <div class="form-group">
-			                <label for="date" class="col-sm-2 control-label">Credit Duration</label>
+			                <label for="date" class="col-sm-2 control-label">Lama Kredit</label>
 			                <div class="col-sm-10">
 			                   <select name="duration" class="form-control" id="credit_duration">
-			                   		<option disabled="disabled" selected="selected" value="0">Choose Month Duration</option>
+			                   		<option disabled="disabled" selected="selected" value="0">Pilih Bulan</option>
 			                   		@foreach($months as $key => $val)
 			                   		<option @if(old('duration') == $val->months) selected @endif value="{{$val->months}}">{{$val->months}} Months</option>
 			                   		@endforeach
@@ -94,7 +94,7 @@
 			             </div>
 
 			             <div class="col-md-12" style="text-align:center">
-				       		<a onclick="getCalculation()" style="cursor:pointer" style="width:100%" class="btn btn-primary">CALCULATE</a>
+				       		<a onclick="getCalculation()" style="cursor:pointer" style="width:100%" class="btn btn-primary">HITUNG</a>
 				       </div>
 
 		            </div>
@@ -102,40 +102,40 @@
 
 		        <div class="box box-info" id="calculation" style="display:none">
 					<div class="box-header with-border">
-						<h3 class="box-title">Calculation</h3>
+						<h3 class="box-title">Perhitungan</h3>
 					</div>
 		            <div class="box-body">
 
 		            	<div class="form-group">
-			               <label for="admin_cost" class="col-sm-2 control-label">Admin Cost</label>
+			               <label for="admin_cost" class="col-sm-2 control-label">Biaya Admininstrasi</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="admin_cost" value="{{old('admin_cost')}}" id="admin_cost">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="interest_rate" class="col-sm-2 control-label">Interest Rate</label>
+			               <label for="interest_rate" class="col-sm-2 control-label">Suku Bunga</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="interest_rate" value="{{old('interest_rate')}}" id="interest_rate">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="installment_cost" class="col-sm-2 control-label">Installment Cost</label>
+			               <label for="installment_cost" class="col-sm-2 control-label">Cicilan Perbulan</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="installment_cost" value="{{old('installment_cost')}}" id="installment_cost" readonly>
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="insurance_cost" class="col-sm-2 control-label">Insurance Cost</label>
+			               <label for="insurance_cost" class="col-sm-2 control-label">Biaya Asuransi</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="insurance_cost" value="{{old('insurance_cost')}}" id="insurance_cost">
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="total_dp" class="col-sm-2 control-label">Total Down Payment</label>
+			               <label for="total_dp" class="col-sm-2 control-label">TDP</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="total_dp" value="{{old('total_dp')}}" id="total_down_payment" readonly>
 			               </div>
@@ -144,7 +144,7 @@
 		            </div>
 		        </div>
 		        <div class="col-md-12">
-				    <button type="submit" style="width:100%" class="btn btn-primary">SAVE SIMULATION</button>
+				    <button type="submit" style="width:100%" class="btn btn-primary">SIMPAN SIMULASI</button>
 				</div>
 		        </form>
 	        </div>
