@@ -61,7 +61,7 @@ class OrderController extends Controller
         $approval = ($request->input('type') == 'approval') ? true : false;
         $query = $request->input('query');
         $data = [
-            'result' => $this->model->list($approval, $query, $sort = 'desc', $limit = 2),
+            'result' => $this->model->list($approval, $query, $sort = 'desc', $limit = 20),
             'page' => $this->page,
             'title' => ($approval) ? 'SPK To Approve' : 'SPK List',
             'approval' => $approval,
