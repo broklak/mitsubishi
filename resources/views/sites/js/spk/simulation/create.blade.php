@@ -118,6 +118,7 @@
                     $('#interest_rate').val(toMoney(obj.interest));
                     $('#installment_cost').val(toMoney(obj.installment));
                     $('#insurance_cost').val(toMoney(obj.insurance));
+                    $('#other_cost').val(toMoney(0));
                     calculateTotalDP();
                     $('#calculation').show();
                 }
@@ -132,8 +133,9 @@
         var admin_cost = toInt($('#admin_cost').val());
         var installment = toInt($('#installment_cost').val());
         var insurance = toInt($('#insurance_cost').val());
+        var other_cost = toInt($('#other_cost').val());
 
-        var total = parseInt(dp_amount) + parseInt(installment) + parseInt(admin_cost) + parseInt(insurance);
+        var total = parseInt(dp_amount) + parseInt(installment) + parseInt(admin_cost) + parseInt(insurance) + parseInt(other_cost);
         $('#total_down_payment').val(toMoney(total));
     }
 
@@ -142,11 +144,6 @@
         var month = parseInt($('#credit_duration').val());
         var year = Math.floor(month / 12);
         var unpaid = parseInt(toInt($('#total_unpaid').val()));
-
-        console.log(rate);
-        console.log(month);
-        console.log(year);
-        console.log(unpaid);
 
         var totalInterest = (rate / 100 * unpaid) * year;
         var unpaidAndInterest = unpaid + totalInterest;

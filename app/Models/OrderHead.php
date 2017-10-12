@@ -391,16 +391,16 @@ class OrderHead extends Model
 
         $data['price_data'] = [
             'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
-            'price_off'             => moneyFormat($orderPrice->price_off),
-            'price_on'              => moneyFormat($orderPrice->price_on),
-            'cost_surat'            => moneyFormat($orderPrice->cost_surat),
-            'discount'             => moneyFormat($orderPrice->discount),
-            'total_sales_price'      => moneyFormat($orderPrice->total_sales_price),
-            'booking_fee'    => moneyFormat($orderPrice->down_payment_amount),
+            'price_off'             => $orderPrice->price_off,
+            'price_on'              => $orderPrice->price_on,
+            'cost_surat'            => $orderPrice->cost_surat,
+            'discount'             => $orderPrice->discount,
+            'total_sales_price'      => $orderPrice->total_sales_price,
+            'booking_fee'    => $orderPrice->down_payment_amount,
             'down_payment_date'      => $orderPrice->down_payment_date,
-            'dp_amount'    => moneyFormat($orderPrice->jaminan_cost_amount),
+            'dp_amount'    => $orderPrice->jaminan_cost_amount,
             'dp_percentage' => $orderPrice->jaminan_cost_percentage,
-            'total_unpaid'          => moneyFormat($orderPrice->total_unpaid),
+            'total_unpaid'          =>$orderPrice->total_unpaid,
             'payment_method'        => $orderPrice->payment_method
         ];
 
@@ -413,7 +413,7 @@ class OrderHead extends Model
             'customer_address'      => (isset($customer->id)) ?  $customer->address : null,
             'id_image'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
             'customer_phone'        => (isset($customer->id)) ? $customer->phone : null,
-            'customer_phone_address'        => (isset($customer->id)) ? $customer->phone_home : null,
+            'customer_phone_home'        => (isset($customer->id)) ? $customer->phone_home : null,
             'npwp'         => (isset($customer->id)) ? $customer->npwp : null,
             'npwp_image'            => ($orderHead->npwp_image) ? asset('images/npwp') . '/' . $orderHead->npwp_image : null,
         ];
@@ -424,11 +424,11 @@ class OrderHead extends Model
                 'credit_duration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
                 'credit_owner_name'            => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,
                 'interest_rate'         => (isset($orderCredit->interest_rate)) ? $orderCredit->interest_rate : null,
-                'admin_cost'            => (isset($orderCredit->admin_cost)) ? moneyFormat($orderCredit->admin_cost) : null,
-                'insurance_cost'        => (isset($orderCredit->insurance_cost)) ? moneyFormat($orderCredit->insurance_cost) : null,
-                'installment_cost'      => (isset($orderCredit->installment_cost)) ? moneyFormat($orderCredit->installment_cost) : null,
-                'other_cost'            => (isset($orderCredit->other_cost)) ? moneyFormat($orderCredit->other_cost) : null,
-                'total_down_payment'    => (isset($orderCredit->total_down_payment)) ? moneyFormat($orderCredit->total_down_payment) : null
+                'admin_cost'            => (isset($orderCredit->admin_cost)) ? $orderCredit->admin_cost : null,
+                'insurance_cost'        => (isset($orderCredit->insurance_cost)) ? $orderCredit->insurance_cost : null,
+                'installment_cost'      => (isset($orderCredit->installment_cost)) ? $orderCredit->installment_cost : null,
+                'other_cost'            => (isset($orderCredit->other_cost)) ? $orderCredit->other_cost : null,
+                'total_down_payment'    => (isset($orderCredit->total_down_payment)) ? $orderCredit->total_down_payment : null
             ];
         }
 

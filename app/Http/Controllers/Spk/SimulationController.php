@@ -102,6 +102,7 @@ class SimulationController extends Controller
             'installment_cost'  => parseMoneyToInteger($request->input('installment_cost')),
             'interest_rate'  => $request->input('interest_rate'),
             'insurance_cost'  => parseMoneyToInteger($request->input('insurance_cost')),
+            'other_cost'  => parseMoneyToInteger($request->input('other_cost')),
             'total_dp'  => parseMoneyToInteger($request->input('total_dp')),
             'created_by' => Auth::id()
         ];
@@ -171,6 +172,7 @@ class SimulationController extends Controller
             'installment_cost'  => parseMoneyToInteger($request->input('installment_cost')),
             'interest_rate'  => $request->input('interest_rate'),
             'insurance_cost'  => parseMoneyToInteger($request->input('insurance_cost')),
+            'other_cost'  => parseMoneyToInteger($request->input('other_cost')),
             'total_dp'  => parseMoneyToInteger($request->input('total_dp')),
             'updated_by' => Auth::id()
         ];

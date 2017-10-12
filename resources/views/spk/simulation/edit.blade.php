@@ -134,6 +134,13 @@
 			            </div>
 
 			            <div class="form-group">
+			               <label for="insurance_cost" class="col-sm-2 control-label">Biaya Lain Lain</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="other_cost" value="{{moneyFormat($row->other_cost)}}" id="other_cost">
+			               </div>
+			            </div>
+
+			            <div class="form-group">
 			               <label for="total_dp" class="col-sm-2 control-label">TDP</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="total_dp" value="{{moneyFormat($row->total_dp)}}" id="total_down_payment" readonly>

@@ -27,6 +27,7 @@ class SimulationController extends Controller
 			'sort_by' => ($request->input('sort_by')) ? $request->input('sort_by') : 'desc'
 		];
 		$data = $simulation->list($filter);
+		$data = $this->filterListResponse($data);
 		$pagination = $this->getPagination($data, $simulation->countList($filter), $filter['offset'], $filter['limit']);
 
         return $this->apiSuccess($data, $request->input(), $pagination);
@@ -78,6 +79,7 @@ class SimulationController extends Controller
 	            'installment_cost'  => parseMoneyToInteger($request->input('installment_cost')),
 	            'interest_rate'  => $request->input('interest_rate'),
 	            'insurance_cost'  => parseMoneyToInteger($request->input('insurance_cost')),
+	            'other_cost'  => parseMoneyToInteger($request->input('other_cost')),
 	            'total_dp'  => parseMoneyToInteger($request->input('total_dp')),
 	            'uuid'		=> ($request->input('uuid')) ? $request->input('uuid') : null,
 	            'created_by' => Auth::id()
@@ -113,6 +115,7 @@ class SimulationController extends Controller
 	            'installment_cost'  => parseMoneyToInteger($request->input('installment_cost')),
 	            'interest_rate'  => $request->input('interest_rate'),
 	            'insurance_cost'  => parseMoneyToInteger($request->input('insurance_cost')),
+	            'other_cost'  => parseMoneyToInteger($request->input('other_cost')),
 	            'total_dp'  => parseMoneyToInteger($request->input('total_dp')),
 	            'updated_by' => Auth::id()
 	        ];
@@ -132,13 +135,18 @@ class SimulationController extends Controller
     	$field = [
     		generateApiField($fieldName = 'leasing_id', $label = 'Leasing', $type = 'select', $required = true, $options = $leasing),
     		generateApiField($fieldName = 'type_id', $label = 'Tipe Mobil', $type = 'select', $required = true, $options = $carType),
+    		generateApiField($fieldName = 'customer_name', $label = 'Nama Pemesan'),
     		generateApiField($fieldName = 'car_year', $label = 'Tahun Kendaraan'),
-    		generateApiField($fieldName = 'total_sales_price', $label = 'Total Harga Jual', $type = 'integer'),
+    		generateApiField($fieldName = 'total_sales_price', $label = 'Harga Mobil', $type = 'integer'),
     		generateApiField($fieldName = 'duration', $label = 'Lama Kredit', $type = 'integer'),
     		generateApiField($fieldName = 'dp_amount', $label = 'DP (Rp)', $type = 'integer'),
     		generateApiField($fieldName = 'dp_percentage', $label = 'DP (%)', $type = 'integer'),
-    		generateApiField($fieldName = 'total_dp', $label = 'TDP', $type = 'integer'),
-    		generateApiField($fieldName = 'customer_name', $label = 'Nama Pemesan'),
+    		generateApiField($fieldName = 'interest_rate', $label = 'Suku Bunga', $type = 'float'),
+    		generateApiField($fieldName = 'installment_cost', $label = 'Cicilan Perbulan', $type = 'integer'),
+    		generateApiField($fieldName = 'admin_cost', $label = 'Biaya Administrasi', $type = 'integer'),
+    		generateApiField($fieldName = 'insurance_cost', $label = 'Biaya Asuransi', $type = 'integer'),
+    		generateApiField($fieldName = 'other_cost', $label = 'Biaya Lain Lain', $type = 'integer'),
+    		generateApiField($fieldName = 'total_dp', $label = 'TDP', $type = 'integer')
     	];
 
     	return $this->apiSuccess($field);
@@ -154,5 +162,17 @@ class SimulationController extends Controller
 	        'dp_amount'     => 'required',
 	        'dp_percentage'     => 'required'
         ];
+    }
+
+    protected function filterListResponse($data) {
+    	foreach ($data as $key => $value) {
+    		unset($data[$key]['car_category_id']);
+    		unset($data[$key]['car_model_id']);
+    		unset($data[$key]['car_type_id']);
+    		unset($data[$key]['car_year']);
+    		$data[$key]['total_interest'] = ($value['installment_cost'] * $value['duration']) - ($value['price'] - $value['dp_amount']);
+    	}
+
+    	return $data;
     }
 }
