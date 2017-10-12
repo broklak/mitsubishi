@@ -285,7 +285,9 @@ class OrderController extends Controller
             $do = $param['do'];
             foreach ($do as $key => $value) {
                 $spk = $value['spkNo'];
-                $findSpk = OrderHead::where('spk_doc_code', $spk)->first();
+                $findSpk = OrderHead::where('spk_doc_code', $spk)
+                                    ->orWhere('spk_code', $spk)
+                                    ->first();
 
                 if(isset($findSpk->spk_code)) {
                     if(DeliveryOrder::validToDO($findSpk->id)) {
