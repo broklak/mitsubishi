@@ -272,7 +272,7 @@ class OrderHead extends Model
         }
 
 
-        return $clean;
+        return ($api) ? $clean : $data;
 
     }
 
