@@ -62,15 +62,14 @@ class SimulationController extends Controller
     		if ($validator->fails()) {    
                 return $this->apiError($statusCode = 400, $validator->messages(), 'Some fields must be filled');
             }
-	        $carModel = CarType::getModel($request->input('type_id'));
 
 	        $create = [
 	            'leasing_id'  => $request->input('leasing_id'),
-	            'car_category_id'  => CarModel::getCategory($carModel),
-	            'car_model_id'  => $carModel,
+	            'car_category_id'  => 0,
+	            'car_model_id'  => 0,
 	            'customer_name'  => $request->input('customer_name'),
-	            'car_type_id'   => $request->input('type_id'),
-	            'car_year'  => $request->input('car_year'),
+	            'car_type_id'   => 0,
+	            'car_year'  => 2017,
 	            'price'  => parseMoneyToInteger($request->input('total_sales_price')),
 	            'dp_amount'  => parseMoneyToInteger($request->input('dp_amount')),
 	            'dp_percentage'  => $request->input('dp_percentage'),
@@ -97,16 +96,14 @@ class SimulationController extends Controller
     	try {
     		$simulation = new Simulation();
 	    	$data = $simulation->find($id);
-	        
-	        $carModel = CarType::getModel($request->input('type_id'));
 
 	        $update = [
 	            'leasing_id'  => $request->input('leasing_id'),
-	            'car_category_id'  => CarModel::getCategory($carModel),
-	            'car_model_id'  => $carModel,
-	            'car_type_id'   => $request->input('type_id'),
+	            'car_category_id'  => 0,
+	            'car_model_id'  => 0,
 	            'customer_name'  => $request->input('customer_name'),
-	            'car_year'  => $request->input('car_year'),
+	            'car_type_id'   => 0,
+	            'car_year'  => 2017,
 	            'price'  => parseMoneyToInteger($request->input('total_sales_price')),
 	            'dp_amount'  => parseMoneyToInteger($request->input('dp_amount')),
 	            'dp_percentage'  => $request->input('dp_percentage'),
@@ -134,9 +131,7 @@ class SimulationController extends Controller
     	$carType = CarType::getOptionValue();
     	$field = [
     		generateApiField($fieldName = 'leasing_id', $label = 'Leasing', $type = 'select', $required = true, $options = $leasing),
-    		generateApiField($fieldName = 'type_id', $label = 'Tipe Mobil', $type = 'select', $required = true, $options = $carType),
     		generateApiField($fieldName = 'customer_name', $label = 'Nama Pemesan'),
-    		generateApiField($fieldName = 'car_year', $label = 'Tahun Kendaraan'),
     		generateApiField($fieldName = 'total_sales_price', $label = 'Harga Mobil', $type = 'integer'),
     		generateApiField($fieldName = 'duration', $label = 'Lama Kredit', $type = 'integer'),
     		generateApiField($fieldName = 'dp_amount', $label = 'DP (Rp)', $type = 'integer'),
@@ -155,8 +150,6 @@ class SimulationController extends Controller
     protected function rules() {
         return [
 	        'leasing_id'     => 'required',
-	        'type_id'     => 'required',
-	        'car_year'     => 'required',
 	        'total_sales_price'     => 'required',
 	        'duration'     => 'required',
 	        'dp_amount'     => 'required',
@@ -170,6 +163,8 @@ class SimulationController extends Controller
     		unset($data[$key]['car_model_id']);
     		unset($data[$key]['car_type_id']);
     		unset($data[$key]['car_year']);
+    		unset($data[$key]['car_model_name']);
+    		unset($data[$key]['car_type_name']);
     		$data[$key]['total_interest'] = ($value['installment_cost'] * $value['duration']) - ($value['price'] - $value['dp_amount']);
     	}
 

@@ -108,7 +108,7 @@
         var unpaid = $('#total_unpaid').val();
         var total_sales_price = $('#total_sales_price').val();
 
-        if(dp_percentage != undefined && leasing_id != undefined && duration != undefined && type_id != undefined) {
+        if(dp_percentage != undefined && leasing_id != undefined && duration != undefined) {
             $.ajax({
                 method: 'GET',
                 url: '{{route('ajax.getLeasingFormula')}}',

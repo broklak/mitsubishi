@@ -37,13 +37,13 @@
 			                </div>
 			             </div>
 
-			            <div class="form-group">
+			           <!--  <div class="form-group">
 			               <label for="car_type" class="col-sm-2 control-label">Tipe Mobil</label>
 			               <div class="col-sm-10">
 			               		<input type="text" class="form-control" name="type_name" value="{{old('type_name')}}" id="type_id" placeholder="Car Type">
 			               		<input type="hidden" value="{{old('type_id')}}" id="type_id_real" name="type_id" />
 			               </div>
-			            </div>
+			            </div> -->
 
 			            <div class="form-group">
 		                  <label for="customer_name" class="col-sm-2 control-label">Nama Pemesan</label>
@@ -52,12 +52,12 @@
 		                  </div>
 		                </div>
 
-			             <div class="form-group">
+			            <!--  <div class="form-group">
 			               <label for="car_year" class="col-sm-2 control-label">Tahun Kendaraan</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="car_year" value="{{old('car_year')}}" id="car_year" placeholder="Enter Year">
 			               </div>
-			             </div>
+			             </div> -->
 
 			             <div class="form-group">
 			               <label for="price" class="col-sm-2 control-label">Harga Mobil</label>

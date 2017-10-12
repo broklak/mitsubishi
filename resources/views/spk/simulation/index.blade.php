@@ -16,7 +16,6 @@
               <table id="example1" class="table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
-                  <th>Car</th>
                   <th>Customer</th>
                   <th>Sales Price</th>
                   <th>DP (%)</th>
@@ -28,7 +27,6 @@
                 <tbody>
                 @foreach($result as $key => $val)
                 <tr>
-                <td>{{\App\Models\CarModel::getName($val->car_model_id)}}</td>
                 <td>{{$val->customer_name}}</td>
                 <td>{{moneyFormat($val->price)}}</td>
                 <td>{{$val->dp_percentage}}%</td>

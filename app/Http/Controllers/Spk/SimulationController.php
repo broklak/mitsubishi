@@ -77,23 +77,19 @@ class SimulationController extends Controller
     {
         $this->validate($request,[
             'leasing_id'     => 'required',
-            'type_id'     => 'required',
-            'car_year'     => 'required',
             'total_sales_price'     => 'required',
             'duration'     => 'required',
             'dp_amount'     => 'required',
             'dp_percentage'     => 'required'
         ]);
 
-        $carModel = CarType::getModel($request->input('type_id'));
-
         $create = [
             'leasing_id'  => $request->input('leasing_id'),
-            'car_category_id'  => CarModel::getCategory($carModel),
-            'car_model_id'  => $carModel,
+            'car_category_id'  => 0,
+            'car_model_id'  => 0,
             'customer_name'  => $request->input('customer_name'),
-            'car_type_id'   => $request->input('type_id'),
-            'car_year'  => $request->input('car_year'),
+            'car_type_id'   => 0,
+            'car_year'  => 2017,
             'price'  => parseMoneyToInteger($request->input('total_sales_price')),
             'dp_amount'  => parseMoneyToInteger($request->input('dp_amount')),
             'dp_percentage'  => $request->input('dp_percentage'),
@@ -145,8 +141,6 @@ class SimulationController extends Controller
     {
         $this->validate($request,[
             'leasing_id'     => 'required',
-            'type_id'     => 'required',
-            'car_year'     => 'required',
             'total_sales_price'     => 'required',
             'dp_amount'     => 'required',
             'duration'     => 'required',
@@ -154,16 +148,14 @@ class SimulationController extends Controller
         ]);
 
         $data = $this->model->find($id);
-        
-        $carModel = CarType::getModel($request->input('type_id'));
 
         $update = [
             'leasing_id'  => $request->input('leasing_id'),
-            'car_category_id'  => CarModel::getCategory($carModel),
-            'car_model_id'  => $carModel,
-            'car_type_id'   => $request->input('type_id'),
+            'car_category_id'  => 0,
+            'car_model_id'  => 0,
             'customer_name'  => $request->input('customer_name'),
-            'car_year'  => $request->input('car_year'),
+            'car_type_id'   => 0,
+            'car_year'  => 2017,
             'price'  => parseMoneyToInteger($request->input('total_sales_price')),
             'dp_amount'  => parseMoneyToInteger($request->input('dp_amount')),
             'dp_percentage'  => $request->input('dp_percentage'),
