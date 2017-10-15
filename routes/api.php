@@ -35,6 +35,8 @@ Route::get('simulation/field', 'Api\SimulationController@fields')->name('api.sim
 Route::get('simulation/{id}', 'Api\SimulationController@detail')->name('api.simulation.detail');
 Route::post('simulation', 'Api\SimulationController@store')->name('api.simulation.create');
 Route::put('simulation/{id}', 'Api\SimulationController@update')->name('api.simulation.update');
+Route::delete('simulation/{id}', 'Api\SimulationController@destroy')->name('api.simulation.destroy');
+Route::get('sync-simulation', 'Api\SimulationController@sync')->name('api.simulation.sync');
 
 Route::post('do', 'Api\OrderController@doPost')->name('api.order.do');
 Route::get('insentif', 'Api\OrderController@insentif')->name('api.insentif');

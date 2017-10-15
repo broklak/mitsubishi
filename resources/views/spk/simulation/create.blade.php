@@ -37,27 +37,12 @@
 			                </div>
 			             </div>
 
-			           <!--  <div class="form-group">
-			               <label for="car_type" class="col-sm-2 control-label">Tipe Mobil</label>
-			               <div class="col-sm-10">
-			               		<input type="text" class="form-control" name="type_name" value="{{old('type_name')}}" id="type_id" placeholder="Car Type">
-			               		<input type="hidden" value="{{old('type_id')}}" id="type_id_real" name="type_id" />
-			               </div>
-			            </div> -->
-
 			            <div class="form-group">
 		                  <label for="customer_name" class="col-sm-2 control-label">Nama Pemesan</label>
 		                  <div class="col-sm-10">
 		                    <input type="text" class="form-control" name="customer_name" value="{{old('customer_name')}}" id="customer_name" placeholder="Enter Customer Name">
 		                  </div>
 		                </div>
-
-			            <!--  <div class="form-group">
-			               <label for="car_year" class="col-sm-2 control-label">Tahun Kendaraan</label>
-			               <div class="col-sm-10">
-			                  <input type="text" class="form-control" name="car_year" value="{{old('car_year')}}" id="car_year" placeholder="Enter Year">
-			               </div>
-			             </div> -->
 
 			             <div class="form-group">
 			               <label for="price" class="col-sm-2 control-label">Harga Mobil</label>
@@ -107,6 +92,13 @@
 		            <div class="box-body">
 
 		            	<div class="form-group">
+			               <label for="total_unpaid" class="col-sm-2 control-label">Sisa Pembayaran</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" readonly name="total_unpaid_text" value="{{old('total_unpaid_text')}}" id="total_unpaid_text">
+			               </div>
+			            </div>
+
+		            	<div class="form-group">
 			               <label for="admin_cost" class="col-sm-2 control-label">Biaya Admininstrasi</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="admin_cost" value="{{old('admin_cost')}}" id="admin_cost">
@@ -114,9 +106,16 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="interest_rate" class="col-sm-2 control-label">Suku Bunga</label>
+			               <label for="interest_rate" class="col-sm-2 control-label">Suku Bunga (%)</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="interest_rate" value="{{old('interest_rate')}}" id="interest_rate">
+			               </div>
+			            </div>
+
+			            <div class="form-group">
+			               <label for="total_interest" class="col-sm-2 control-label">Total Bunga (IDR)</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" readonly name="total_interest" value="{{old('total_interest')}}" id="total_interest">
 			               </div>
 			            </div>
 
@@ -145,6 +144,13 @@
 			               <label for="total_dp" class="col-sm-2 control-label">TDP</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="total_dp" value="{{old('total_dp')}}" id="total_down_payment" readonly>
+			               </div>
+			            </div>
+
+			            <div class="form-group">
+			               <label for="total_payment" class="col-sm-2 control-label">Total Payment</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" name="total_payment" value="{{old('total_payment')}}" id="total_payment" readonly>
 			               </div>
 			            </div>
 

@@ -10,11 +10,12 @@ use App\Models\Simulation;
 use App\Models\Leasing;
 use App\Models\CarType;
 use App\Models\CarModel;
+use App\Models\ServerSecret;
 
 class SimulationController extends Controller
 {
     public function __construct() {
-		$this->middleware('auth:api');
+		$this->middleware('auth:api', ['except' => ['sync']]);
 	}
 
 	public function list(Request $request) {
@@ -126,6 +127,24 @@ class SimulationController extends Controller
     	}
     }
 
+    public function destroy($id)
+    {
+    	try {
+    		$simulation = new Simulation();
+	        $data = $simulation->find($id);
+
+	        if(!isset($data->id)) return $this->apiError($statusCode = 400, "Simulation with id $id is not found", 'No result found');
+
+	        $data->delete();
+	        $messages['internalMessage'] = "Success to delete simulation with id $id";
+	        $messages['userMessage'] = "Success to delete simulation with id $id";
+	        logUser('Delete Simulation '.$id);
+	        return $this->apiSuccess($messages, $request = null, $pagination = null, $statusCode = 200);
+    	} catch (Exception $e) {
+    		return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');	
+    	}
+    }
+
     public function fields() {
     	$leasing = Leasing::getOption();
     	$carType = CarType::getOptionValue();
@@ -136,7 +155,7 @@ class SimulationController extends Controller
     		generateApiField($fieldName = 'duration', $label = 'Lama Kredit', $type = 'integer'),
     		generateApiField($fieldName = 'dp_amount', $label = 'DP (Rp)', $type = 'integer'),
     		generateApiField($fieldName = 'dp_percentage', $label = 'DP (%)', $type = 'integer'),
-    		generateApiField($fieldName = 'interest_rate', $label = 'Suku Bunga', $type = 'float'),
+    		generateApiField($fieldName = 'interest_rate', $label = 'Suku Bunga (%)', $type = 'float'),
     		generateApiField($fieldName = 'installment_cost', $label = 'Cicilan Perbulan', $type = 'integer'),
     		generateApiField($fieldName = 'admin_cost', $label = 'Biaya Administrasi', $type = 'integer'),
     		generateApiField($fieldName = 'insurance_cost', $label = 'Biaya Asuransi', $type = 'integer'),
@@ -158,6 +177,7 @@ class SimulationController extends Controller
     }
 
     protected function filterListResponse($data) {
+    	$model = new Simulation();
     	foreach ($data as $key => $value) {
     		unset($data[$key]['car_category_id']);
     		unset($data[$key]['car_model_id']);
@@ -165,9 +185,33 @@ class SimulationController extends Controller
     		unset($data[$key]['car_year']);
     		unset($data[$key]['car_model_name']);
     		unset($data[$key]['car_type_name']);
-    		$data[$key]['total_interest'] = ($value['installment_cost'] * $value['duration']) - ($value['price'] - $value['dp_amount']);
+    		unset($data[$key]['price']);
+    		$data[$key]['total_interest'] = $model->totalInterest($value['installment_cost'], $value['duration'], $value['total_sales_price'], $value['dp_amount']);
+    		$data[$key]['sisa_payment'] = $value['total_sales_price'] - $value['dp_amount'];
+    		$data[$key]['total_payment'] = $data[$key]['total_interest'] + $data[$key]['sisa_payment'];
     	}
 
     	return $data;
+    }
+
+    public function sync(Request $request) {
+        $secret = $request->input('secret');
+
+        $validSecret = ServerSecret::find(1)->value('secret');
+
+        if($secret != $validSecret) {
+            return $this->apiError($statusCode = 401, 'Wrong Server Secret', 'Unauthenticated');   
+        }
+
+        $where = [];
+        if($request->input('timestamp')) {
+            $where[] = ['created_at', '>', $request->input('timestamp')];
+        }
+
+        $data = Simulation::syncList($request->input('timestamp'));
+
+        $data = $this->filterListResponse($data);
+
+        return $this->apiSuccess($data, $request->input());
     }
 }

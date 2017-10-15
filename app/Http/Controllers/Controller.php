@@ -14,11 +14,13 @@ class Controller extends BaseController
 
     public function apiSuccess($payload = null, $request = null, $pagination = null, $statusCode = 200) {
     	$data = [
-    		'data'		=> $payload
+    		'data'		  => $payload
     	];
 
         if($pagination != null) $data['pagination'] = $pagination;
     	if($request != null) $data['request'] = $request;
+
+        $data['diagnostic'] = $this->getDiagnostic();
 
     	return response($data, $statusCode)
                   ->header('Content-Type', 'application/json');
@@ -50,5 +52,16 @@ class Controller extends BaseController
     		'nextPage'		=> $nextPage,
     		'prevPage'		=> $prevPage
     	];
+    }
+
+    private function getDiagnostic() {
+        $duration = microtime() - START_TIME;
+        $hours = (int)($duration/60/60);
+        $minutes = (int)($duration/60)-$hours*60;
+        $seconds = $duration-$hours*60*60-$minutes*60;
+        return [
+            'server_time'               => date('Y-m-d H:i:s'),
+            'server_execution_time'     => $seconds." seconds",
+        ];
     }
 }

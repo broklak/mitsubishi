@@ -518,7 +518,7 @@ class OrderController extends Controller
                     generateApiField($fieldName = 'plat', $label = 'Jenis Plat', $type = 'select', $required = true, $options = $platType),
                     generateApiField($fieldName = 'bbn_type', $label = 'Jenis BBN', $type = 'select', $required = true, $options = $bbnType),
                     generateApiField($fieldName = 'karoseri', $label = 'Karoseri', $type = 'string', $required = false),
-                    generateApiField($fieldName = 'karoseri_type', $label = 'Jenis Karosei', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'karoseri_type', $label = 'Jenis Karoseri', $type = 'string', $required = false),
                     generateApiField($fieldName = 'karoseri_spec', $label = 'Spesifikasi', $type = 'string', $required = false),
                     generateApiField($fieldName = 'karoseri_price', $label = 'Harga', $type = 'integer', $required = false),
                     generateApiField($fieldName = 'price_type', $label = 'Jenis Harga', $type = 'select', $required = true, $options = $priceType),

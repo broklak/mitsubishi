@@ -19,6 +19,8 @@
 |
 */
 
+define('START_TIME', microtime());
+
 require __DIR__.'/../bootstrap/autoload.php';
 
 /*

@@ -121,11 +121,23 @@
                     $('#other_cost').val(toMoney(0));
                     calculateTotalDP();
                     $('#calculation').show();
+                    $('#total_unpaid_text').val(toMoney(unpaid));
+
+                    let total_interest = calculateTotalInterest(obj.installment, duration, total_sales_price, dp_amount);
+                    $('#total_interest').val(toMoney(total_interest));
+                    $('#total_payment').val(toMoney(total_interest + unpaid));
                 }
             });
         } else {
             alert('Please input all fields');
         }
+    }
+
+    function calculateTotalInterest(installment, duration, total_sales_price, dp_amount) {
+        if(installment == 0) {
+          return 0;
+        }
+        return (installment * duration) - (total_sales_price - dp_amount);
     }
 
     function calculateTotalDP() {
@@ -150,6 +162,8 @@
         var installment = Math.floor(unpaidAndInterest / month);
 
         $('#installment_cost').val(toMoney(installment));
+        $('#total_interest').val(toMoney(totalInterest));
+        $('#total_payment').val(toMoney(totalInterest + unpaid));
 
         calculateTotalDP();
     }

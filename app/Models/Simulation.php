@@ -32,7 +32,7 @@ class Simulation extends Model
         $sortType = $filter['sort_type'];
         $sortBy = $filter['sort_by'];
 
-        $data = parent::select(DB::raw('simulation.*,leasing.name as leasing_name, car_models.name as car_model_name, car_types.name as car_type_name'))
+        $data = parent::select(DB::raw('simulation.*,simulation.price as total_sales_price,leasing.name as leasing_name, car_models.name as car_model_name, car_types.name as car_type_name'))
                         ->where('simulation.created_by', $userId)
                         ->join('car_types', 'car_types.id', '=', 'simulation.car_type_id')
                         ->join('car_models', 'car_models.id', '=', 'simulation.car_model_id')
@@ -42,6 +42,16 @@ class Simulation extends Model
                         ->limit($limit)
                         ->get();
 
+        return $data;
+    }
+
+    public static function syncList($time) {
+        $data = parent::select(DB::raw('simulation.*,simulation.price as total_sales_price,leasing.name as leasing_name, car_models.name as car_model_name, car_types.name as car_type_name'))
+                        ->where('simulation.created_at', '>', $time)
+                        ->join('car_types', 'car_types.id', '=', 'simulation.car_type_id')
+                        ->join('car_models', 'car_models.id', '=', 'simulation.car_model_id')
+                        ->join('leasing', 'leasing.id', '=', 'simulation.leasing_id')
+                        ->get();
         return $data;
     }
 
@@ -55,5 +65,9 @@ class Simulation extends Model
                         ->count();
 
         return $count;
+    }
+
+    public static function totalInterest($installmentCost, $duration, $totalSalesPrice, $dpAmount) {
+        return ceil(($installmentCost * $duration) - ($totalSalesPrice - $dpAmount));
     }
 }

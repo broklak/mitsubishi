@@ -124,8 +124,11 @@ class SimulationController extends Controller
             'row' => $this->model->find($id),
             'leasing' => Leasing::all(),
             'carType' => CarType::all(),
-            'months' => CreditMonth::all()
+            'months' => CreditMonth::all(),
         ];
+
+        $data['totalInterest'] = $this->model->totalInterest($data['row']->installment_cost, $data['row']->duration, $data['row']->price, $data['row']->dp_amount);
+        $data['totalPayment'] = $data['totalInterest'] + ($data['row']->price - $data['row']->dp_amount);
 
         return view($this->module.".edit", $data);
     }

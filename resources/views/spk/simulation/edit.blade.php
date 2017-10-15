@@ -106,6 +106,13 @@
 		            <div class="box-body">
 
 		            	<div class="form-group">
+			               <label for="total_unpaid" class="col-sm-2 control-label">Sisa Pembayaran</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" readonly name="total_unpaid_text" value="{{moneyFormat($row->price - $row->dp_amount)}}" id="total_unpaid_text">
+			               </div>
+			            </div>
+
+		            	<div class="form-group">
 			               <label for="admin_cost" class="col-sm-2 control-label">Biaya Administrasi</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" onkeyup="formatMoney($(this))" name="admin_cost" value="{{moneyFormat($row->admin_cost)}}" id="admin_cost">
@@ -113,9 +120,16 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="interest_rate" class="col-sm-2 control-label">Suku Bunga</label>
+			               <label for="interest_rate" class="col-sm-2 control-label">Suku Bunga (%)</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="interest_rate" value="{{$row->interest_rate}}" id="interest_rate">
+			               </div>
+			            </div>
+
+			            <div class="form-group">
+			               <label for="total_interest" class="col-sm-2 control-label">Total Bunga (IDR)</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" readonly name="total_interest" value="{{moneyFormat($totalInterest)}}" id="total_interest">
 			               </div>
 			            </div>
 
@@ -144,6 +158,13 @@
 			               <label for="total_dp" class="col-sm-2 control-label">TDP</label>
 			               <div class="col-sm-10">
 			                  <input type="text" class="form-control" name="total_dp" value="{{moneyFormat($row->total_dp)}}" id="total_down_payment" readonly>
+			               </div>
+			            </div>
+
+			            <div class="form-group">
+			               <label for="total_payment" class="col-sm-2 control-label">Total Payment</label>
+			               <div class="col-sm-10">
+			                  <input type="text" class="form-control" name="total_payment" value="{{moneyFormat($totalPayment)}}" id="total_payment" readonly>
 			               </div>
 			            </div>
 
