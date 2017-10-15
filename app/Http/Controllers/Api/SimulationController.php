@@ -131,14 +131,14 @@ class SimulationController extends Controller
     {
     	try {
     		$simulation = new Simulation();
-	        $data = $simulation->find($id);
+	        $data = $simulation->where('uuid', $id)->first();
 
-	        if(!isset($data->id)) return $this->apiError($statusCode = 400, "Simulation with id $id is not found", 'No result found');
+	        if(!isset($data->id)) return $this->apiError($statusCode = 400, "Simulation with uuid $id is not found", 'No result found');
 
 	        $data->delete();
-	        $messages['internalMessage'] = "Success to delete simulation with id $id";
-	        $messages['userMessage'] = "Success to delete simulation with id $id";
-	        logUser('Delete Simulation '.$id);
+	        $messages['internalMessage'] = "Success to delete simulation with uuid $id";
+	        $messages['userMessage'] = "Success to delete simulation with uuid $id";
+	        logUser('Delete Simulation From API'.$id);
 	        return $this->apiSuccess($messages, $request = null, $pagination = null, $statusCode = 200);
     	} catch (Exception $e) {
     		return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');	
