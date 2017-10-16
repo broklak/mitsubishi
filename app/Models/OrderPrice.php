@@ -44,7 +44,7 @@ class OrderPrice extends Model
     		'discount'			=> parseMoneyToInteger($data['discount']),
     		'total_sales_price' => parseMoneyToInteger($data['total_sales_price']),
     		'down_payment_amount' => parseMoneyToInteger($data['booking_fee']),
-    		'down_payment_date' => $data['down_payment_date'],
+    		'down_payment_date' => isset($data['down_payment_date']) ? $data['down_payment_date'] : null,
     		'jaminan_cost_amount' => parseMoneyToInteger($data['dp_amount']),
     		'jaminan_cost_percentage' => $data['dp_percentage'],
     		'total_unpaid' 		=> parseMoneyToInteger($data['total_unpaid']),

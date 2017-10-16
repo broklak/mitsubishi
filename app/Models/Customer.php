@@ -48,7 +48,7 @@ class Customer extends Model
             'id_number' => '',
             'address'   => $data['customer_address'],
             'phone'     => $data['customer_phone'],
-            'npwp'      => $data['customer_npwp']
+            'npwp'      => isset($data['customer_npwp']) ? $data['customer_npwp'] : null
         ];
 
         $image = [

@@ -389,20 +389,22 @@ class OrderHead extends Model
             'karoseri_price'        => $orderHead->karoseri_price
         ];   
 
-        $data['price_data'] = [
-            'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
-            'price_off'             => $orderPrice->price_off,
-            'price_on'              => $orderPrice->price_on,
-            'cost_surat'            => $orderPrice->cost_surat,
-            'discount'             => $orderPrice->discount,
-            'total_sales_price'      => $orderPrice->total_sales_price,
-            'booking_fee'    => $orderPrice->down_payment_amount,
-            'down_payment_date'      => $orderPrice->down_payment_date,
-            'dp_amount'    => $orderPrice->jaminan_cost_amount,
-            'dp_percentage' => $orderPrice->jaminan_cost_percentage,
-            'total_unpaid'          =>$orderPrice->total_unpaid,
-            'payment_method'        => $orderPrice->payment_method
-        ];
+        if(isset($orderPrice->id)) {
+            $data['price_data'] = [
+                'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
+                'price_off'             => $orderPrice->price_off,
+                'price_on'              => $orderPrice->price_on,
+                'cost_surat'            => $orderPrice->cost_surat,
+                'discount'             => $orderPrice->discount,
+                'total_sales_price'      => $orderPrice->total_sales_price,
+                'booking_fee'    => $orderPrice->down_payment_amount,
+                'down_payment_date'      => $orderPrice->down_payment_date,
+                'dp_amount'    => $orderPrice->jaminan_cost_amount,
+                'dp_percentage' => $orderPrice->jaminan_cost_percentage,
+                'total_unpaid'          =>$orderPrice->total_unpaid,
+                'payment_method'        => $orderPrice->payment_method
+            ];
+        }
 
         $data['customer_data'] = [
             'first_name'         => (isset($customer->id)) ? $customer->first_name : null,
