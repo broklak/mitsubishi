@@ -203,11 +203,6 @@ class SimulationController extends Controller
             return $this->apiError($statusCode = 401, 'Wrong Server Secret', 'Unauthenticated');   
         }
 
-        $where = [];
-        if($request->input('timestamp')) {
-            $where[] = ['updated_at', '>', $request->input('timestamp')];
-        }
-
         $data = Simulation::syncList($request->input('timestamp'));
 
         $data = $this->filterListResponse($data);

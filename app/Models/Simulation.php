@@ -45,7 +45,7 @@ class Simulation extends Model
 
     public static function syncList($time) {
         $data = parent::select(DB::raw('simulation.*,simulation.price as total_sales_price,leasing.name as leasing_name'))
-                        ->where('simulation.created_at', '>', $time)
+                        ->where('simulation.updated_at', '>', $time)
                         ->join('leasing', 'leasing.id', '=', 'simulation.leasing_id')
                         ->get();
         return $data;
