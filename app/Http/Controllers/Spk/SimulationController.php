@@ -100,7 +100,8 @@ class SimulationController extends Controller
             'insurance_cost'  => parseMoneyToInteger($request->input('insurance_cost')),
             'other_cost'  => parseMoneyToInteger($request->input('other_cost')),
             'total_dp'  => parseMoneyToInteger($request->input('total_dp')),
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
+            'uuid'      => uuidV4()
         ];
 
         $head = $this->model->create($create);

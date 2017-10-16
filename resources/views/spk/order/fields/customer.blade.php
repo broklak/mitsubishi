@@ -34,14 +34,14 @@
 	                <div class="form-group">
 	                  <label for="id_number" class="col-sm-3 control-label">Nomor Identitas</label>
 	                  <div class="col-sm-9">
-	                  	<input type="text" class="form-control" name="id_number" value="{{$init['id_number']}}" id="id_number" placeholder="ID Number">
+	                  	<input type="text" class="form-control" name="id_number" value="{{$init['id_number']}}" id="id_number" placeholder="Nomor Tanda Pengenal">
 	                  </div>
 	                </div>
 
 	                <div class="form-group">
 	                  <label for="customer_name" class="col-sm-3 control-label">Nama Pemesan</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_first_name" value="{{$init['customer_first_name']}}" id="customer_name" placeholder="First Name">
+	                    <input type="text" class="form-control" name="customer_first_name" value="{{$init['customer_first_name']}}" id="customer_name" placeholder="Nama Pemesan">
 	                  </div>
 	                </div>
 
@@ -55,21 +55,21 @@
 	                <div class="form-group">
 	                  <label for="customer_phone_home" class="col-sm-3 control-label">Nomor Telepon</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_phone_home" value="{{$init['customer_phone_home']}}" id="customer_phone_home" placeholder="Home / Office Phone Number">
+	                    <input type="text" class="form-control" name="customer_phone_home" value="{{$init['customer_phone_home']}}" id="customer_phone_home" placeholder="Nomor Telepon Rumah / Kantor">
 	                  </div>
 	                </div>
 
 	                <div class="form-group">
 	                  <label for="customer_business" class="col-sm-3 control-label">Jenis Usaha</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_business" value="{{$init['customer_business']}}" id="customer_business" placeholder="Business Type">
+	                    <input type="text" class="form-control" name="customer_business" value="{{$init['customer_business']}}" id="customer_business" placeholder="Jenis Usaha">
 	                  </div>
 	                </div>
 
 	                <div class="form-group">
 	                  <label for="customer_npwp" class="col-sm-3 control-label">NPWP</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_npwp" value="{{$init['customer_npwp']}}" id="customer_npwp" placeholder="NPWP Number">
+	                    <input type="text" class="form-control" name="customer_npwp" value="{{$init['customer_npwp']}}" id="customer_npwp" placeholder="Nomor NPWP">
 	                  </div>
 	                </div>
 

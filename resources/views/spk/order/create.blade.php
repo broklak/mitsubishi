@@ -22,14 +22,14 @@
 			            <div class="form-group">
 			                <label for="spk_doc_code" class="col-sm-3 control-label">Nomor Dokumen</label>
 			                <div class="col-sm-9">
-			                   <input type="text" class="form-control" name="spk_doc_code" value="{{old('spk_doc_code')}}" id="spk_doc_code" placeholder="Control Number">
+			                   <input type="text" class="form-control" name="spk_doc_code" value="{{old('spk_doc_code')}}" id="spk_doc_code" placeholder="Nomor Dokumen">
 			                </div>
 			            </div>
 
 			            <div class="form-group">
 			                <label for="date" class="col-sm-3 control-label">Tanggal</label>
 			                <div class="col-sm-9">
-			                   <input type="text" class="form-control datepicker" name="date" value="{{old('date')}}" id="date" placeholder="Order Date">
+			                   <input type="text" class="form-control datepicker" name="date" value="{{old('date')}}" id="date" placeholder="Tanggal">
 			                </div>
 			             </div>
 

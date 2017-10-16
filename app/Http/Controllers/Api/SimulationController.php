@@ -205,7 +205,7 @@ class SimulationController extends Controller
 
         $where = [];
         if($request->input('timestamp')) {
-            $where[] = ['created_at', '>', $request->input('timestamp')];
+            $where[] = ['updated_at', '>', $request->input('timestamp')];
         }
 
         $data = Simulation::syncList($request->input('timestamp'));

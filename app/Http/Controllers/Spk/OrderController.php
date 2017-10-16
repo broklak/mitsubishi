@@ -127,7 +127,7 @@ class OrderController extends Controller
         $customer = Customer::validateSpk($create);
         $create['customer_id'] = $customer['customerId'];
         $create['customer_id_image'] = isset($customer['imageId']) ? $customer['imageId'] : null;
-
+        $create['uuid'] = uuidV4();
         $createHead = $this->model->create($create);
 
         $create['order_id'] = $createHead->id;
