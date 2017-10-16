@@ -157,9 +157,11 @@
         var year = Math.floor(month / 12);
         var unpaid = parseInt(toInt($('#total_unpaid').val()));
 
-        var totalInterest = (rate / 100 * unpaid) * year;
+        var totalInterest = Math.floor((rate / 100 * unpaid) * year);
         var unpaidAndInterest = unpaid + totalInterest;
         var installment = Math.floor(unpaidAndInterest / month);
+
+        console.log(totalInterest);
 
         $('#installment_cost').val(toMoney(installment));
         $('#total_interest').val(toMoney(totalInterest));
