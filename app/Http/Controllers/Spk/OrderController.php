@@ -393,6 +393,11 @@ class OrderController extends Controller
                 $folder = 'passport';
             }
         }
+
+        $return = [
+
+        ];
+
         return [
             'customer_first_name'   => $customer->first_name,
             'customer_last_name'    => $customer->last_name,
@@ -420,18 +425,18 @@ class OrderController extends Controller
             'karoseri_type'         => $orderHead->karoseri_type,
             'karoseri_spec'         => $orderHead->karoseri_spec,
             'karoseri_price'        => $orderHead->karoseri_price,
-            'price_type'            => ($orderPrice->price_off == 0) ? 1 : 2,
-            'price_off'             => moneyFormat($orderPrice->price_off),
-            'price_on'              => moneyFormat($orderPrice->price_on),
-            'cost_surat'            => moneyFormat($orderPrice->cost_surat),
-            'discount'              => moneyFormat($orderPrice->discount),
-            'total_sales_price'     => moneyFormat($orderPrice->total_sales_price),
-            'booking_fee'           => moneyFormat($orderPrice->down_payment_amount),
-            'down_payment_date'     => $orderPrice->down_payment_date,
-            'dp_amount'             => moneyFormat($orderPrice->jaminan_cost_amount),
-            'dp_percentage'         => $orderPrice->jaminan_cost_percentage,
-            'total_unpaid'          => moneyFormat($orderPrice->total_unpaid),
-            'payment_method'        => $orderPrice->payment_method,
+            'price_type'            => (isset($orderPrice->id) && $orderPrice->price_off == 0) ? 1 : 2,
+            'price_off'             => isset($orderPrice->id) ? moneyFormat($orderPrice->price_off) : null,
+            'price_on'              => isset($orderPrice->id) ? moneyFormat($orderPrice->price_on) : null,
+            'cost_surat'            => isset($orderPrice->id) ? moneyFormat($orderPrice->cost_surat) : null,
+            'discount'              => isset($orderPrice->id) ? moneyFormat($orderPrice->discount) : null,
+            'total_sales_price'     => isset($orderPrice->id) ? moneyFormat($orderPrice->total_sales_price) : null,
+            'booking_fee'           => isset($orderPrice->id) ? moneyFormat($orderPrice->down_payment_amount) : null,
+            'down_payment_date'     => isset($orderPrice->id) ? $orderPrice->down_payment_date : null,
+            'dp_amount'             => isset($orderPrice->id) ? moneyFormat($orderPrice->jaminan_cost_amount) : null,
+            'dp_percentage'         => isset($orderPrice->id) ? $orderPrice->jaminan_cost_percentage : null,
+            'total_unpaid'          => isset($orderPrice->id) ? moneyFormat($orderPrice->total_unpaid) : null,
+            'payment_method'        => isset($orderPrice->id) ? $orderPrice->payment_method : null,
             'leasing_id'            => (isset($orderCredit->leasing_id)) ? $orderCredit->leasing_id : null,
             'credit_duration'         => (isset($orderCredit->year_duration)) ? $orderCredit->year_duration : null,
             'credit_owner_name'     => (isset($orderCredit->owner_name)) ? $orderCredit->owner_name : null,

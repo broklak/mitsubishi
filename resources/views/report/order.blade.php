@@ -35,6 +35,7 @@
                 <thead>
                 <tr>
                   <th>SPK Number</th>
+                  <th>Sales Name</th>
                   <th>Date</th>
                   <th>Customer</th>
                   <th>Car</th>
@@ -45,6 +46,7 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{$val->spk_code}}</td>
+                <td>{{App\User::getName($val->created_by)}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
                 <td>{{$val->model_name.' '.$val->type_name}}</td>

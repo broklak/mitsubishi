@@ -24,8 +24,9 @@ class DeliveryOrder extends Model
     protected $primaryKey = 'id';
 
     public function list($where = []) {
-        $data = parent::select('spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet')
+        $data = parent::select('order_head.spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet', 'order_head.created_by')
                         ->join('order_price', 'order_price.order_id', '=', 'delivery_order.spk_id')
+                        ->join('order_head', 'order_head.id', '=', 'delivery_order.spk_id')
                         ->where($where)
                         ->get();
 
