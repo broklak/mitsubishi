@@ -51,7 +51,7 @@
                 <td>{{$val['non_fleet']}}</td>
                 <td>{{$val['sales']}}</td>
                 <td>{{moneyFormat($val['total_insentif'])}}</td>
-                <td>{{moneyFormat($val['imbalan'])}}</td>
+                <td>{{moneyFormat($val['total_imbalan'])}}</td>
                 <td>{{moneyFormat($val['sales_accepted'])}}</td>
                 </tr>
                 @endforeach

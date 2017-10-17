@@ -37,5 +37,20 @@ class AppServiceProvider extends ServiceProvider
         View::share('js_name', 'sites/js.'.$view->getName());
         View::share('user', Auth::user());
         View::share('css_name', 'sites/css.'.$view->getName());
+        View::share('parent_menu', $this->parentMenuFilter());
+
+        // echo json_encode($this->parentMenuFilter()); die;
+    }
+
+    protected function parentMenuFilter() {
+        return [
+            'order'     => ['*.spk', '*.leasing.formula', '*.insurance.formula', '*.credit.simulation'],
+            'insentif'  => ['*.do', 'update.fleet.rate', '*.salary.formula'],
+            'report'    => ['read.report.*'],
+            'setting'   => ['*.user', 'update.serverkey', '*.role', '*.banner', '*.news', '*.car', '*.company', '*.dealer', '*.leasing.master', '*.bbn',
+                           '*.credit.duration', '*.area', 'update.default.admin.fee', '*.customer'],
+            'master'    => ['*.banner', '*.news', '*.car', '*.company', '*.dealer', '*.leasing.master', '*.bbn','*.credit.duration', '*.area', 
+                            'update.default.admin.fee', '*.customer']
+        ];
     }
 }
