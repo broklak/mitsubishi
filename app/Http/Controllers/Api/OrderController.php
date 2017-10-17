@@ -101,7 +101,7 @@ class OrderController extends Controller
             $create['created_by'] = Auth::id();
 
             if ($request->file('npwp_image')) {
-                $name = $request->npwp_image->getClientOriginalName();
+                $name = str_replace(' ', '-', $request->npwp_image->getClientOriginalName());
                 $request->npwp_image->move(
                     base_path() . '/public/images/npwp/', $name
                 );
@@ -109,7 +109,8 @@ class OrderController extends Controller
             }
 
             if ($request->file('id_image')) {
-                $nameCust = $request->id_image->getClientOriginalName();
+                $nameCust = str_replace(' ', '-', $request->id_image->getClientOriginalName());
+
                 $folder = ($create['id_type'] == 1) ? 'ktp' : 'sim';
                 $folder = ($create['id_type'] == 3) ? 'passport' : $folder;
                 $request->id_image->move(
@@ -148,6 +149,15 @@ class OrderController extends Controller
         }
         
         $data['created'] = $createHead;
+
+        if(isset($create['image'])) {
+            $data['created']->id_image = asset('images/customer'). '/' .$folder.'/'.$create['image'];
+        }
+
+        if(isset($create['npwp_image'])) {
+            $data['created']->npwp_image = asset('images/npwp'). '/' . $create['npwp_image'];
+        }
+
         return $this->apiSuccess($data, $request->input(), $pagination = null, $statusCode = 201);
     }
 

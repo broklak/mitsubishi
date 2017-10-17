@@ -221,7 +221,7 @@ class OrderHead extends Model
     }
 
     public static function getInsentifByModel($orderId) {
-        $data = parent::select('car_models.insentif_amount', 'order_head.created_by', 'order_head.spk_code')
+        $data = parent::select('car_models.insentif_amount', 'order_head.type_id', 'qty', 'order_head.date', 'order_head.created_by', 'order_head.spk_code', 'order_head.spk_doc_code')
                     ->where('order_head.id', $orderId)
                     ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
                     ->first();
@@ -229,9 +229,9 @@ class OrderHead extends Model
     }
 
     public static function getInsentifByType($orderId) {
-        $data = parent::select('car_types.insentif_amount', 'order_head.created_by', 'order_head.spk_code')
+        $data = parent::select('car_types.insentif_amount', 'order_head.type_id', 'qty', 'order_head.date', 'order_head.created_by', 'order_head.spk_code', 'order_head.spk_doc_code')
                     ->where('order_head.id', $orderId)
-                    ->join('car_types', 'car_types.id', '=', 'order_head.model_id')
+                    ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                     ->first();
         return $data;
     }

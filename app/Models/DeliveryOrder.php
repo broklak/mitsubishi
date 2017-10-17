@@ -78,8 +78,11 @@ class DeliveryOrder extends Model
             $result[$key]['total_insentif'] = $totalInsentif;
             $result[$key]['for_supervisor'] = $supervisorDeduct;
             $result[$key]['insentif_fleet'] = $insentifFleet;
-            $result[$key]['sales_accepted'] = $value['imbalan'] + $totalInsentif;
-            // $result[$key]['spk_list']['accept_amount'][] = $result[$key]['sales_accepted'];
+            $result[$key]['sales_accepted'] = $value['total_imbalan'] + $totalInsentif;
+
+            foreach ($value['spk_list'] as $keySPK => $valueSPK) {
+                $result[$key]['spk_list'][$keySPK]['insentif'] = ($valueSPK['do_type'] == 'Non Fleet') ? $value['insentif_non_fleet'] : $insentifFleet;
+            }
         }
 
         return $result;
@@ -121,7 +124,20 @@ class DeliveryOrder extends Model
                 }
             }
 
-            $result[$user]['spk_list'][] = $spk->spk_code;
+            $spkList =  [
+                            'spk_code'  => $spk->spk_code,
+                            'spk_doc_code'  => $spk->spk_doc_code,
+                            'date'       => $spk->date,
+                            'car_type'  => CarType::getFullName($spk->type_id),
+                            'qty'       => $spk->qty,
+                            'do_type'   => ($value->is_fleet == 2) ? 'Non Fleet' : 'Fleet'
+                        ];
+
+            if(isset($result[$user]['spk_list'])) {
+                array_push($result[$user]['spk_list'], $spkList);
+            } else {
+                $result[$user]['spk_list'][] = $spkList;
+            }
         }
 
         return $result;
@@ -131,7 +147,7 @@ class DeliveryOrder extends Model
         $lastFormula = SalesBonusHead::orderBy('id', 'desc')->first();
         if(!isset($lastFormula->id)) { // IF NO FORMULA
             foreach ($result as $key => $value) {
-                $result[$key]['imbalan'] = 0;    
+                $result[$key]['total_imbalan'] = 0;    
             }
 
             return $result;
@@ -151,7 +167,11 @@ class DeliveryOrder extends Model
                                             ->where('min_car', '<=', $value['non_fleet'])
                                             ->where('max_car', '>=', $value['non_fleet'])
                                             ->first();
-            $result[$key]['imbalan'] = (isset($imbalan_amount->amount)) ? $imbalan_amount->amount : 0;
+            $result[$key]['total_imbalan'] = (isset($imbalan_amount->amount)) ? $imbalan_amount->amount : 0;
+
+            foreach ($value['spk_list'] as $keySPK => $valueSPK) {
+                $result[$key]['spk_list'][$keySPK]['imbalan'] = ($valueSPK['do_type'] == 'Non Fleet') ? $result[$key]['total_imbalan'] : 0;
+            }
         }
 
         return $result;

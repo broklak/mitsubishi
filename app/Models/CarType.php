@@ -43,6 +43,20 @@ class CarType extends Model
         return isset($data->name) ? $data->name : null;
     }
 
+    public static function getFullName($id) {
+        $data = parent::find($id);
+
+        if(isset($data->id)) {
+            $typeName = $data->name;
+            $model = CarModel::find($data->model_id);
+            $modelName = isset($model->name) ? $model->name : null;
+
+            return $modelName.'-'.$typeName;
+        }
+
+        return null;
+    }
+
     public static function getOptionValue() {
         $data = parent::select(DB::raw('car_types.id as value, CONCAT(car_models.name," ",car_types.name) AS display'))
                         ->join('car_models', 'car_models.id', '=', 'car_types.model_id')
