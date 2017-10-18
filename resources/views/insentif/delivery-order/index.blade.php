@@ -15,6 +15,7 @@
                 <tr>
                   <th>DO Code</th>
                   <th>Type</th>
+                  <th>Sales Name</th>
                   <th>SPK Code</th>
                   <th>Date</th>
                   <th>Total Sales Price</th>
@@ -26,6 +27,7 @@
                 <tr>
                 <td>{{$val->do_code}}</td>
                 <td>{{App\Models\DeliveryOrder::getType($val->is_fleet)}}</td>
+                <td>{{App\User::getName($val->created_by)}}</td>
                 <td>{{$val->spk_doc_code}}</td>
                 <td>{{date('j F Y', strtotime($val->do_date))}}</td>
                 <td>{{moneyFormat($val->total_sales_price)}}</td>

@@ -69,7 +69,7 @@
 	                <div class="form-group">
 	                  <label for="customer_npwp" class="col-sm-3 control-label">NPWP</label>
 	                  <div class="col-sm-9">
-	                    <input type="text" class="form-control" name="customer_npwp" value="{{$init['customer_npwp']}}" id="customer_npwp" placeholder="Nomor NPWP">
+	                    <input type="text" class="form-control" name="npwp" value="{{$init['customer_npwp']}}" id="customer_npwp" placeholder="Nomor NPWP">
 	                  </div>
 	                </div>
 

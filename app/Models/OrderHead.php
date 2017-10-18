@@ -65,7 +65,7 @@ class OrderHead extends Model
         if($api){
             if($page == 0 || $limit == 0) {
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
-                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
@@ -75,8 +75,9 @@ class OrderHead extends Model
                         ->orderBy('id', $sort)
                         ->get();
             } else {
-                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
-                            (select payment_method from order_price where order_id = order_head.id) as payment_method,
+                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
+                            date, qty, order_head.created_by,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
@@ -366,6 +367,7 @@ class OrderHead extends Model
             }
         }
 
+        $data['uuid'] = $orderHead->uuid;
         $data['spk_code'] = $orderHead->spk_code;
         $data['spk_doc_code'] = $orderHead->spk_doc_code;
         $data['created_by'] = User::find($orderHead->created_by)->value('username');
@@ -381,7 +383,7 @@ class OrderHead extends Model
             'color'                => $orderHead->color,
             'qty'                  => $orderHead->qty,
             'plat'                 => $orderHead->plat,
-            'car_year'              => $orderHead->car_year,
+            'car_year'              => (int) $orderHead->car_year,
             'bbn_type'              => $orderHead->bbn_type,
             'karoseri'             => $orderHead->karoseri,
             'karoseri_type'         => $orderHead->karoseri_type,
@@ -407,8 +409,8 @@ class OrderHead extends Model
         }
 
         $data['customer_data'] = [
-            'first_name'         => (isset($customer->id)) ? $customer->first_name : null,
-            'last_name'      => (isset($customer->id)) ? $customer->last_name : null,
+            'customer_first_name'         => (isset($customer->id)) ? $customer->first_name : null,
+            'customer_last_name'      => (isset($customer->id)) ? $customer->last_name : null,
             'customer_business'      => (isset($customer->id)) ? $customer->job : null,
             'id_type'               => (isset($customerImage->type)) ? $customerImage->type : null,
             'id_number'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
