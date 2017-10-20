@@ -40,7 +40,7 @@ class OrderHead extends Model
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
-        $where = 'order_head.status <> 0 ';
+        $where = 'order_head.status <> 0 && uuid is not null ';
         $offset = ($page * $limit) - $limit;
 
         if($approval) {
