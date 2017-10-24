@@ -236,12 +236,20 @@ class OrderController extends Controller
                 $createCredit = OrderCredit::createData($update);
             }
 
+            if(isset($update['image'])) {
+                $update['image'] = asset('images/customer'). '/' .$folder.'/'.$update['image'];
+            }
+
+            if(isset($update['npwp_image'])) {
+                $update['npwp_image'] = asset('images/npwp'). '/' . $update['npwp_image'];
+            }
+
             logUser('Update SPK '.$id);
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');
         }
-        $data['message'] = 'Success to update SPK';
-        return $this->apiSuccess($data, $request->input());
+        // $data['message'] = 'Success to update SPK';
+        return $this->apiSuccess($update, $request->input());
         
     }
 
@@ -288,6 +296,14 @@ class OrderController extends Controller
         try {
             $body = $request->getContent();
             $param = json_decode($body, true);
+
+            $secret = isset($param['server-secret']) ? $param['server-secret'] : null;
+
+            $validSecret = ServerSecret::find(1)->value('secret');
+
+            if($secret != $validSecret) {
+                return $this->apiError($statusCode = 401, 'Wrong Server Secret', 'Unauthenticated');   
+            }
 
             if(!isset($param['do'])) {
                 return $this->apiError($statusCode = 400, 'No DO key in body param', 'Invalid Request Body Param');            

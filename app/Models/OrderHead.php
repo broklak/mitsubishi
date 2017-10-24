@@ -67,7 +67,7 @@ class OrderHead extends Model
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
-                            car_types.name as type_name, car_models.name as model_name"))
+                            car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
@@ -79,7 +79,7 @@ class OrderHead extends Model
                             date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
-                            car_types.name as type_name, car_models.name as model_name"))
+                            car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')

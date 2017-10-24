@@ -161,8 +161,6 @@
         var unpaidAndInterest = unpaid + totalInterest;
         var installment = Math.floor(unpaidAndInterest / month);
 
-        console.log(totalInterest);
-
         $('#installment_cost').val(toMoney(installment));
         $('#total_interest').val(toMoney(totalInterest));
         $('#total_payment').val(toMoney(totalInterest + unpaid));
