@@ -89,7 +89,8 @@ class DeliveryOrder extends Model
             $result[$key]['sales_accepted'] = $value['total_imbalan'] + $totalInsentif;
 
             foreach ($value['spk_list'] as $keySPK => $valueSPK) {
-                $result[$key]['spk_list'][$keySPK]['insentif'] = ($valueSPK['do_type'] == 'Non Fleet') ? $value['insentif_non_fleet'] : $insentifFleet;
+                $insentif = ($valueSPK['do_type'] == 'Non Fleet') ? $value['insentif_non_fleet'] / $value['non_fleet'] : $insentifFleet / $value['fleet'];
+                $result[$key]['spk_list'][$keySPK]['insentif'] = round($insentif);
             }
         }
 
@@ -177,9 +178,9 @@ class DeliveryOrder extends Model
                                             ->first();
             $result[$key]['total_imbalan'] = (isset($imbalan_amount->amount)) ? $imbalan_amount->amount : 0;
 
-            foreach ($value['spk_list'] as $keySPK => $valueSPK) {
-                $result[$key]['spk_list'][$keySPK]['imbalan'] = ($valueSPK['do_type'] == 'Non Fleet') ? $result[$key]['total_imbalan'] : 0;
-            }
+            // foreach ($value['spk_list'] as $keySPK => $valueSPK) {
+            //     $result[$key]['spk_list'][$keySPK]['imbalan'] = ($valueSPK['do_type'] == 'Non Fleet') ? $result[$key]['total_imbalan'] : 0;
+            // }
         }
 
         return $result;
