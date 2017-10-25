@@ -251,12 +251,6 @@ class OrderHead extends Model
     }
 
     public function filterResult($data, $api = false) {
-        $user= Auth::user();
-        $userId = $user->id;
-        $isSupervisor = $user->hasRole('supervisor');
-        $isManager = $user->hasRole('manager');
-        $isSuperUser = $user->hasRole('super_admin');
-
         foreach ($data as $key => $value) {
             $head = parent::find($value->id);
             $approveLabel = OrderApproval::getLabelStatus($head);

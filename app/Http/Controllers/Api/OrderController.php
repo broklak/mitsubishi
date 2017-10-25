@@ -472,6 +472,7 @@ class OrderController extends Controller
 
     public function syncSpk(Request $request) {
         $secret = $request->input('secret');
+        $head = new OrderHead();
 
         $validSecret = ServerSecret::find(1)->value('secret');
 
@@ -486,6 +487,8 @@ class OrderController extends Controller
 
         $data = OrderHead::where($where)
                             ->get();
+
+        $data = $head->filterResult($data, $api = true);
 
         return $this->apiSuccess($data, $request->input());
     }
