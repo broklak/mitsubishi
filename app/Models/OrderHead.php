@@ -79,24 +79,24 @@ class OrderHead extends Model
         if($api){
             if($page == 0 || $limit == 0) { // SYNC SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by, dealer_id,
-                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
-                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->join('order_approval', 'order_head.id', '=', 'order_approval.order_id')
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
                         ->get();
             } else { // GET SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
                             date, qty, order_head.created_by, dealer_id,
-                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
-                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->leftJoin('order_approval', 'order_head.id', '=', 'order_approval.order_id')
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
                         ->offset($offset)
@@ -106,7 +106,6 @@ class OrderHead extends Model
         } else {
             $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
-                            (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
@@ -260,26 +259,12 @@ class OrderHead extends Model
 
         foreach ($data as $key => $value) {
             $head = parent::find($value->id);
-            if($api)  $data[$key]->detail = $this->detailSpk($head, $value->id);
+            $approveLabel = OrderApproval::getLabelStatus($head);
+            if($api){
+                $data[$key]->approval_status = str_replace('<br />', '.', $approveLabel);
+                $data[$key]->detail = $this->detailSpk($head, $value->id);
+            }
         }
-
-        // if($isManager || $isSuperUser) {
-        //     return $data;
-        // }
-
-        // if($isSupervisor) {
-        //     $salesOwned = User::salesOwned($userId);
-
-        //     foreach ($data as $key => $value) {
-        //         if(!in_array($value->created_by, $salesOwned)) unset($data[$key]);
-        //     }
-
-        //     return $data;
-        // }
-
-        // foreach ($data as $key => $value) {
-        //     if($value->created_by != $userId) unset($data[$key]);
-        // }
 
         $clean = [];
         foreach ($data as $key => $value) {

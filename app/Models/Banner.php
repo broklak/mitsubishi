@@ -38,6 +38,8 @@ class Banner extends Model
 
         $data = parent::select(DB::raw('id, name, file'))
                         ->orderBy('id', $sort)
+                        ->where('status', 1)
+                        ->where('deleted_at', null)
                         ->offset($offset)
                         ->limit($limit)
                         ->get();

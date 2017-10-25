@@ -39,6 +39,9 @@ class News extends Model
             $where[] = ['title', 'like', "%$query%"];
         }
 
+        $where[] = ['status', '=', 1];
+        $where[] = ['deleted_at', '=', null];
+
         $offset = ($page * $limit) - $limit;
 
         $data = parent::select(DB::raw('id, title, SUBSTRING(content, 1, 50) AS contentShort, image, created_at'))

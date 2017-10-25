@@ -96,7 +96,9 @@ class SimulationController extends Controller
     public function update(Request $request, $id) {
     	try {
     		$simulation = new Simulation();
-	    	$data = $simulation->find($id);
+	    	$data = $simulation->where('uuid', $id)->first();
+
+            if(!isset($data->id)) return $this->apiError($statusCode = 400, "Simulation with uuid $id is not found", 'No result found');
 
 	        $update = [
 	            'leasing_id'  => $request->input('leasing_id'),
