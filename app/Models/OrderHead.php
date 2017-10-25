@@ -84,7 +84,7 @@ class OrderHead extends Model
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
                         ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
-                        ->join('order_approval', 'order_head.id', '=', 'order_approval.order_id')
+                        ->leftJoin('order_approval', 'order_head.id', '=', 'order_approval.order_id')
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
                         ->get();
