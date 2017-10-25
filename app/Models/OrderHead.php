@@ -43,6 +43,20 @@ class OrderHead extends Model
         $where = 'order_head.status <> 0 AND uuid is not null ';
         $offset = ($page * $limit) - $limit;
 
+        $isSupervisor = $user->hasRole('supervisor');
+        $isManager = $user->hasRole('manager');
+        $isSuperUser = $user->hasRole('super_admin');
+
+        if($isSupervisor) {
+            $salesOwned = User::salesOwned($userId);
+            $salesOwned = implode(',', $salesOwned);
+            $where .= "and order_head.created_by in ($salesOwned) ";
+        }
+
+        if(!$isManager && !$isSuperUser && !$isSupervisor) {
+            $where .= "and order_head.created_by = $userId ";   
+        }
+
         if($approval) {
             $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0 ";
         }
@@ -63,7 +77,7 @@ class OrderHead extends Model
 
 
         if($api){
-            if($page == 0 || $limit == 0) {
+            if($page == 0 || $limit == 0) { // SYNC SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by, dealer_id,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
@@ -74,7 +88,7 @@ class OrderHead extends Model
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
                         ->get();
-            } else {
+            } else { // GET SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
                             date, qty, order_head.created_by, dealer_id,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
@@ -249,23 +263,23 @@ class OrderHead extends Model
             if($api)  $data[$key]->detail = $this->detailSpk($head, $value->id);
         }
 
-        if($isManager || $isSuperUser) {
-            return $data;
-        }
+        // if($isManager || $isSuperUser) {
+        //     return $data;
+        // }
 
-        if($isSupervisor) {
-            $salesOwned = User::salesOwned($userId);
+        // if($isSupervisor) {
+        //     $salesOwned = User::salesOwned($userId);
 
-            foreach ($data as $key => $value) {
-                if(!in_array($value->created_by, $salesOwned)) unset($data[$key]);
-            }
+        //     foreach ($data as $key => $value) {
+        //         if(!in_array($value->created_by, $salesOwned)) unset($data[$key]);
+        //     }
 
-            return $data;
-        }
+        //     return $data;
+        // }
 
-        foreach ($data as $key => $value) {
-            if($value->created_by != $userId) unset($data[$key]);
-        }
+        // foreach ($data as $key => $value) {
+        //     if($value->created_by != $userId) unset($data[$key]);
+        // }
 
         $clean = [];
         foreach ($data as $key => $value) {
