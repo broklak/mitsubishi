@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryOrder extends Model
 {
@@ -24,6 +25,9 @@ class DeliveryOrder extends Model
     protected $primaryKey = 'id';
 
     public function list($where = []) {
+        $user= Auth::user();
+        $userId = $user->id;
+        $where[] = ['order_head.created_by', '=', $userId];
         $data = parent::select('order_head.spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet', 'order_head.created_by')
                         ->join('order_price', 'order_price.order_id', '=', 'delivery_order.spk_id')
                         ->join('order_head', 'order_head.id', '=', 'delivery_order.spk_id')
@@ -34,9 +38,13 @@ class DeliveryOrder extends Model
     }
 
     public static function notChecked() {
+        $user= Auth::user();
+        $userId = $user->id;
+        $where[] = ['order_price.created_by', '=', $userId];
+        $where[] = ['is_fleet', '=', null];
         $data = parent::select('spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet')
                         ->join('order_price', 'order_price.order_id', '=', 'delivery_order.spk_id')
-                        ->where('is_fleet', '=', null)
+                        ->where($where)
                         ->get();
 
         return $data;
