@@ -190,7 +190,7 @@
 			                <label for="date" class="col-sm-4 control-label">Price Type</label>
 			                <div class="col-sm-8">
 			                   <div class="spk-field">
-			                   		<span>{{($init['price_type'] == 1) ? 'Off' : 'On'}} The Road</span>
+			                   		<span>{{($init['price_type'] == 2) ? 'Off' : 'On'}} The Road</span>
 			                   	</div>
 			                </div>
 			             </div>
