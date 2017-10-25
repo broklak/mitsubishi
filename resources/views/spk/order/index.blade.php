@@ -60,7 +60,7 @@
 	                  </button>
 	                  <ul class="dropdown-menu" role="menu">
                       @permission('update.spk')
-                        @if(!$approval)
+                        @if(App\Models\OrderApproval::canEdit(App\Models\OrderApproval::getLabelStatus($val)))
                           <li><a href="{{ route($page.'.edit', ['id' => $val->id]) }}">Edit</a></li>
                         @endif
                       @endpermission

@@ -102,6 +102,14 @@ class OrderApproval extends Model
 
     }
 
+    public static function canEdit($stringStatus) {
+        if(stristr($stringStatus, 'Approved') || stristr($stringStatus, 'DO')) {
+            return false;
+        }
+
+        return true;
+    }
+
     private static function checkDO($id, $unit) {
         $do = DeliveryOrder::where('spk_id', $id)->count();
         if($do == $unit) {

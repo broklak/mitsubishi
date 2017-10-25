@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
 	public function __construct() {
-		$this->middleware('auth:api', ['except' => ['syncSpk']]);
+		$this->middleware('auth:api', ['except' => ['syncSpk', 'doPost']]);
 	}
 
     public function list(Request $request) { 
