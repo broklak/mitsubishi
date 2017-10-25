@@ -64,7 +64,7 @@ class OrderHead extends Model
 
         if($api){
             if($page == 0 || $limit == 0) {
-                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
+                $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by, dealer_id,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
@@ -76,7 +76,7 @@ class OrderHead extends Model
                         ->get();
             } else {
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
-                            date, qty, order_head.created_by,
+                            date, qty, order_head.created_by, dealer_id,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid,
                             (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
