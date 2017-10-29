@@ -253,8 +253,9 @@
                 var total = 0;
                 let opt = [];
                 let typeId = {{$row->type_id}};
-                $.each(obj, function(key, value, total, typeId) {
+                $.each(obj, function(key, value, total) {
                     total++;
+                    typeId = "{{$row->type_id}}";
                     let selected = (typeId == value.id) ? "selected" : "";
                     opt.push('<option '+selected+' value="'+value.id+'">'+value.value+'</option>');    
                 });
