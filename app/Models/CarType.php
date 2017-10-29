@@ -51,7 +51,7 @@ class CarType extends Model
             $model = CarModel::find($data->model_id);
             $modelName = isset($model->name) ? $model->name : null;
 
-            return $modelName.'-'.$typeName;
+            return $modelName.' '.$typeName;
         }
 
         return null;

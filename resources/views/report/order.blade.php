@@ -50,7 +50,7 @@
                 <td>{{App\User::getName($val->created_by)}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
                 <td>{{$val->customer_name}}</td>
-                <td>{{($val->type_id == null) ? $val->type_others : $val->model_name.' '.$val->type_name}}</td>
+                <td>{{($val->type_id == null) ? App\Models\CarModel::getName($val->model_id) . ' '.$val->type_others : App\Models\CarType::getFullName($val->type_id)}}</td>
                 <td>{!! App\Models\OrderApproval::getLabelStatus($val) !!}</td>
                 </tr>
                 @endforeach

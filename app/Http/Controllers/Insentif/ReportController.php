@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DeliveryOrder;
 use App\Models\CarType;
+use App\Models\CarModel;
 use App\Models\OrderHead;
 use App\Models\OrderApproval;
 use App\User;
@@ -108,6 +109,7 @@ class ReportController extends Controller
             $csv[$key]['Sales Name'] = User::getName($value['created_by']);
             $csv[$key]['Date'] = date('j F Y', strtotime($value->date));
             $csv[$key]['Customer'] = $value->customer_name;
+            $csv[$key]['Car'] = ($value->type_id == 0) ? CarModel::getName($value->model_id).' '.$value->type_others : CarType::getFullName($value->type_id);
             $csv[$key]['Status'] = str_replace('<br />', '.', OrderApproval::getLabelStatus($value));
         }
 
