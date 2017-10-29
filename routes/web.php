@@ -22,6 +22,8 @@ Route::get('ajax/spk-graph', 'Spk\AjaxController@getGraphSPK')->name('ajax.getGr
 Route::get('report/insentif', 'Insentif\ReportController@insentif')->name('report.insentif');
 Route::get('report/order', 'Insentif\ReportController@order')->name('report.order');
 Route::get('report/do', 'Insentif\ReportController@delivery')->name('report.delivery');
+Route::get('report/excel/order', 'Insentif\ReportController@excelOrder')->name('report.excel.order');
+Route::get('report/excel/insentif', 'Insentif\ReportController@excelInsentif')->name('report.excel.insentif');
 
 Route::get('logout', 'Auth\LoginController@logout');
 

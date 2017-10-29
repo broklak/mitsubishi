@@ -26,17 +26,52 @@
 			            </div>
 
 			            <div class="form-group">
-			               <label for="car_type" class="col-sm-3 control-label">Tipe</label>
+			               <label for="car_model" class="col-sm-3 control-label">Model Mobil</label>
 			               <div class="col-sm-9">
-			               		<input type="text" class="form-control" name="type_name" value="{{$init['type_name']}}" id="type_id" placeholder="Tipe Mobil">
-			               		<input type="hidden" value="{{$init['type_id']}}" id="type_id_real" name="type_id" />
+			               		<select name="model_id" id="model_id" class="form-control">
+			               			<option @if($init['model_id'] == null) selected @endif>Pilih Model Mobil</option>
+			               			@foreach($carModel as $key => $val)
+			               			<option @if($init['model_id'] == $val->id) selected @endif value="{{$val->id}}">{{$val->name}}</option>
+			               			@endforeach
+			               		</select>
 			               </div>
 			            </div>
 
 			            <div class="form-group">
-			               <label for="color" class="col-sm-3 control-label">Warna</label>
+			               <label for="car_type" class="col-sm-3 control-label">Tipe Mobil</label>
 			               <div class="col-sm-9">
-			                  <input type="text" class="form-control" name="color" value="{{$init['color']}}" id="color" placeholder="Warna">
+			               		<select name="type_id" id="type_id" class="form-control">
+			               			<option>Pilih Tipe Mobil</option>
+			               			<option @if($init['type_id'] == 0) selected @endif value="0">Tipe Lain</option>
+			               		</select>
+			               </div>
+			            </div>
+
+			            <div class="form-group" id="type_others_cont" style="display: {{($init['type_id'] == 0) ? 'block' : 'none'}}">
+			               <label for="car_type" class="col-sm-3 control-label">Nama Tipe</label>
+			               <div class="col-sm-9">
+			               		<input type="text" class="form-control" value="{{$init['type_others']}}" name="type_others">
+			               </div>
+			            </div>
+
+			            <div class="form-group">
+			               <label for="color" class="col-sm-3 control-label">Warna Mobil</label>
+			               <div class="col-sm-9">
+			                  <!-- <input type="text" class="form-control" name="color" value="{{$init['color']}}" id="color" placeholder="Warna"> -->
+			                  <select class="form-control" name="color" id="color">
+			                  	<option>Pilih Warna</option>
+			                  	@foreach($carColor as $key => $val)
+			               		<option @if($init['color'] == $val->name) selected @endif>{{$val->name}}</option>
+			               		@endforeach
+			               		<option value="0">Warna Lain</option>
+			                  </select>
+			               </div>
+			            </div>
+
+			            <div class="form-group" id="color_others_cont" style="display: none;">
+			               <label for="color" class="col-sm-3 control-label">Nama Warna</label>
+			               <div class="col-sm-9">
+			                  <input type="text" class="form-control" name="color_others" value="{{$init['color_others']}}" id="color_others" placeholder="Warna">
 			               </div>
 			            </div>
 

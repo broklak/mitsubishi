@@ -11,6 +11,7 @@ use App\Models\OrderHead;
 use App\Models\OrderAttachment;
 use App\Models\CarType;
 use App\Models\CarModel;
+use App\Models\CarColor;
 use App\Models\Leasing;
 use App\PermissionRole;
 use App\Models\OrderApproval;
@@ -82,11 +83,13 @@ class OrderController extends Controller
     {
         $data = [
             'page' => $this->page,
-            'carType' => CarType::all(),
+            'carModel' => CarModel::all(),
+            'carColor' => CarColor::all(),
             'customer' => Customer::all(),
             'leasing' => Leasing::all(),
             'months' => CreditMonth::all(),
             'bbn' => Bbn::all(),
+            'carType' => CarType::getOptionValue(),
             'dealer' => UserDealer::where('user_id', Auth::id())->get(),
             'init' => $this->initValue($type = 'create'),
         ];
@@ -168,7 +171,10 @@ class OrderController extends Controller
             'page' => $this->page,
             'row' => $this->model->find($id),
             'carType' => CarType::all(),
+            'carModel' => CarModel::all(),
+            'carColor' => CarColor::all(),
             'customer' => Customer::all(),
+            'carType' => CarType::getOptionValue(),
             'attachment' => OrderAttachment::where('order_id', $id)->get(),
             'leasing' => Leasing::all(),
             'months' => CreditMonth::all(),
@@ -336,8 +342,11 @@ class OrderController extends Controller
                 'stnk_name'             => old('stnk_name'),
                 'stnk_address'          => old('stnk_address'),
                 'faktur_conf'           => old('faktur_conf'),
-                'type_id'               => old('type_id'),
+                'type_id'               => 100000000,
+                'model_id'               => old('model_id'),
                 'type_name'             => old('type_name'),
+                'type_others'           => old('type_others'),
+                'color_others'          => old('color_others'),
                 'color'                 => old('color'),
                 'qty'                   => old('qty'),
                 'car_year'              => old('car_year'),
@@ -414,6 +423,9 @@ class OrderController extends Controller
             'stnk_address'          => $orderHead->stnk_address,
             'faktur_conf'           => $orderHead->faktur_conf,
             'type_id'               => $orderHead->type_id,
+            'model_id'               => $orderHead->model_id,
+            'type_others'           => $orderHead->type_others,
+            'color_others'           => $orderHead->color,
             'type_name'             => CarModel::getName($orderHead->model_id) .' '. CarType::getName($orderHead->type_id),
             'npwp_image'            => $orderHead->npwp_image,
             'color'                 => $orderHead->color,

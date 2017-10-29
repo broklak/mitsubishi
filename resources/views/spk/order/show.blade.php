@@ -107,7 +107,13 @@
 			                <label for="date" class="col-sm-4 control-label">Car Type</label>
 			                <div class="col-sm-8">
 			                   <div class="spk-field">
-			                   		<span>{{\App\Models\CarModel::getName($row->model_id)}} {{\App\Models\CarType::getName($row->type_id)}}</span>
+			                   		<span>
+			                   			@if($row->type_id != 0)
+			                   			{{\App\Models\CarModel::getName($row->model_id)}} {{\App\Models\CarType::getName($row->type_id)}}
+			                   			@else
+			                   			{{$row->type_others}}
+			                   			@endif
+			                   		</span>
 			                   	</div>
 			                </div>
 			             </div>

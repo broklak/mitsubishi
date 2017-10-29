@@ -10,25 +10,26 @@
 		<div class="box">
             <!-- /.box-header -->
             <div class="box-header">
-              <form class="form-inline">
+              <form class="form-inline pull-left">
+
                 <div class="form-group">
-                  <label for="month">Month</label>
-                  <select onchange="this.form.submit()" id="month" name="month" class="form-control">
-                    @foreach(getMonths() as $key => $val)
-                    <option @if($month == $key) selected @endif value="{{$key}}">{{$val}}</option>
-                    @endforeach
-                  </select>
+                  <label>Start</label>
+                  <input type="text" name="start" value="{{$start}}" class="form-control datepicker">
                 </div>
 
-                <div style="margin-left:15px" class="form-group">
-                  <label for="year">Years</label>
-                  <select onchange="this.form.submit()" id="year" name="year" class="form-control">
-                    @foreach(getPrevYears() as $key => $val)
-                    <option @if($year == $val) selected @endif>{{$val}}</option>
-                    @endforeach
-                  </select>
+                <div class="form-group" style="margin-left:15px" >
+                  <label>End</label>
+                  <input type="text" name="end" value="{{$end}}" class="form-control datepicker">
                 </div>
+
+                <div class="form-group" style="margin-left:15px" >
+                  <input type="submit" value="Search" class="btn btn-primary">
+                </div>
+
               </form>
+              <div class="pull-right">
+                <a class="btn btn-primary" href="{{route('report.excel.order')}}?start={{$startTime}}&end={{$endTime}}">Export to CSV</a>
+              </div>
             </div>
             <div class="box-body">
               <table class="table table-bordered table-hover table-striped">
@@ -48,8 +49,8 @@
                 <td>{{$val->spk_code}}</td>
                 <td>{{App\User::getName($val->created_by)}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
-                <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{$val->model_name.' '.$val->type_name}}</td>
+                <td>{{$val->customer_name}}</td>
+                <td>{{($val->type_id == null) ? $val->type_others : $val->model_name.' '.$val->type_name}}</td>
                 <td>{!! App\Models\OrderApproval::getLabelStatus($val) !!}</td>
                 </tr>
                 @endforeach

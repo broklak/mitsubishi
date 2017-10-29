@@ -31,9 +31,16 @@ class Simulation extends Model
         $offset = $filter['offset'];
         $sortType = $filter['sort_type'];
         $sortBy = $filter['sort_by'];
+        $timestamp = isset($filter['timestamp']) ? $filter['timestamp'] : null;
+
+        $where[] = ['simulation.created_by', '=', $userId];
+
+        if($timestamp != null) {
+            $where[] = ['simulation.updated_at', '>', $timestamp];
+        }
 
         $data = parent::select(DB::raw('simulation.*,simulation.price as total_sales_price,leasing.name as leasing_name'))
-                        ->where('simulation.created_by', $userId)
+                        ->where($where)
                         ->join('leasing', 'leasing.id', '=', 'simulation.leasing_id')
                         ->orderBy($sortType, $sortBy)
                         ->offset($offset)

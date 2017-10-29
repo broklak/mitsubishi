@@ -48,8 +48,8 @@
                 <td>{{$val->spk_code}}</td>
                 <td>{{App\User::getName($val->created_by)}}</td>
                 <td>{{date('j F Y', strtotime($val->date))}}</td>
-                <td>{{$val->first_name . ' ' . $val->last_name}}</td>
-                <td>{{$val->model_name . ' ' . $val->type_name}}</td>
+                <td>{{$val->customer_name}}</td>
+                <td>{{(isset($val->type_name)) ? $val->model_name . ' ' . $val->type_name : $val->type_others}}</td>
                 <td>{!! App\Models\OrderApproval::getLabelStatus($val) !!}</td>
                 <td>
                 	<div class="btn-group">

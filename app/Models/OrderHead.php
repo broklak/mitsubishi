@@ -21,7 +21,8 @@ class OrderHead extends Model
      */
     protected $fillable = [
         'spk_code', 'spk_doc_code', 'date', 'npwp_image', 'stnk_name', 'stnk_address', 'faktur_conf', 'model_id', 'type_id', 'color', 'dealer_id', 'customer_id',
-        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 'customer_image_id', 'uuid'
+        'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 
+        'customer_image_id', 'uuid', 'customer_name', 'type_others'
     ];
 
     /**
@@ -36,7 +37,7 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $month = null, $year = null, $api = false) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $start = null, $end = null, $api = false) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;
@@ -66,12 +67,10 @@ class OrderHead extends Model
         }
 
         if($timestamp != null) {
-            $where .= "and order_head.created_at > '$timestamp' ";      
+            $where .= "and order_head.updated_at > '$timestamp' ";      
         }
 
-        if($month != null && $year != null) {
-            $start = $year.'-'.$month.'-01';
-            $end = $year.'-'.$month.'-'.date('t', strtotime($start));
+        if($start != null && $end != null) {
             $where .= "and (date >= '$start' && date <= '$end') ";   
         }
 
@@ -79,7 +78,7 @@ class OrderHead extends Model
         if($api){
             if($page == 0 || $limit == 0) { // SYNC SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by, dealer_id,
-                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason,
+                            (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason, type_others,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
@@ -90,7 +89,7 @@ class OrderHead extends Model
                         ->get();
             } else { // GET SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
-                            date, qty, order_head.created_by, dealer_id,
+                            date, qty, order_head.created_by, dealer_id, type_others,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
@@ -104,12 +103,12 @@ class OrderHead extends Model
                         ->get();
             }
         } else {
-            $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name, last_name, date, qty, order_head.created_by,
+            $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, customer_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
-                            car_types.name as type_name, car_models.name as model_name"))
-                        ->join('customers', 'order_head.customer_id', '=', 'customers.id')
-                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
-                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                            car_types.name as type_name, car_models.name as model_name, type_others"))
+                        // ->join('customers', 'order_head.customer_id', '=', 'customers.id')
+                        ->leftJoin('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->leftJoin('car_models', 'car_models.id', '=', 'order_head.model_id')
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
                         ->offset($offset)
@@ -148,6 +147,13 @@ class OrderHead extends Model
     }
 
     public function create($data) {
+        if($data['color'] == '0') {
+            CarColor::create([
+                'name' => $data['color_others'],
+                'created_by' => $data['created_by']
+            ]);
+        }
+
     	return parent::create([
     		'dealer_id'		=> $data['dealer_id'],
             'customer_id'   => $data['customer_id'],
@@ -159,12 +165,13 @@ class OrderHead extends Model
     		'stnk_name'		=> $data['stnk_name'],
     		'stnk_address'	=> $data['stnk_address'],
     		'faktur_conf'   => (isset($data['faktur_conf'])) ? $data['faktur_conf'] : null,
-    		'model_id'		=> CarType::getModel($data['type_id']),
+    		'model_id'		=> $data['model_id'],
     		'type_id'		=> $data['type_id'],
             'car_year'      => $data['car_year'],
-    		'color'		    => $data['color'],
+    		'color'		    => ($data['color'] != '0') ? $data['color'] : $data['color_others'],
     		'qty'			=> $data['qty'],
-    		'plat'			=> $data['plat'],
+            'plat'          => $data['plat'],
+    		'type_others'	=> ($data['type_id'] == 0) ? $data['type_others'] : null,
     		'bbn_type'		=> $data['bbn_type'],
     		'karoseri'      => (isset($data['karoseri'])) ? $data['karoseri'] : null,
             'karoseri_type' => (isset($data['karoseri_type'])) ? $data['karoseri_type'] : null,
@@ -172,11 +179,18 @@ class OrderHead extends Model
             'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
     		'status'		=> 1,
     		'created_by'	=> $data['created_by'],
-            'uuid'          => isset($data['uuid']) ? $data['uuid'] : null
+            'uuid'          => isset($data['uuid']) ? $data['uuid'] : null,
+            'customer_name' => $data['customer_first_name']
     	]);
     }
 
     public function updateData($id, $data) {
+        if($data['color'] == '0') {
+            CarColor::create([
+                'name' => $data['color_others'],
+                'created_by' => $data['updated_by']
+            ]);
+        }
         return parent::find($id)->update([
             'dealer_id'     => $data['dealer_id'],
             'customer_id'   => $data['customer_id'],
@@ -187,10 +201,11 @@ class OrderHead extends Model
             'stnk_name'     => $data['stnk_name'],
             'stnk_address'  => $data['stnk_address'],
             'faktur_conf'   => (isset($data['faktur_conf'])) ? $data['faktur_conf'] : null,
-            'model_id'      => CarType::getModel($data['type_id']),
+            'model_id'      => $data['model_id'],
             'type_id'       => $data['type_id'],
+            'type_others'   => ($data['type_id'] == 0) ? $data['type_others'] : null,
             'car_year'      => $data['car_year'],
-            'color'         => $data['color'],
+            'color'         => ($data['color'] != '0') ? $data['color'] : $data['color_others'],
             'qty'           => $data['qty'],
             'plat'          => $data['plat'],
             'bbn_type'      => $data['bbn_type'],
@@ -199,7 +214,7 @@ class OrderHead extends Model
             'karoseri_spec' => (isset($data['karoseri_spec'])) ? $data['karoseri_spec'] : null,
             'karoseri_price'    => (isset($data['karoseri_price'])) ? parseMoneyToInteger($data['karoseri_price']) : null,
             'updated_by'    => $data['updated_by'],
-            'uuid'          => isset($data['uuid']) ? $data['uuid'] : null
+            'customer_name' => $data['customer_first_name']
         ]);
     }
 

@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
-class CarModel extends Model
+class CarColor extends Model
 {
     use SoftDeletes;
     /**
      * @var string
      */
-    protected $table = 'car_models';
+    protected $table = 'car_colors';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 'category_id', 'insentif_amount', 'status', 'created_by', 'updated_by'
+        'name', 'status', 'created_by', 'updated_by'
     ];
 
     /**
@@ -35,16 +35,11 @@ class CarModel extends Model
 
     public static function getName($id) {
         $data = parent::find($id);
-        return isset($data->name) ? $data->name : null;
-    }
-
-    public static function getCategory($id) {
-        $data = parent::find($id);
-        return (isset($data->category_id)) ? $data->category_id : null;
+        return (isset($data->name)) ? $data->name : 'Others';
     }
 
     public static function getOptionValue() {
-        $data = parent::select(DB::raw('id as value, name as display'))
+        $data = parent::select(DB::raw('name as value, name as display'))
                         ->get();
 
         return $data;

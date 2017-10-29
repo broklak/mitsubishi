@@ -82,7 +82,7 @@ class OrderApproval extends Model
         $totalApproval = count($data);
 
         if($totalApproval == 0) { // NO APPROVAL YET
-            return 'Approve Pending';
+            return 'Approval Pending';
         }
 
         // CHECK DELIVERY ORDER

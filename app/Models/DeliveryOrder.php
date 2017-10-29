@@ -62,9 +62,7 @@ class DeliveryOrder extends Model
         return 'Not Fleet';
     }
 
-    public function getInsentif($month, $year) {
-        $start = $year.'-'.$month.'-01';
-        $end = $year.'-'.$month.'-'.date('t', strtotime($start));
+    public function getInsentif($start, $end) {
         $whereDO[] = ['is_fleet', '<>', null];
         $data = parent::where($whereDO)
                         ->whereBetween('do_date', [$start, $end])

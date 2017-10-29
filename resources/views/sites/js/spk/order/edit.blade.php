@@ -5,6 +5,11 @@
         dateFormat: 'yy-mm-dd'
     });
 
+    $(document).ready(function() {
+        let model_id = $('#model_id').val();
+        getTypeByModel(model_id);
+    });
+
     $('input[name="payment_method"]').click(function(){
         if($(this).val() == '1'){
             $('#leasing-container').hide(); 
@@ -18,8 +23,32 @@
         clearInterestFormula();
     });
 
+    $('#model_id').change(function() {
+        let val = $(this).val();
+        getTypeByModel(val);
+        clearInterestFormula();
+    });
+
     $('#car_year').keyup(function() {
         clearInterestFormula();
+    });
+
+    $('#type_id').change(function() {
+        let val = $(this).val();
+        if(val == 0) {
+            $('#type_others_cont').show();
+        } else {
+            $('#type_others_cont').hide();
+        }
+    });
+
+    $('#color').change(function() {
+        let val = $(this).val();
+        if(val == 0) {
+            $('#color_others_cont').show();
+        } else {
+            $('#color_others_cont').hide();
+        }
     });
 
     $('input[name="price_type"]').click(function(){
@@ -212,6 +241,30 @@
         $('#admin_cost').val('0');
         $('#other_cost').val('0');
         $('#total_down_payment').val('0');
+    }
+
+    function getTypeByModel(model_id) {
+        $.ajax({
+            method: 'GET',
+            url: '{{route('ajax.getCarType')}}',
+            data: {'model_id':model_id},
+            success: function(result) {
+                obj = JSON.parse(result);
+                var total = 0;
+                let opt = [];
+                $.each(obj, function(key, value, total) {
+                    total++;
+                    opt.push('<option value="'+value.id+'">'+value.value+'</option>');    
+                });
+                if(total == 0) {
+                    $('#type_others_cont').hide();
+                } else {
+                    $('#type_others_cont').show();
+                }
+                opt.push('<option value="0">Tipe Lain</option>');
+                $('#type_id').html(opt.join(''));
+            }
+        });
     }
 
     function getCustomerData (phone) {

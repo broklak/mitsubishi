@@ -25,7 +25,8 @@ class SimulationController extends Controller
 			'limit'		=> ($request->input('limit')) ? $request->input('limit') : 1000,
 			'offset'	=> ($request->input('offset')) ? $request->input('offset') : 0,
 			'sort_type' => ($request->input('sort_type')) ? $request->input('sort_type') : 'id',
-			'sort_by' => ($request->input('sort_by')) ? $request->input('sort_by') : 'desc'
+			'sort_by' => ($request->input('sort_by')) ? $request->input('sort_by') : 'desc',
+            'timestamp' => ($request->input('timestamp')) ? $request->input('timestamp') : null
 		];
 		$data = $simulation->list($filter);
 		$data = $this->filterListResponse($data);

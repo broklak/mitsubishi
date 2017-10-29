@@ -14,6 +14,7 @@ use App\Models\OrderApproval;
 use App\Models\OrderAttachment;
 use App\Models\CarModel;
 use App\Models\CarType;
+use App\Models\CarColor;
 use App\Models\ServerSecret;
 use App\Models\Bbn;
 use App\Models\DeliveryOrder;
@@ -50,7 +51,7 @@ class OrderController extends Controller
 	    	$limit = ($request->input('limit')) ? $request->input('limit') : 0;
 	    	$page = ($request->input('page')) ? $request->input('page') : 0;
 	        $sort = ($request->input('sort')) ? $request->input('sort') : 'desc';
-	        $query = $request->input('query');
+            $query = $request->input('query');
 
 	        if($limit < 0) return $this->apiError($statusCode = 400, 'Limit data must not be negative number', 'Something went wrong with the request');	
 
@@ -176,6 +177,8 @@ class OrderController extends Controller
             }
 
             $orderHead = new OrderHead();
+
+            $headNew = $orderHead->find($id);
             $validator = Validator::make($request->input(), $this->rules());
             if ($validator->fails()) {    
                 return $this->apiError($statusCode = 400, $validator->messages(), 'Some fields must be filled');
@@ -243,6 +246,11 @@ class OrderController extends Controller
             if(isset($update['npwp_image'])) {
                 $update['npwp_image'] = asset('images/npwp'). '/' . $update['npwp_image'];
             }
+
+            $update['id_image'] = $update['customer_id_image'];
+            unset($update['customer_id_image']);
+            $update['update_at'] = date('Y-m-d H:i:s');
+            $update['created_at'] = date('Y-m-d H:i:s',strtotime($headNew->created_at));
 
             logUser('Update SPK '.$id);
         } catch (Exception $e) {
@@ -485,6 +493,10 @@ class OrderController extends Controller
             $where[] = ['updated_at', '>', $request->input('timestamp')];
         }
 
+        if($request->input('dealer_id')) {
+            $where[] = ['dealer_id', '=', $request->input('dealer_id')];
+        }
+
         $data = OrderHead::where($where)
                             ->get();
 
@@ -495,7 +507,13 @@ class OrderController extends Controller
 
     public function fields() {
         $dealer = Dealer::select('id as value', 'name as display')->get();
+        $carModel = CarModel::getOptionValue();
         $carType = CarType::getOptionValue();
+        $carType[] = ['value' => 0, 'display' => 'Others'];
+
+        $carColor = CarColor::getOptionValue();
+        $carColor[] = ['value' => 0, 'display' => 'Others'];
+
         $idType = [
             ['value' => 1, 'display' => 'KTP'],
             ['value' => 2, 'display' => 'SIM'],
@@ -541,8 +559,11 @@ class OrderController extends Controller
                     generateApiField($fieldName = 'stnk_name', $label = 'Nama STNK'),
                     generateApiField($fieldName = 'stnk_address', $label = 'Alamat STNK'),
                     generateApiField($fieldName = 'faktur_conf', $label = 'Faktur Konfirmasi', $type = 'string', $required = false),
+                    generateApiField($fieldName = 'model_id', $label = 'Model Mobil', $type = 'select', $required = true, $options = $carModel),
                     generateApiField($fieldName = 'type_id', $label = 'Tipe Mobil', $type = 'select', $required = true, $options = $carType),
-                    generateApiField($fieldName = 'color', $label = 'Warna'),
+                    generateApiField($fieldName = 'type_others', $label = 'Nama Tipe Mobil', $type = 'string', false, null, $desc = 'Fill if type_id is others'),
+                    generateApiField($fieldName = 'color', $label = 'Warna Mobil', $type = 'select', true, $carColor),
+                    generateApiField($fieldName = 'color_others', $label = 'Nama Warna', $type = 'string', false, null, $desc = 'Fill if color is others'),
                     generateApiField($fieldName = 'car_year', $label = 'Tahun Kendaraan', $type = 'string', $required = true, $options = null, $desc = 'YYYY-MM-DD'),
                     generateApiField($fieldName = 'qty', $label = 'Quantity', $type = 'integer'),
                     generateApiField($fieldName = 'plat', $label = 'Jenis Plat', $type = 'select', $required = true, $options = $platType),

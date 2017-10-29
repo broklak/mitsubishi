@@ -122,6 +122,7 @@
                     <li @if($page == 'car-category') class="active" @endif ><a href="{{route('car-category.index')}}"><i class="fa fa-car"></i> Car Category</a></li>
                     <li @if($page == 'car-model') class="active" @endif ><a href="{{route('car-model.index')}}"><i class="fa fa-car"></i> Car Model</a></li>
                     <li @if($page == 'car-type') class="active" @endif ><a href="{{route('car-type.index')}}"><i class="fa fa-car"></i> Car Type</a></li>
+                    <li @if($page == 'car-color') class="active" @endif ><a href="{{route('car-color.index')}}"><i class="fa fa-paint-brush"></i> Car Color</a></li>
                   @endpermission
                   @permission('*.company')
                     <li @if($page == 'company') class="active" @endif ><a href="{{route('company.index')}}"><i class="fa fa-building"></i> Company</a></li>

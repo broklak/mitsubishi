@@ -45,19 +45,15 @@ class AjaxController extends Controller
     }
 
     public function getCarType(Request $request) {
-        $term = $request->input('term');
-        $data = CarType::select('car_types.id', 'car_types.name as typeName', 'car_models.name as modelName')
-                        ->where('car_types.name', 'like', "%$term%")
-                        ->orWhere('car_models.name', 'like', "%$term%")
-                        ->join('car_models', 'car_types.model_id', '=', 'car_models.id')
-                        ->get();
+        $model_id = $request->input('model_id');
+        $data = CarType::where('model_id', $model_id)->get();
         $result = [];
         foreach ($data as $key => $value) {
             $result[$key]['id'] = $value->id;
-            $result[$key]['value'] = $value->modelName.' '.$value->typeName;
+            $result[$key]['value'] = $value->name;
         }
 
-        return $result;
+        return json_encode($result);
     }
 
     public function getCustomerData (Request $request) {

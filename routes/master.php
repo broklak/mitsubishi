@@ -40,3 +40,5 @@ Route::resource('setting/master/default-admin-fee', 'Master\DefaultAdminFeeContr
 
 Route::get('setting/master/leasing/change-status/{id}/{status}', 'Master\LeasingController@changeStatus')->name('leasing.change-status');
 Route::resource('setting/master/leasing', 'Master\LeasingController');
+
+Route::resource('setting/master/car-color', 'Master\CarColorController');
