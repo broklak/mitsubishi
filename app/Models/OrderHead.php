@@ -126,7 +126,7 @@ class OrderHead extends Model
         $where = 'order_head.status <> 0 ';
         
         if($approval) {
-            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id and job_position_id = $job) = 0 ";
+            $where .= "and (select count(order_id) from order_approval where order_id = order_head.id) = 0 ";
         }
 
         if($query != null) {
