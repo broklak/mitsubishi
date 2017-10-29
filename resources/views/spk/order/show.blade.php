@@ -111,7 +111,7 @@
 			                   			@if($row->type_id != 0)
 			                   			{{\App\Models\CarModel::getName($row->model_id)}} {{\App\Models\CarType::getName($row->type_id)}}
 			                   			@else
-			                   			{{$row->type_others}}
+			                   			{{\App\Models\CarModel::getName($row->model_id)}} {{$row->type_others}}
 			                   			@endif
 			                   		</span>
 			                   	</div>
