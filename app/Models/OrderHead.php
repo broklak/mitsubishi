@@ -50,10 +50,8 @@ class OrderHead extends Model
 
         if($isSupervisor) {
             $salesOwned = User::salesOwned($userId);
-            if(!empty($salesOwned)) {
-                $salesOwned = implode(',', $salesOwned);
-                $where .= "and order_head.created_by in ($salesOwned) ";
-            }
+            $salesOwned = (!empty($salesOwned)) ? implode(',', $salesOwned) : $userId;
+            $where .= "and order_head.created_by in ($salesOwned) ";
         }
 
         if(!$isManager && !$isSuperUser && !$isSupervisor) {
