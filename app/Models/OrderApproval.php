@@ -102,7 +102,10 @@ class OrderApproval extends Model
 
     }
 
-    public static function canEdit($stringStatus) {
+    public static function canEdit($order) {
+        $userData = Auth::user();
+        $stringStatus = self::getLabelStatus($order);
+
         if(stristr($stringStatus, 'Approved') || stristr($stringStatus, 'DO')) {
             return false;
         }

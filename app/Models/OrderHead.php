@@ -48,13 +48,23 @@ class OrderHead extends Model
         $isManager = $user->hasRole('manager');
         $isSuperUser = $user->hasRole('super_admin');
 
+        if($user->can('update-dealer.spk')) {
+            $dealer = UserDealer::where('user_id', $userId)->get();
+            $dealerOwned = [];
+            foreach ($dealer as $key => $value) {
+                $dealerOwned[] = $value->dealer_id;
+            }
+            $dealerOwned = (!empty($dealerOwned)) ? implode(',', $dealerOwned) : $userId;
+            $where .= "and order_head.dealer_id in ($dealerOwned) ";
+        }
+
         if($isSupervisor) {
             $salesOwned = User::salesOwned($userId);
             $salesOwned = (!empty($salesOwned)) ? implode(',', $salesOwned) : $userId;
             $where .= "and order_head.created_by in ($salesOwned) ";
         }
 
-        if(!$isManager && !$isSuperUser && !$isSupervisor) {
+        if(!$isManager && !$isSuperUser && !$isSupervisor && !$user->can('update-dealer.spk') && !$user->can('update-all.spk')) {
             $where .= "and order_head.created_by = $userId ";   
         }
 
