@@ -135,7 +135,6 @@ class OrderHead extends Model
 
         $count = parent::select(DB::raw("order_head.id, spk_code, first_name, last_name, date, qty, order_head.created_by,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method,
-                            (select count(order_id) from order_approval where order_id = order_head.id) AS is_approved,
                             car_types.name as type_name, car_models.name as model_name"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
                         ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
