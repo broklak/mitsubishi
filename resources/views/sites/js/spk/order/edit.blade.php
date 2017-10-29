@@ -252,16 +252,19 @@
                 obj = JSON.parse(result);
                 var total = 0;
                 let opt = [];
-                $.each(obj, function(key, value, total) {
+                let typeId = {{$row->type_id}};
+                $.each(obj, function(key, value, total, typeId) {
                     total++;
-                    opt.push('<option value="'+value.id+'">'+value.value+'</option>');    
+                    let selected = (typeId == value.id) ? "selected" : "";
+                    opt.push('<option '+selected+' value="'+value.id+'">'+value.value+'</option>');    
                 });
-                if(total == 0) {
+                if(total == 0 && typeId != 0) {
                     $('#type_others_cont').hide();
                 } else {
                     $('#type_others_cont').show();
                 }
-                opt.push('<option value="0">Tipe Lain</option>');
+                let selected = (typeId == 0) ? "selected" : "";
+                opt.push('<option '+selected+' value="0">Tipe Lain</option>');
                 $('#type_id').html(opt.join(''));
             }
         });
