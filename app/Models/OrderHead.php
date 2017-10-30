@@ -99,12 +99,12 @@ class OrderHead extends Model
                         ->get();
             } else { // GET SPK
                 $data = parent::select(DB::raw("order_head.id, spk_code, spk_doc_code, first_name as customer_first_name, last_name as customer_last_name, 
-                            date, qty, order_head.created_by, dealer_id, type_others,
+                            date, qty, order_head.created_by, dealer_id, type_others, order_head.model_id,
                             (select payment_method from order_price where order_id = order_head.id) as payment_method, uuid, reject_reason,
                             car_types.name as type_name, car_models.name as model_name, order_head.created_at, order_head.updated_at"))
                         ->join('customers', 'order_head.customer_id', '=', 'customers.id')
-                        ->join('car_types', 'car_types.id', '=', 'order_head.type_id')
-                        ->join('car_models', 'car_models.id', '=', 'order_head.model_id')
+                        ->leftJoin('car_types', 'car_types.id', '=', 'order_head.type_id')
+                        ->leftJoin('car_models', 'car_models.id', '=', 'order_head.model_id')
                         ->leftJoin('order_approval', 'order_head.id', '=', 'order_approval.order_id')
                         ->whereRaw($where)
                         ->orderBy('id', $sort)
