@@ -279,6 +279,7 @@ class OrderController extends Controller
             'stnk_name' => 'required',
             'stnk_address' => 'required',
             'type_id' => 'required',
+            'model_id' => 'required',
             'color' => 'required',
             'bbn_type' => 'required',
             'qty' => 'required',
