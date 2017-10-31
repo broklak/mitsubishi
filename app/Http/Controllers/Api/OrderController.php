@@ -239,6 +239,9 @@ class OrderController extends Controller
             $update['created_by'] = Auth::id();
             OrderCredit::where('order_id', $id)->delete();
             if($update['payment_method'] == 2) {
+                $update['installment_cost'] = floor($update['installment_cost']);
+                $update['insurance_cost'] = floor($update['insurance_cost']);
+                $update['total_down_payment'] = floor($update['total_down_payment']);
                 $createCredit = OrderCredit::createData($update);
             }
 
