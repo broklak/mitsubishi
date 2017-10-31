@@ -437,7 +437,7 @@ class OrderController extends Controller
             'karoseri_type'         => $orderHead->karoseri_type,
             'karoseri_spec'         => $orderHead->karoseri_spec,
             'karoseri_price'        => $orderHead->karoseri_price,
-            'price_type'            => (isset($orderPrice->id) && $orderPrice->price_off == 0) ? 1 : 2,
+            'price_type'            => (isset($orderPrice->id)) ? $orderPrice->payment_method : null,
             'price_off'             => isset($orderPrice->id) ? moneyFormat($orderPrice->price_off) : null,
             'price_on'              => isset($orderPrice->id) ? moneyFormat($orderPrice->price_on) : null,
             'cost_surat'            => isset($orderPrice->id) ? moneyFormat($orderPrice->cost_surat) : null,

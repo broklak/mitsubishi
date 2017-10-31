@@ -432,7 +432,7 @@ class OrderHead extends Model
             'id_type'               => (isset($customerImage->type)) ? $customerImage->type : null,
             'id_number'             => (isset($customerImage->id_number)) ? $customerImage->id_number : null,
             'customer_address'      => (isset($customer->id)) ?  $customer->address : null,
-            'id_image'              => (isset($customerImage->filename)) ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
+            'id_image'              => (isset($customerImage->filename) && $customerImage->filename != '') ? asset('images/customer') . '/' . $folder . '/' . $customerImage->filename : null,
             'customer_phone'        => (isset($customer->id)) ? $customer->phone : null,
             'customer_phone_home'        => (isset($customer->id)) ? $customer->phone_home : null,
             'npwp'         => (isset($customer->id)) ? $customer->npwp : null,

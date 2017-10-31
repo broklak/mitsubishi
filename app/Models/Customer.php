@@ -61,12 +61,16 @@ class Customer extends Model
             $dataChange['updated_by'] = Auth::id();
             parent::where($where)->first()->update($dataChange);
 
-            if(isset($data['image'])) {
-                $image['filename'] = $data['image'];
-                $image['customer_id'] = $validateId->id;
-                $createImage = CustomerImage::create($image);
-                $return['imageId'] = $createImage->id; 
-            }
+            // if(isset($data['image'])) {
+            //     $image['filename'] = $data['image'];
+            //     $image['customer_id'] = $validateId->id;
+            //     $createImage = CustomerImage::create($image);
+            //     $return['imageId'] = $createImage->id; 
+            // }
+            $image['filename'] = isset($data['image']) ? $data['image'] : '';
+            $image['customer_id'] = $validateId->id;
+            $createImage = CustomerImage::create($image);
+            $return['imageId'] = $createImage->id; 
             $return['customerId'] = $validateId->id;
             return $return;
         }
@@ -74,13 +78,18 @@ class Customer extends Model
         $dataChange['created_by'] = Auth::id();
         $created = parent::create($dataChange);
 
-        if(isset($data['image'])) {
-            $image['filename'] = $data['image'];
-            $image['customer_id'] = $created->id;
-            $createImage = CustomerImage::create($image);
-            $return['imageId'] = $createImage->id;
-        }
+        // if(isset($data['image'])) {
+        //     $image['filename'] = $data['image'];
+        //     $image['customer_id'] = $created->id;
+        //     $createImage = CustomerImage::create($image);
+        //     $return['imageId'] = $createImage->id;
+        // }
+        $image['filename'] = isset($data['image']) ? $data['image'] : '';
+        $image['customer_id'] = $created->id;
+        $createImage = CustomerImage::create($image);
+        $return['imageId'] = $createImage->id;
         $return['customerId'] = $created->id;
+        
         return $return;
     }
 

@@ -141,6 +141,9 @@ class OrderController extends Controller
             ]);
 
             if($create['payment_method'] == 2) {
+                $create['installment_cost'] = floor($create['installment_cost']);
+                $create['insurance_cost'] = floor($create['insurance_cost']);
+                $create['total_down_payment'] = floor($create['total_down_payment']);
                 $createCredit = OrderCredit::createData($create);
             }
 
