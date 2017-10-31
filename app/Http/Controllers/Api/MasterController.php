@@ -45,7 +45,7 @@ class MasterController extends Controller
             if(!isset($data->id)) return $this->apiError($statusCode = 400, "News with ID $id is not found", 'No result found');
 
             $data->image = asset('images/news/').'/'.$data->image;
-            $data->content = strip_tags($data->content);
+            $data->content = $data->content;
             $data->dateHuman = date('j F Y', strtotime($data->dateSystem));
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');       

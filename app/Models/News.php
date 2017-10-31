@@ -51,7 +51,7 @@ class News extends Model
                         ->limit($limit)
                         ->get();
         foreach ($data as $key => $value) {
-            $data[$key]->contentShort = strip_tags($value->contentShort);
+            $data[$key]->contentShort = $value->contentShort;
             $data[$key]->image = asset('images/news/').'/'.$value->image;
         }
         return $data;

@@ -16,7 +16,7 @@ class CreateApprovalSetting extends Migration
         Schema::create('approval_setting', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('level');
-            $table->integer('job_position_id');
+            $table->integer('role_id');
             $table->integer('updated_by');
             $table->timestamps();
         });
