@@ -52,11 +52,12 @@ class OrderController extends Controller
 	    	$page = ($request->input('page')) ? $request->input('page') : 0;
 	        $sort = ($request->input('sort')) ? $request->input('sort') : 'desc';
             $query = $request->input('query');
+            $status = $request->input('status');
 
 	        if($limit < 0) return $this->apiError($statusCode = 400, 'Limit data must not be negative number', 'Something went wrong with the request');	
 
 	        $order = new OrderHead();
-            $data = $order->list($approval, $query, $sort, $limit, $page, $time, null, null, $api = true);
+            $data = $order->list($approval, $query, $sort, $limit, $page, $time, null, null, $api = true, $status);
             $data = $order->filterResult($data, $api = true);
             $pagination = ($limit == 0) ? null : $this->getPagination($data, $order->countList($approval, $query), $page, $limit);
     	} catch (Exception $e) {
@@ -181,10 +182,19 @@ class OrderController extends Controller
 
             $orderHead = new OrderHead();
 
+            $rules = $this->rules();
+            unset($rules['uuid']);
             $headNew = $orderHead->find($id);
-            $validator = Validator::make($request->input(), $this->rules());
+            $priceOld = OrderPrice::where('order_id', $id)->first();
+            $validator = Validator::make($request->input(), $rules);
             if ($validator->fails()) {    
                 return $this->apiError($statusCode = 400, $validator->messages(), 'Some fields must be filled');
+            }
+
+            // IF SPK IS CANT UPDATED
+            $headNew->payment_method = $priceOld->payment_method;
+            if(!OrderApproval::canEdit($headNew)) {
+                return $this->apiError($statusCode = 400, 'SPK status can not be updated', 'SPK status can not be updated');   
             }
 
             $update = $request->input();
@@ -270,6 +280,7 @@ class OrderController extends Controller
     protected function rules() {
         return [
             'spk_doc_code'     => 'required',
+            'uuid'      => 'required|unique:order_head',
             'date'     => 'required',
             'dealer_id' => 'required',
             'id_number' => 'required',
@@ -350,7 +361,7 @@ class OrderController extends Controller
 
             $data = [
                 'processed'   => $true,
-                'notProcessd' => $false,
+                'notProcessed' => $false,
             ];    
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');            

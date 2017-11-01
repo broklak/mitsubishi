@@ -37,7 +37,7 @@ class OrderHead extends Model
      */
     protected $dates = ['deleted_at'];
 
-    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $start = null, $end = null, $api = false) {
+    public function list($approval = false, $query = null, $sort = 'desc', $limit = 1000, $page = 1, $timestamp = null, $start = null, $end = null, $api = false, $status = null) {
         $user = Auth::user();
         $userId = $user->id;
         $job = $user->job_position_id;

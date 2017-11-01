@@ -106,7 +106,7 @@ class OrderApproval extends Model
         $userData = Auth::user();
         $stringStatus = self::getLabelStatus($order);
 
-        if(stristr($stringStatus, 'Approved') || stristr($stringStatus, 'DO')) {
+        if(stristr($stringStatus, 'Approved') || stristr($stringStatus, 'DO') || stristr($stringStatus, 'Order')) {
             return false;
         }
 

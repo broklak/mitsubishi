@@ -24,14 +24,28 @@ class DeliveryOrder extends Model
      */
     protected $primaryKey = 'id';
 
-    public function list($where = []) {
+    public function list($where = null) {
         $user= Auth::user();
         $userId = $user->id;
-        $where[] = ['order_head.created_by', '=', $userId];
+        $isSupervisor = $user->hasRole('supervisor');
+        $isManager = $user->hasRole('manager');
+        $isSuperUser = $user->hasRole('super_admin');
+        $where = 'order_head.status <> 0 AND uuid is not null ';
+
+        if($isSupervisor) {
+            $salesOwned = \App\User::salesOwned($userId);
+            $salesOwned = (!empty($salesOwned)) ? implode(',', $salesOwned) : $userId;
+            $where .= "and order_head.created_by in ($salesOwned) ";
+        }
+
+        if(!$isManager && !$isSuperUser && !$isSupervisor) {
+            $where .= "and order_head.created_by = $userId ";   
+        }
+
         $data = parent::select('order_head.spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet', 'order_head.created_by')
                         ->join('order_price', 'order_price.order_id', '=', 'delivery_order.spk_id')
                         ->join('order_head', 'order_head.id', '=', 'delivery_order.spk_id')
-                        ->where($where)
+                        ->whereRaw($where)
                         ->get();
 
         return $data;
@@ -40,11 +54,23 @@ class DeliveryOrder extends Model
     public static function notChecked() {
         $user= Auth::user();
         $userId = $user->id;
-        $where[] = ['order_price.created_by', '=', $userId];
-        $where[] = ['is_fleet', '=', null];
-        $data = parent::select('spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet')
+        $isSupervisor = $user->hasRole('supervisor');
+        $isManager = $user->hasRole('manager');
+        $isSuperUser = $user->hasRole('super_admin');
+        $where = 'is_fleet is null ';
+
+        if($isSupervisor) {
+            $salesOwned = \App\User::salesOwned($userId);
+            $salesOwned = (!empty($salesOwned)) ? implode(',', $salesOwned) : $userId;
+            $where .= "and order_price.created_by in ($salesOwned) ";
+        }
+
+        if(!$isManager && !$isSuperUser && !$isSupervisor) {
+            $where .= "and order_price.created_by = $userId ";   
+        }
+        $data = parent::select('spk_doc_code', 'do_code', 'do_date', 'total_sales_price', 'spk_id', 'delivery_order.id', 'is_fleet', 'created_by')
                         ->join('order_price', 'order_price.order_id', '=', 'delivery_order.spk_id')
-                        ->where($where)
+                        ->whereRaw($where)
                         ->get();
 
         return $data;
