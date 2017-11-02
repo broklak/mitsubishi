@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\PermissionRole;
+use App\RoleUser;
+use App\Mail\OrderNotification;
+use App\User;
+use Illuminate\Support\Facades\Mail;
 
 class OrderApproval extends Model
 {
@@ -183,5 +187,45 @@ class OrderApproval extends Model
         }
 
         return $label;
+    }
+
+    public static function sendEmailNotif($type, $order) {
+        $user = Auth::user();
+        $isSupervisor = $user->hasRole('supervisor');
+        $isManager = $user->hasRole('manager');
+        $isSuperUser = $user->hasRole('super_admin');
+        $dealer_id = $order->dealer_id;
+
+        if($type == 'create') { // CREATE
+            if($isSupervisor || $isManager || $isSuperUser) {
+                return false;
+            }
+
+            // FIND APPROVER
+            $approver = self::findValidApprover($user->id, $dealer_id);
+            foreach ($approver as $key => $value) {
+                $data = User::find($value);
+                if(isset($data->email) && !empty($data->email)) {
+                    Mail::to($data->email)->send(new OrderNotification($type, $order, $data));   
+                }
+            }
+        }
+    }
+
+    public static function findValidApprover($salesId, $dealerId) {
+        // FIND ROLE APPROVE SPK
+        $data = RoleUser::select('role_user.user_id')
+                            ->where('permission_id', 50)
+                            ->where('dealer_id', $dealerId)
+                            ->join('permission_role', 'permission_role.role_id', '=', 'role_user.role_id')
+                            ->join('user_dealer', 'user_dealer.user_id', '=', 'role_user.user_id')
+                            ->get();
+
+        $approver = [];
+        foreach ($data as $key => $value) {
+            $approver[] = $value->user_id;
+        }
+
+        return $approver;
     }
 }

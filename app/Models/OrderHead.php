@@ -163,7 +163,7 @@ class OrderHead extends Model
             ]);
         }
 
-    	return parent::create([
+    	$created = parent::create([
     		'dealer_id'		=> $data['dealer_id'],
             'customer_id'   => $data['customer_id'],
     		'customer_image_id'	=> $data['customer_id_image'],
@@ -191,6 +191,8 @@ class OrderHead extends Model
             'uuid'          => isset($data['uuid']) ? $data['uuid'] : null,
             'customer_name' => $data['customer_first_name']
     	]);
+
+        return $created;
     }
 
     public function updateData($id, $data) {

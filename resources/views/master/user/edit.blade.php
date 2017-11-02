@@ -37,6 +37,13 @@
 	                </div>
 
 	                <div class="form-group">
+	                  <label for="email" class="col-sm-4 control-label">Email</label>
+	                  <div class="col-sm-8">
+	                  	<input type="text" class="form-control" name="email" value="{{$row->email}}" id="email" placeholder="Email">
+	                  </div>
+	                </div>
+
+	                <div class="form-group">
 			            <label for="start_work" class="col-sm-4 control-label">Start Working Date</label>
 			            <div class="col-sm-8">
 			               	<input type="text" class="form-control datepicker" name="start_work" value="{{$row->start_work}}" id="start_work" placeholder="Start Working Date">

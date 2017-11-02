@@ -20,6 +20,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Username</th>
+                  <th>Email</th>
                   <th>Role</th>
                   <th>Join Date</th>
                   <th>Status</th>
@@ -31,6 +32,7 @@
                 <tr>
                 <td>{{$val->first_name . ' ' . $val->last_name}}</td>
                 <td>{{$val->username}}</td>
+                <td>{{$val->email}}</td>
                 <td>{{App\RoleUser::roleWordList($val->id)}}</td>
                 <td>{{dateHumanFormat($val->start_work)}}</td>
                 <td>{!!getUserValidityStatus($val->valid_login)!!}</td>

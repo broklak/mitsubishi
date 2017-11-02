@@ -154,6 +154,9 @@ class OrderController extends Controller
 
         logUser('Create SPK '.$createHead->id);
 
+        // SEND EMAIL NOTIF
+        OrderApproval::sendEmailNotif('create', $createHead);
+
         $message = setDisplayMessage('success', "Success to create new ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }
@@ -501,6 +504,9 @@ class OrderController extends Controller
         $orderId = $request->input('order_id');
         $role = $request->input('role');
         $reason = $request->input('reject_reason');
+        $order = $this->model->find($orderId);
+
+        OrderApproval::sendEmailNotif('reject', $order); die('sukses');
 
         $approve = OrderApproval::create([
             'order_id'  => $orderId,

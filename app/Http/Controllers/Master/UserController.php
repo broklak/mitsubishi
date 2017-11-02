@@ -82,6 +82,7 @@ class UserController extends Controller
             'username'     => 'required|unique:users',
             'dealer_id'     => 'required',
             'start_work'     => 'required',
+            'email'         => 'required',
             'password' => 'required|string|min:4',
         ]);
 
@@ -91,6 +92,7 @@ class UserController extends Controller
             'job_position_id'  => 0,
             'supervisor_id'  => ($request->input('supervisor_id') != '0') ? $request->input('supervisor_id') : null,
             'start_work'  => $request->input('start_work'),
+            'email'  => $request->input('email'),
             'username'  => $request->input('username'),
             'password' => bcrypt($request->input('password')),
             'extend_duration' => ($request->input('duration')) ? $request->input('duration') : 90,
@@ -159,7 +161,8 @@ class UserController extends Controller
             'first_name'     => 'required',
             'dealer_id'     => 'required',
             'last_name'     => 'required',
-            'start_work'     => 'required'
+            'start_work'     => 'required',
+            'email'     => 'required',
         ]);
 
         $data = $this->model->find($id);
@@ -169,6 +172,7 @@ class UserController extends Controller
             'last_name'  => $request->input('last_name'),
             'job_position_id'  => 0,
             'start_work'  => $request->input('start_work'),
+            'email'  => $request->input('email'),
             'extend_duration' => ($request->input('duration')) ? $request->input('duration') : 90,
             'supervisor_id'  => ($request->input('supervisor_id') != '0') ? $request->input('supervisor_id') : null,
             'updated_by' => Auth::id()
