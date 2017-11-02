@@ -149,6 +149,9 @@ class OrderController extends Controller
             }
 
             logUser('Create SPK '.$createHead->id);    
+
+            // SEND EMAIL NOTIF
+            OrderApproval::sendEmailNotif('create', $createHead);
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');
         }
