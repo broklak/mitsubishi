@@ -187,7 +187,7 @@ class OrderController extends Controller
 
             $rules = $this->rules();
             unset($rules['uuid']);
-            $headNew = $orderHead->find($id);
+            $headNew = $orderHead->findOrFail($id);
             $priceOld = OrderPrice::where('order_id', $id)->first();
             $validator = Validator::make($request->input(), $rules);
             if ($validator->fails()) {    
@@ -271,7 +271,9 @@ class OrderController extends Controller
             $update['update_at'] = date('Y-m-d H:i:s');
             $update['created_at'] = date('Y-m-d H:i:s',strtotime($headNew->created_at));
 
-            OrderApproval::sendEmailNotif('update', $update);
+            $update['id'] = $id;
+            $update['spk_code'] = $headNew->spk_code;
+            OrderApproval::sendEmailNotif('update', (object) $update);
 
             logUser('Update SPK '.$id);
         } catch (Exception $e) {
