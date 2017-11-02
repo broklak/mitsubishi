@@ -196,13 +196,13 @@ class OrderApproval extends Model
         $isSuperUser = $user->hasRole('super_admin');
         $dealer_id = $order->dealer_id;
 
-        if($type == 'create') { // CREATE
+        if($type == 'create' || $type == 'update') { // CREATE
             if($isSupervisor || $isManager || $isSuperUser) {
                 return false;
             }
 
             // FIND APPROVER
-            $approver = self::findValidApprover($user->id, $dealer_id);
+            $approver = self::findValidApprover($user->id, $dealer_id); // FIND ALL APPROVER FROM SAME BRANCH
             foreach ($approver as $key => $value) {
                 $data = User::find($value);
                 if(isset($data->email) && !empty($data->email)) {

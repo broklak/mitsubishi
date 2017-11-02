@@ -251,6 +251,9 @@ class OrderController extends Controller
 
         logUser('Update SPK '.$id);
 
+        $update['id'] = $id;
+        OrderApproval::sendEmailNotif('update', (object) $update);
+
         $message = setDisplayMessage('success', "Success to update ".$this->page);
         return redirect(route($this->page.'.index'))->with('displayMessage', $message);
     }

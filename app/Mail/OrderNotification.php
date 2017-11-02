@@ -37,7 +37,9 @@ class OrderNotification extends Mailable
             case 'create':
                 $subject = 'Notifikasi SPK Baru '.$this->order->spk_code;
                 break;
-            
+            case 'update':
+                $subject = 'Notifikasi Perubahan SPK '.$this->order->spk_code;
+                break;
             default:
                 $subject = 'Notifikasi Lain';
                 break;

@@ -271,6 +271,8 @@ class OrderController extends Controller
             $update['update_at'] = date('Y-m-d H:i:s');
             $update['created_at'] = date('Y-m-d H:i:s',strtotime($headNew->created_at));
 
+            OrderApproval::sendEmailNotif('update', $update);
+
             logUser('Update SPK '.$id);
         } catch (Exception $e) {
             return $this->apiError($statusCode = 500, $e->getMessage(), 'Something went wrong');
