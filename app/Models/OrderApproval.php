@@ -210,6 +210,18 @@ class OrderApproval extends Model
                 }
             }
         }
+
+        if($type == 'reject' || $type == 'approve') {
+            $email = $user->email;
+            $approver = self::findValidApprover($user->id, $dealer_id); // FIND ALL APPROVER FROM SAME BRANCH
+            $approver[] = $order->created_by;
+            foreach ($approver as $key => $value) {
+                $data = User::find($value);
+                if(isset($data->email) && !empty($data->email) && $data->email != $email) {
+                    Mail::to($data->email)->send(new OrderNotification($type, $order, $data));   
+                }
+            }
+        }
     }
 
     public static function findValidApprover($salesId, $dealerId) {

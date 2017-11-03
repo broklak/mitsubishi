@@ -498,6 +498,9 @@ class OrderController extends Controller
 
         logUser('Approve SPK '.$orderId);
 
+        $orderHead->approved_by = $user->first_name . ' '. $user->last_name;
+        OrderApproval::sendEmailNotif('approve', $orderHead);
+
         $message = setDisplayMessage('success', "Success to approve SPK");
         return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);
     }
@@ -508,8 +511,6 @@ class OrderController extends Controller
         $role = $request->input('role');
         $reason = $request->input('reject_reason');
         $order = $this->model->find($orderId);
-
-        OrderApproval::sendEmailNotif('reject', $order); die('sukses');
 
         $approve = OrderApproval::create([
             'order_id'  => $orderId,
@@ -529,6 +530,10 @@ class OrderController extends Controller
         ]);
 
         logUser('Reject SPK '.$orderId);
+
+        $order->reject_reason = $reason;
+        $order->reject_by = $user->first_name . ' '. $user->last_name;
+        OrderApproval::sendEmailNotif('reject', $order);
 
         $message = setDisplayMessage('success', "Success to reject SPK");
         return redirect(route($this->page.'.show', ['id' => $orderId]))->with('displayMessage', $message);

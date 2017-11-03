@@ -406,6 +406,7 @@ class OrderController extends Controller
 
     protected function approveSpk($orderId) {
         try {
+            $user = Auth::user();
             $orderHead = OrderHead::find($orderId);
             $eligible = OrderApproval::eligibleToApprove($orderHead);
 
@@ -444,6 +445,9 @@ class OrderController extends Controller
                 'created_by'    => Auth::id()
             ]);
 
+            $orderHead->approved_by = $user->first_name . ' '. $user->last_name;
+            OrderApproval::sendEmailNotif('approve', $orderHead);
+
             logUser('Approve SPK '.$orderId);
             $data = [
                 'message'   => 'Success to approve SPK'
@@ -462,6 +466,9 @@ class OrderController extends Controller
             if(!$eligible) {
                 return $this->apiError($statusCode = 401, 'Unauthorized', 'You are not eligible to approve');
             }
+
+            $order = OrderHead::find($orderId);
+            $user = Auth::user();
 
             $roles = RoleUser::getRoleForUser(Auth::id());
             if(count($roles) == 1) {
@@ -491,6 +498,10 @@ class OrderController extends Controller
                 'desc'          => 'Rejected',
                 'created_by'    => Auth::id()
             ]);
+
+            $order->reject_reason = $reason;
+            $order->reject_by = $user->first_name . ' '. $user->last_name;
+            OrderApproval::sendEmailNotif('reject', $order);
 
             logUser('Reject SPK '.$orderId);    
             $data = [
