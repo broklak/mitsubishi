@@ -100,6 +100,13 @@ class OrderController extends Controller
                 }
             }
 
+            // UUID VALIDATION 
+            $uuid = $create['uuid'];
+            $validateUuid = $orderHead->where('uuid', $uuid)->first();
+            if(isset($validateUuid->id)) {
+                return $this->apiSuccess($validateUuid, $create, $pagination = null, $statusCode = 201);
+            }
+
             $create['created_by'] = Auth::id();
 
             if ($request->file('npwp_image')) {
@@ -287,7 +294,7 @@ class OrderController extends Controller
     protected function rules() {
         return [
             'spk_doc_code'     => 'required',
-            'uuid'      => 'required|unique:order_head',
+            'uuid'      => 'required',
             'date'     => 'required',
             'dealer_id' => 'required',
             'id_number' => 'required',
