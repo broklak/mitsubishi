@@ -17,6 +17,7 @@ use App\Models\CarType;
 use App\Models\CarColor;
 use App\Models\ServerSecret;
 use App\Models\Bbn;
+use App\Models\UserDealer;
 use App\Models\DeliveryOrder;
 use App\Models\Customer;
 use App\Models\CustomerImage;
@@ -549,7 +550,10 @@ class OrderController extends Controller
     }
 
     public function fields() {
-        $dealer = Dealer::select('id as value', 'name as display')->get();
+        $dealer = UserDealer::select('dealer_id as value', 'name as display')
+                            ->join('dealers', 'dealers.id', '=', 'user_dealer.dealer_id')
+                            ->where('user_id', Auth::id())
+                            ->get();
         $carModel = CarModel::getOptionValue();
         $carType = CarType::getOptionValue();
         $carType[] = ['value' => 0, 'display' => 'Others'];
