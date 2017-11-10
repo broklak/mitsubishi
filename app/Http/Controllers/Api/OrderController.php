@@ -104,8 +104,9 @@ class OrderController extends Controller
             // UUID VALIDATION 
             $uuid = $create['uuid'];
             $validateUuid = $orderHead->where('uuid', $uuid)->first();
+            $validSPK['created'] = $validateUuid;
             if(isset($validateUuid->id)) {
-                return $this->apiSuccess($validateUuid, $create, $pagination = null, $statusCode = 201);
+                return $this->apiSuccess($validSPK, $create, $pagination = null, $statusCode = 201);
             }
 
             $create['created_by'] = Auth::id();
