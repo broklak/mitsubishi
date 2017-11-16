@@ -19,7 +19,6 @@
                 <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Status</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -27,7 +26,6 @@
                 @foreach($result as $key => $val)
                 <tr>
                 <td>{{$val->name}}</td>
-                <td>{!!setActivationStatus($val->status)!!}</td>
                 <td>
                 	<div class="btn-group">
 	                  <button type="button" class="btn btn-info">Action</button>

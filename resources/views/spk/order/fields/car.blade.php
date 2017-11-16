@@ -61,14 +61,14 @@
 			                  <select class="form-control" name="color" id="color">
 			                  	<option>Pilih Warna</option>
 			                  	@foreach($carColor as $key => $val)
-			               		<option @if($init['color'] == $val->name) selected @endif>{{$val->name}}</option>
+			               		<option @if($init['color'] == $val->id) selected @endif value="{{$val->id}}">{{$val->name}}</option>
 			               		@endforeach
-			               		<option value="0">Warna Lain</option>
+			               		<option @if($init['color'] == null) selected @endif value="0">Warna Lain</option>
 			                  </select>
 			               </div>
 			            </div>
 
-			            <div class="form-group" id="color_others_cont" style="display: none;">
+			            <div class="form-group" id="color_others_cont" style="@if($init['color'] != null) display: none; @endif">
 			               <label for="color" class="col-sm-3 control-label">Nama Warna</label>
 			               <div class="col-sm-9">
 			                  <input type="text" class="form-control" name="color_others" value="{{$init['color_others']}}" id="color_others" placeholder="Warna">

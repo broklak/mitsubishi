@@ -39,7 +39,7 @@ class CarColor extends Model
     }
 
     public static function getOptionValue() {
-        $data = parent::select(DB::raw('name as value, name as display'))
+        $data = parent::select(DB::raw('id as value, name as display'))
                         ->get();
 
         return $data;

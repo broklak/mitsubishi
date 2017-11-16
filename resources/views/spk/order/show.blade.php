@@ -121,7 +121,7 @@
 			                <label for="date" class="col-sm-4 control-label">Car Color</label>
 			                <div class="col-sm-8">
 			                   <div class="spk-field">
-			                   		<span>{{$init['color']}}</span>
+			                   		<span>{{$init['color_name']}}</span>
 			                   	</div>
 			                </div>
 			             </div>

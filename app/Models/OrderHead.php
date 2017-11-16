@@ -22,7 +22,7 @@ class OrderHead extends Model
     protected $fillable = [
         'spk_code', 'spk_doc_code', 'date', 'npwp_image', 'stnk_name', 'stnk_address', 'faktur_conf', 'model_id', 'type_id', 'color', 'dealer_id', 'customer_id',
         'car_year', 'qty', 'plat', 'bbn_type', 'karoseri', 'karoseri_type', 'karoseri_spec', 'karoseri_price', 'status', 'created_by', 'updated_by', 
-        'customer_image_id', 'uuid', 'customer_name', 'type_others'
+        'customer_image_id', 'uuid', 'customer_name', 'type_others', 'color_id'
     ];
 
     /**
@@ -156,12 +156,9 @@ class OrderHead extends Model
     }
 
     public function create($data) {
-        if($data['color'] == '0') {
-            CarColor::create([
-                'name' => $data['color_others'],
-                'created_by' => $data['created_by']
-            ]);
-        }
+        if($data['color'] != '0') {
+            $colorName = CarColor::where('id', $data['color'])->value('name');
+        }        
 
     	$created = parent::create([
     		'dealer_id'		=> $data['dealer_id'],
@@ -177,7 +174,8 @@ class OrderHead extends Model
     		'model_id'		=> $data['model_id'],
     		'type_id'		=> $data['type_id'],
             'car_year'      => $data['car_year'],
-    		'color'		    => ($data['color'] != '0') ? $data['color'] : $data['color_others'],
+            'color_id'      => ($data['color'] != '0') ? $data['color'] : null,
+    		'color'		    => ($data['color'] != '0') ? $colorName : $data['color_others'],
     		'qty'			=> $data['qty'],
             'plat'          => $data['plat'],
     		'type_others'	=> ($data['type_id'] == 0) ? $data['type_others'] : null,
@@ -196,11 +194,8 @@ class OrderHead extends Model
     }
 
     public function updateData($id, $data) {
-        if($data['color'] == '0') {
-            CarColor::create([
-                'name' => $data['color_others'],
-                'created_by' => $data['updated_by']
-            ]);
+        if($data['color'] != '0') {
+            $colorName = CarColor::where('id', $data['color'])->value('name');
         }
         return parent::find($id)->update([
             'dealer_id'     => $data['dealer_id'],
@@ -216,7 +211,8 @@ class OrderHead extends Model
             'type_id'       => $data['type_id'],
             'type_others'   => ($data['type_id'] == 0) ? $data['type_others'] : null,
             'car_year'      => $data['car_year'],
-            'color'         => ($data['color'] != '0') ? $data['color'] : $data['color_others'],
+            'color_id'      => ($data['color'] != '0') ? $data['color'] : null,
+            'color'         => ($data['color'] != '0') ? $colorName : $data['color_others'],
             'qty'           => $data['qty'],
             'plat'          => $data['plat'],
             'bbn_type'      => $data['bbn_type'],
@@ -412,7 +408,7 @@ class OrderHead extends Model
 
         if(isset($orderPrice->id)) {
             $data['price_data'] = [
-                'price_type'            => ($orderPrice->price_off == 0) ? 2 : 1,
+                'price_type'            => ($orderPrice->price_on == 0) ? 2 : 1,
                 'price_off'             => $orderPrice->price_off,
                 'price_on'              => $orderPrice->price_on,
                 'cost_surat'            => $orderPrice->cost_surat,
